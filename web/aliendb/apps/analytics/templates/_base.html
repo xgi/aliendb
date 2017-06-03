@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AlienDB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    {% load compress %}
+    {% compress css %}
+    <link rel="stylesheet" href="/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="/css/aliendb.css" type="text/css">
+    {% endcompress %}
+    {% compress js %}
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/tether.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/highcharts.js"></script>
+    <script src="/js/custom.js"></script>
+    {% endcompress %}
+
+  </head>
+  <body>
+    <nav class="navbar navbar-toggleable-sm navbar-inverse bg-custom fixed-top">
+      <div class="container-fluid">
+        <div class="row justify-content-sm-center">
+          <div class="col-12 col-md-11 col-lg-10">
+            <a class="navbar-brand hidden-md-up" href="/">AlienDB</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <a class="navbar-brand hidden-xs-down" href="/">AlienDB</a>
+                <li class="nav-item active">
+                  <a class="nav-link" href="/">Posts</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Subreddits</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/about">About</a>
+                </li>
+              </ul>
+              <form class="form-inline my-2 my-lg-0" action="/search">
+                <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

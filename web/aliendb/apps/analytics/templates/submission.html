@@ -1,0 +1,179 @@
+{% extends "_base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-sm-center">
+    <div class="col-12 col-md-2 col-lg-2">
+      <div class="card card-inverse card-primary text-center">
+        <div class="card-block">
+          {% if submission.rank == -1 %}
+          <h2><b>#???</b></h2>
+          {% else %}
+          <h2><b>#{{ submission.rank }}</b></h2>
+          {% endif %}
+          <span>Peak: {{ submission.rank_peak }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card card-inverse card-primary">
+        <div class="card-block">
+          <h4 class="card-title"><a href="https://redd.it/{{ submission.id }}">{{ submission.title }}</a></h4>
+          <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit }}">/r/{{ submission.subreddit }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row justify-content-sm-center">
+    <div class="col-12 col-md-2 col-lg-2">
+      <ul class="nav nav-tabs-custom flex-column">
+        <li class="nav-item"><a class="nav-link active" href="#overview" data-toggle="tab">Overview</a></li>
+        <li class="nav-item"><a class="nav-link" href="#details" data-toggle="tab">Details</a></li>
+        <li class="nav-item"><a class="nav-link" href="#sentiment" data-toggle="tab">Sentiment</a></li>
+        <li class="nav-item"><a class="nav-link" href="#comments" data-toggle="tab">Comments</a></li>
+      </ul>
+    </div>
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="tab-content">
+        <script>bulk_chart('{{ submission.id }}');</script>
+        <div class="tab-pane active" id="overview"> <!-- overview tab -->
+          <div class="row justify-content-sm-center">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">Activity</div>
+                <div class="card-block">
+                  <div id="chart_activity"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-sm-center">
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Lifetime</div>
+                <div class="card-block text-center">
+                  <p>Time spent in the top 100:</p>
+                  <h1>{{ lifetime }}</h1>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Rise Time</div>
+                <div class="card-block text-center">
+                  <p>Time before reaching top 100:</p>
+                  <h1>{{ rise_time }}</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="details"> <!-- details tab -->
+          <div class="row justify-content-sm-center">
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Details</div>
+                <div class="card-block">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <th>Domain</td>
+                        <td>{{ submission.domain }}</td>
+                      </tr>
+                      <tr>
+                        <th>Flair text</td>
+                        <td>{{ submission.link_flair_text }}</td>
+                      </tr>
+                      <tr>
+                        <th>Upvote ratio</td>
+                        <td>{{ submission.upvote_ratio }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Modifiers</div>
+                <div class="card-block">
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <th>Stickied</td>
+                        <td>{{ submission.stickied }}</td>
+                      </tr>
+                      <tr>
+                        <th>NSFW</td>
+                        <td>{{ submission.over_18 }}</td>
+                      </tr>
+                      <tr>
+                        <th>Spoiler</td>
+                        <td>{{ submission.spoiler }}</td>
+                      </tr>
+                      <tr>
+                        <th>Locked</td>
+                        <td>{{ submission.locked }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">Upvote Ratio</div>
+                <div class="card-block">
+                  <div id="chart_upvote_ratio"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="sentiment"> <!-- sentiment tab -->
+          <div class="row justify-content-sm-center">
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Polarity</div>
+                <div class="card-block">
+                  <div id="chart_polarity"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Subjectivity</div>
+                <div class="card-block">
+                  <div id="chart_subjectivity"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="comments"> <!-- comments tab -->
+          <div class="row justify-content-sm-center">
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Special User Presence</div>
+                <div class="card-block">
+                  <div id="chart_special_users"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header">Gold Given</div>
+                <div class="card-block">
+                  <div id="chart_gilded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="settings">Settings Tab.</div>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+{% endblock content %}

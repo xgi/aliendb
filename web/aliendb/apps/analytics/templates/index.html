@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-sm-center">
+    <div class="col-xs-12 col-md-11 col-lg-10">
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-5">Welcome to AlienDB!</h1>
+          <p class="lead">AlienDB is an analytics platform for trending Reddit
+            threads. It stores historical data for the top threads on Reddit,
+            including karma trends and comment stats.</p>
+          <a class="btn btn-primary btn-lg" href="/about" role="button">Learn more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-sm-center">
+    <div class="col-xs-12 col-md-11 col-lg-10">
+      <div class="bs-component">
+        <table class="table table-striped table-hover table-bordered">
+          <thead class="thead-inverse">
+            <tr>
+              <th class="table-caption" colspan="4">Current top 100 on /r/all</th>
+            </tr>
+          </thead>
+          <thead class="thead-inverse">
+            <tr>
+              <th id="rank">#</th>
+              <th id="delta">Δ</th>
+              <th id="title">Title</th>
+              <th id="subreddit" class="hidden-sm-down">Subreddit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for submission in submissions|slice:":100" %}
+            <tr>
+              <td id="rank">{{ submission.rank }}</td>
+              <td id="delta"><span style="color: {{ submission.delta_color }}">{{ submission.delta_string }}</span></td>
+              <td id="title">
+                <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
+              </td>
+              <td id="subreddit" class="hidden-sm-down"><a href="/subreddit/{{ submission.subreddit }}">r/{{ submission.subreddit }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+{% endblock content %}

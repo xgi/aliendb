@@ -1,0 +1,43 @@
+{% extends "_base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row justify-content-sm-center">
+    <div class="col-xs-12 col-md-10 col-lg-6">
+      <div class="about">
+        <h4>About AlienDB</h4>
+        <p>AlienDB is an analytics platform for trending Reddit threads. It
+          stores historical data for the top threads on Reddit, including karma
+          trends and comment stats. This website is <b>not</b> affiliated with
+          Reddit, and only accesses data which is publicly available.
+        </p>
+        <p>AlienDB monitors the top 100 submissions on
+          <a href="https://reddit.com/r/all">/r/all</a> and periodically records
+          information including each submission's rank, its number of comments,
+          and its current karma. Additionally, each comment is analyzed using
+          the <a href="http://nltk.org">Natural Language Toolkit</a> (NLTK) and
+          <a href="https://textblob.readthedocs.io">TextBlob</a> for
+          statistics such as polarity, subjectivity, gold given, and special
+          user presence. Comment text is <b>not</b> stored.
+        </p>
+        <p>Statistics from individual submissions are also used to provide
+          subreddit averages. It is important to note that only submissions
+          which reach the top of Reddit are included in these averages, so
+          subreddit averages should not be used as a way to describe a subreddit
+          as a whole. Rather, it is a useful tool to determine whether an
+          individual submission is significantly different than others which
+          were also highly upvoted from the subreddit.
+        <h3>Contact</h3>
+        <p>AlienDB was created by xgi as part of
+          <a href="https://faltro.com">Faltro</a>. You can contact me in the
+          following places:
+        </p>
+        <ul>
+          <li>Reddit: <a href="https://reddit.com/u/xgi">https://reddit.com/u/xgi</a></li>
+          <li>GitHub: <a href="https://github.com/xgi">https://github.com/xgi</a></li>
+          <li>Email: <a href="mailto:jake@faltro.com">jake@faltro.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+{% endblock content %}

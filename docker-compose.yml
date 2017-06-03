@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    env_file: .env
+
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:latest
+    volumes:
+      - /var/lib/rabbitmq
+    env_file: .env
+    expose:
+      - "5672"
+
+  redis:
+    restart: always
+    image: redis:latest
+    expose:
+      - "6379"
+    volumes:
+      - redisdata:/data
+
+  web:
+    restart: always
+    command: /usr/src/app/startup.sh
+    build: ./web
+    ports:
+      - "8000:8000"
+      - "5555:5555"
+    links:
+      - postgres:postgres
+      - redis:redis
+      - rabbitmq:rabbit
+    volumes:
+      - webdata:/usr/src/app
+    env_file: .env
+    environment:
+      DEBUG: 'true'
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes:
+      - /www/static
+    links:
+      - web:web
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+  webdata:
+    driver: local

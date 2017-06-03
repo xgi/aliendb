@@ -1,0 +1,23 @@
+FROM python:3.5
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# install dependencies
+RUN apt-get update --fix-missing
+RUN apt-get install -y supervisor netcat
+
+# install module dependencies
+COPY requirements.txt /usr/src/app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir /usr/local/lib/nltk_data
+ENV NLTK_DATA /usr/local/lib/nltk_data
+RUN python -m textblob.download_corpora
+
+# copy local project dir to container
+ADD ./ /usr/src/app
+
+# create unprivileged user
+RUN adduser --disabled-password --gecos '' guest
+RUN chown -R guest /usr/src/app
