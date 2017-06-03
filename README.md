@@ -37,3 +37,14 @@ docker-compose -f docker-compose-dev.yml build --no-cache
 ```bash
 docker-compose -f docker-compose-dev.yml up [-d]
 ```
+5. Connect to the website at http://localhost
+6. Make any necessary changes to the code.
+7. Stop and remove the `web` container.
+```bash
+docker-compose -f docker-compose-dev.yml stop web
+docker-compose -f docker-compose-dev.yml rm web
+```
+8. Build the new image and create+start a new container.
+```bash
+docker-compose -f docker-compose-dev.yml up [-d] --build
+```
