@@ -39,7 +39,7 @@ services:
       - redis:redis
       - rabbitmq:rabbit
     volumes:
-      - webdata:/usr/src/app
+      - /usr/src/app
     env_file: .env
     environment:
       DEBUG: 'true'
@@ -58,6 +58,4 @@ volumes:
   pgdata:
     driver: local
   redisdata:
-    driver: local
-  webdata:
     driver: local
