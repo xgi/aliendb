@@ -163,7 +163,8 @@ def get_top_submissions():
             created_at = created_at.replace(tzinfo=datetime.timezone.utc)
 
             if hasattr(submission, 'author'):
-                author = submission.author.name
+                if author is not None:
+                    author = submission.author.name
 
             # perform sentiment analysis on submission title
             blob = TextBlob(submission.title)
