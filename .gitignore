@@ -4,3 +4,4 @@ __pycache__
 .env-production
 docker-compose-custom.yml
 docker-compose-production.yml
+web/static/*/main.min.*

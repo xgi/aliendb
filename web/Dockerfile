@@ -18,6 +18,9 @@ RUN python -m textblob.download_corpora
 # copy local project dir to container
 ADD ./ /usr/src/app
 
+# compress css and js files
+RUN sh /usr/src/app/compress.sh
+
 # create unprivileged user
 RUN adduser --disabled-password --gecos '' guest
 RUN chown -R guest /usr/src/app

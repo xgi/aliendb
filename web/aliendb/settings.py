@@ -34,8 +34,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    # 3rd party
-    'compressor',
     # custom
     'aliendb.apps.analytics'
 )
@@ -101,16 +99,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 3rd party
-    'compressor.finders.CompressorFinder',
 )
-
-COMPRESS_ENABLED = True
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.rCSSMinFilter'
-]
-COMPRESS_OUTPUT_DIR = ''
 
 # Caching
 
