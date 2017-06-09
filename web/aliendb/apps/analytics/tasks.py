@@ -3,7 +3,7 @@ from django.conf import settings
 import datetime
 import math
 import os
-import praw
+import praw, prawcore
 import string
 from textblob import TextBlob
 from .models import Submission, SubmissionScore, SubmissionNumComments, SubmissionUpvoteRatio, Comment
@@ -93,7 +93,12 @@ def create_comment_obj(comment, submission_obj):
 @app.task
 def get_top_submissions():
     subreddit = r.subreddit('all')
-    submissions = [submission for submission in subreddit.hot(limit=100)]
+
+    try:
+        submissions = [submission for submission in subreddit.hot(limit=100)]
+    except prawcore.exceptions.RequestException:
+        # reddit api is likely unavailable
+        return
 
     rank = 1
     submission_objs = []
