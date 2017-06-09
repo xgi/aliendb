@@ -29,7 +29,7 @@ def home(request):
         submission.delta_color = color
         submission.delta_string = "%s%d" % (shape, rank_delta)
 
-    return render(request, 'index.html', {
+    return render(request, 'home.html', {
         'submissions': submissions,
     })
 
