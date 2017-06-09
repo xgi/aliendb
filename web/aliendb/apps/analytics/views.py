@@ -60,20 +60,8 @@ def about(request):
 def api(request):
     name = request.GET.get('name', '')
 
-    if name == 'bulk':
-        data = reports.bulk(request)
-    elif name == 'activity':
-        data = reports.activity(request)
-    elif name == 'upvote_ratio':
-        data = reports.upvote_ratio(request)
-    elif name == 'special_users':
-        data = reports.special_users(request)
-    elif name == 'gilded':
-        data = reports.gilded(request)
-    elif name == 'polarity':
-        data = reports.polarity(request)
-    elif name == 'subjectivity':
-        data = reports.subjectivity(request)
+    if name == 'submission':
+        data = reports.submission(request)
 
     return JsonResponse(data)
 

@@ -1,5 +1,5 @@
-function bulk_chart(id) {
-  $.getJSON('/api?name=bulk&id=' + id, function (data) {
+function submission_charts(id) {
+  $.getJSON('/api?name=submission&id=' + id, function (data) {
     polarity_chart(data);
     subjectivity_chart(data);
     activity_chart(data);
