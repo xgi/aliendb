@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+  <div class="row justify-content-sm-center">
+    <div class="col-12 col-md-2 col-lg-2">
+      <div class="card card-inverse card-primary text-center">
+        <div class="card-block">
+          <h2>{{ submissions|length }}</h2>
+          <span>Total submissions</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-2 col-lg-2">
+      <div class="card card-inverse card-primary text-center">
+        <div class="card-block">
+          <h2>{{ total_karma|intcomma }}</h2>
+          <span>Total karma</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-2 col-lg-2">
+      <div class="card card-inverse card-primary text-center">
+        <div class="card-block">
+          <h2>{{ total_comments|intcomma }}</h2>
+          <span>Total comments</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-sm-center">
+    <div class="col-xs-12 col-md-11 col-lg-10">
+      <div class="bs-component">
+        <table class="table table-striped table-hover table-bordered">
+          <thead class="thead-inverse">
+            <tr>
+              <th class="table-caption" colspan="4">Top posts from /r/{{ subreddit }}</th>
+            </tr>
+          </thead>
+          <thead class="thead-inverse">
+            <tr>
+              <th id="karma">Karma</th>
+              <th id="comments">Comments</th>
+              <th id="title">Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for submission in submissions|slice:":100" %}
+            <tr>
+              <td id="karma">{{ submission.karma_peak|intcomma }}</td>
+              <td id="comments">{{ submission.comments_peak|intcomma }}</td>
+              <td id="title">
+                <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+{% endblock content %}

@@ -77,6 +77,19 @@ def submission(request, id):
         'rise_time': rise_time,
     })
 
+def subreddit(request, subreddit):
+    submissions = Submission.objects.filter(subreddit__iexact=subreddit).order_by('-karma_peak')
+
+    total_karma = sum(submission.karma_peak for submission in submissions)
+    total_comments = sum(submission.comments_peak for submission in submissions)
+
+    return render(request, 'subreddit.html', {
+        'subreddit': subreddit,
+        'total_karma': total_karma,
+        'total_comments': total_comments,
+        'submissions': submissions,
+    })
+
 def search(request):
     query = request.GET.get('q', '')
     order_by = request.GET.get('order_by', '')

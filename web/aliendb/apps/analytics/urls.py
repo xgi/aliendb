@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^about', views.about, name='about'),
     url(r'^api', views.api, name='api'),
     url(r'^submission/(?P<id>[\w]+)', views.submission, name='submission'),
+    url(r'^subreddit/(?P<subreddit>[\w]+)', views.subreddit, name='subreddit'),
     url(r'^search', views.search, name='search')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
