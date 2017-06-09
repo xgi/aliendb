@@ -58,12 +58,12 @@ a:hover {
   border-bottom: 0 !important;
 }
 
-th#rank, th#delta, th#karma, th#comments {
+th#rank, th#delta, th#karma, th#comments, th#submissions {
   width: 1rem;
   text-align: center;
 }
 
-td#rank, td#delta, td#karma, td#comments {
+td#rank, td#delta, td#karma, td#comments, td#submissions {
   font-size: 1.2em;
   text-align: center;
   vertical-align: middle;
@@ -74,7 +74,7 @@ td#subreddit {
   vertical-align: middle;
 }
 
-td#title {
+td#title, td#name {
   font-size: 1.1em;
 }
 

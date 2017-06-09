@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Q, Count
 from .models import *
 from . import reports
 from redis import Redis
@@ -31,6 +31,27 @@ def home(request):
 
     return render(request, 'home.html', {
         'submissions': submissions,
+    })
+
+def subreddits(request):
+    subreddit_objs = Submission.objects.values_list('subreddit').annotate(sub_count=Count('subreddit')).order_by('-sub_count')[:100]
+
+    subreddits = []
+    for subreddit in subreddit_objs:
+        submissions = Submission.objects.filter(subreddit__iexact=subreddit[0])
+        total_karma = sum(submission.karma_peak for submission in submissions)
+        total_comments = sum(submission.comments_peak for submission in submissions)
+
+        subreddits.append({
+            'name': subreddit[0],
+            'total_karma': total_karma,
+            'total_comments': total_comments,
+            'total_submissions': len(submissions)
+        })
+
+
+    return render(request, 'subreddits.html', {
+        'subreddits': subreddits
     })
 
 def about(request):

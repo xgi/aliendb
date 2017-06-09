@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% block content %}
+{% load humanize %}
+<div class="container-fluid">
+  <div class="row justify-content-sm-center">
+    <div class="col-xs-12 col-md-11 col-lg-10">
+      <div class="bs-component">
+        <table class="table table-striped table-hover table-bordered">
+          <thead class="thead-inverse">
+            <tr>
+              <th class="table-caption" colspan="4">Most popular subreddits</th>
+            </tr>
+          </thead>
+          <thead class="thead-inverse">
+            <tr>
+              <th id="submissions">Submissions</th>
+              <th id="karma">Karma</th>
+              <th id="comments">Comments</td>
+              <th id="name">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for subreddit in subreddits|slice:":100" %}
+            <tr>
+              <td id="submissions">{{ subreddit.total_submissions|intcomma }}</td>
+              <td id="karma">{{ subreddit.total_karma|intcomma }}</td>
+              <td id="comments">{{ subreddit.total_comments|intcomma }}</td>
+              <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+{% endblock content %}

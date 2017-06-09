@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'^subreddits', views.subreddits, name='subreddits'),
     url(r'^about', views.about, name='about'),
     url(r'^api', views.api, name='api'),
     url(r'^submission/(?P<id>[\w]+)', views.submission, name='submission'),
