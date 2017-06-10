@@ -13,9 +13,9 @@
           </thead>
           <thead class="thead-inverse">
             <tr>
-              <th id="submissions">Submissions</th>
+              <th id="submissions">Posts</th>
               <th id="karma">Karma</th>
-              <th id="comments">Comments</td>
+              <th id="comments" class="hidden-sm-down">Comments</td>
               <th id="name">Name</th>
             </tr>
           </thead>
@@ -24,7 +24,7 @@
             <tr>
               <td id="submissions">{{ subreddit.total_submissions|intcomma }}</td>
               <td id="karma">{{ subreddit.total_karma|intcomma }}</td>
-              <td id="comments">{{ subreddit.total_comments|intcomma }}</td>
+              <td id="comments" class="hidden-sm-down">{{ subreddit.total_comments|intcomma }}</td>
               <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
             </tr>
             {% endfor %}
