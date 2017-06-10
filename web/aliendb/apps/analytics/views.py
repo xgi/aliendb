@@ -30,6 +30,7 @@ def home(request):
         submission.delta_string = "%s%d" % (shape, rank_delta)
 
     return render(request, 'home.html', {
+        'page_category': 'posts',
         'submissions': submissions,
     })
 
@@ -51,11 +52,14 @@ def subreddits(request):
 
 
     return render(request, 'subreddits.html', {
+        'page_category': 'subreddits',
         'subreddits': subreddits
     })
 
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'about.html', {
+        'page_category': 'about'
+    })
 
 def api(request):
     name = request.GET.get('name', '')
@@ -81,6 +85,7 @@ def submission(request, id):
     rise_time = time.strftime('%H:%M:%S', time.gmtime(rise_time_delta.seconds))
 
     return render(request, 'submission.html', {
+        'page_category': 'posts',
         'submission': submission,
         'lifetime': lifetime,
         'rise_time': rise_time,
@@ -93,6 +98,7 @@ def subreddit(request, subreddit):
     total_comments = sum(submission.comments_peak for submission in submissions)
 
     return render(request, 'subreddit.html', {
+        'page_category': 'subreddits',
         'subreddit': subreddit,
         'total_karma': total_karma,
         'total_comments': total_comments,
