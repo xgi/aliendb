@@ -71,11 +71,7 @@ def api(request):
 
 def submission(request, id):
     submission = Submission.objects.get(id=id)
-    comments = Comment.objects.filter(submission=submission)
-    subreddit_submissions = Submission.objects.filter(subreddit=submission.subreddit)
-    subreddit_comments = [c for queryset in [Comment.objects.filter(submission_id=s.id) for s in subreddit_submissions] for c in queryset]
     submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
-    submission_num_comments = SubmissionNumComments.objects.filter(submission=submission).order_by('timestamp')
 
     # lifetime and rise time
     lifetime_delta = submission_scores[len(submission_scores) - 1].timestamp - submission_scores[0].timestamp
