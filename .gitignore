@@ -2,6 +2,7 @@ __pycache__
 .atom-build.yml
 .env-custom
 .env-production
+.travis.yml
 docker-compose-custom.yml
 docker-compose-production.yml
 web/static/*/main.min.*
