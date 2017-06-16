@@ -6,7 +6,11 @@ epoch = datetime.datetime.utcfromtimestamp(0)
 def submission(request):
     id = request.GET.get('id', '')
 
-    submission = Submission.objects.get(id=id)
+    try:
+        submission = Submission.objects.get(id=id)
+    except Submission.DoesNotExist:
+        raise Http404("Submission was not found")
+        
     comments = Comment.objects.filter(submission=submission)
     subreddit_submissions = Submission.objects.filter(subreddit=submission.subreddit)
     subreddit_comments = [c for queryset in [Comment.objects.filter(submission_id=s.id) for s in subreddit_submissions] for c in queryset]

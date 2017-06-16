@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.db.models import Q, Count
 from .models import *
 from . import reports
@@ -70,7 +70,11 @@ def api(request):
     return JsonResponse(data)
 
 def submission(request, id):
-    submission = Submission.objects.get(id=id)
+    try:
+        submission = Submission.objects.get(id=id)
+    except Submission.DoesNotExist:
+        raise Http404("Submission was not found")
+
     submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
 
     # lifetime and rise time
@@ -89,6 +93,9 @@ def submission(request, id):
 
 def subreddit(request, subreddit):
     submissions = Submission.objects.filter(subreddit__iexact=subreddit).order_by('-karma_peak')
+
+    if len(submissions) == 0:
+        raise Http404("Subreddit has no recorded submissions")
 
     total_karma = sum(submission.karma_peak for submission in submissions)
     total_comments = sum(submission.comments_peak for submission in submissions)
