@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 from .models import *
 import datetime
 
@@ -10,13 +12,28 @@ def submission(request):
         submission = Submission.objects.get(id=id)
     except Submission.DoesNotExist:
         raise Http404("Submission was not found")
-        
+
+    # try to get full data variable from cache
+    data = cache.get("submission_data_%s" % id)
+    if data is not None:
+        return data
+
     comments = Comment.objects.filter(submission=submission)
-    subreddit_submissions = Submission.objects.filter(subreddit=submission.subreddit)
-    subreddit_comments = [c for queryset in [Comment.objects.filter(submission_id=s.id) for s in subreddit_submissions] for c in queryset]
     submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
     submission_num_comments = SubmissionNumComments.objects.filter(submission=submission).order_by('timestamp')
     submission_upvote_ratios = SubmissionUpvoteRatio.objects.filter(submission=submission).order_by('timestamp')
+
+    # try to get some variables from cache
+    subreddit_submissions = cache.get("subreddit_submissions_%s" % submission.subreddit)
+    subreddit_comments = cache.get("subreddit_comments_%s" % submission.subreddit)
+
+    # check if they weren't found in cache
+    if subreddit_submissions is None:
+        subreddit_submissions = Submission.objects.filter(subreddit=submission.subreddit)
+        cache.set("subreddit_submissions_%s" % submission.subreddit, subreddit_submissions, 600)
+    if subreddit_comments is None:
+        subreddit_comments = [c for queryset in [Comment.objects.filter(submission_id=s.id) for s in subreddit_submissions] for c in queryset]
+        cache.set("subreddit_comments_%s" % submission.subreddit, subreddit_comments, 600)
 
     ## activity
     score_tallies = [[int((s.timestamp - epoch).total_seconds()) * 1000.0, s.score] for s in submission_scores]
@@ -98,5 +115,7 @@ def submission(request):
             'subreddit': subjectivity_subreddit
         }
     }
+
+    cache.set("submission_data_%s" % id, data, 600)
 
     return data
