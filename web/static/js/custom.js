@@ -6,6 +6,13 @@ function submission_charts(id) {
     upvote_ratio_chart(data);
     special_users_chart(data);
     gilded_chart(data);
+  }).always(function () {
+    // hide loaders
+    $('.loader').each(function () {
+      $(this).hide();
+    });
+  }).fail(function (data, status, error) {
+    $(".chart").append("<div class='error'><h5>An error occurred while loading this chart.</h5><p>Wait a moment, then try reloading the page.<br><i>(" + error + ")</i></p>");
   });
 }
 
