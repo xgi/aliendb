@@ -6,7 +6,7 @@ import os
 import praw, prawcore
 import string
 from textblob import TextBlob
-from .models import Submission, SubmissionScore, SubmissionNumComments, SubmissionUpvoteRatio, Comment
+from .models import *
 
 app = Celery('tasks')
 app.config_from_object('django.conf:settings')
@@ -83,6 +83,19 @@ def create_comment_obj(comment, submission_obj):
                               created_at=created_at)
         comment_obj.save()
 
+        # update subreddit stats
+        subreddit = comment_obj.submission.subreddit
+        if comment.author is not None:
+            subreddit.average_is_op = (int(is_op) + subreddit.average_is_op * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+            subreddit.average_is_mod = (int(is_mod) + subreddit.average_is_mod * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+            subreddit.average_is_admin = (int(is_admin) + subreddit.average_is_admin * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+            subreddit.average_is_special = (int(is_special) + subreddit.average_is_special * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+        subreddit.average_gilded = (comment.gilded + subreddit.average_gilded * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+        subreddit.average_comments_polarity = (polarity + subreddit.average_comments_polarity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+        subreddit.average_comments_subjectivity = (subjectivity + subreddit.average_comments_subjectivity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+        subreddit.tracked_comments = subreddit.tracked_comments + 1
+        subreddit.save()
+
     else:
         # comment already exists in db
         comment_obj = Comment.objects.get(id=comment.id)
@@ -119,28 +132,9 @@ def get_top_submissions():
             submission.comments.replace_more(limit=0)
             comments = submission.comments.list()
 
-            # create new SubmissionScore object
-            submission_score = SubmissionScore(submission=submission_obj,
-                                               score=submission.score)
-            submission_score.save()
-
-            # create new SubmissionNumComments object
-            submission_num_comments = SubmissionNumComments(submission=submission_obj,
-                                                            num_comments=submission.num_comments)
-            submission_num_comments.save()
-
-            # create new SubmissionUpvoteRatio object
-            submission_upvote_ratio = SubmissionUpvoteRatio(submission=submission_obj,
-                                                            upvote_ratio=submission.upvote_ratio)
-            submission_upvote_ratio.save()
-
-            # update karma peak and comments peak if necessary
-            if submission.score > submission_obj.karma_peak:
-                submission_obj.karma_peak = submission.score
-            if submission.num_comments > submission_obj.comments_peak:
-                submission_obj.comments_peak = submission.num_comments
-
             # update submission details
+            submission_obj.score = submission.score
+            submission_obj.num_comments = submission.num_comments
             if submission.link_flair_text is not None:
                 submission_obj.link_flair_text = submission.link_flair_text
             submission_obj.upvote_ratio = submission.upvote_ratio
@@ -148,6 +142,13 @@ def get_top_submissions():
             submission_obj.over_18 = submission.over_18
             submission_obj.spoiler = submission.spoiler
             submission_obj.locked = submission.locked
+
+            # update subreddit stats
+            subreddit = submission_obj.subreddit
+            subreddit.score = subreddit.score + (submission_obj.score - submission.score)
+            subreddit.num_comments = subreddit.num_comments + (submission_obj.num_comments - submission.num_comments)
+            subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
+            subreddit.save()
 
             # create new Comment objects if necessary
             if submission.num_comments > 500:
@@ -176,16 +177,29 @@ def get_top_submissions():
             polarity = blob.polarity
             subjectivity = blob.subjectivity
 
+            # update subreddit stats
+            try:
+                subreddit = Subreddit.objects.get(name=submission.subreddit)
+            except Subreddit.DoesNotExist:
+                subreddit = Subreddit(name=submission.subreddit)
+            subreddit.score = subreddit.score + submission.score
+            subreddit.num_comments = subreddit.num_comments + submission.num_comments
+            subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
+            subreddit.average_submission_polarity = (polarity + subreddit.average_submission_polarity * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
+            subreddit.average_submission_subjectivity = (subjectivity + subreddit.average_submission_subjectivity * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
+            subreddit.tracked_submissions = subreddit.tracked_submissions + 1
+            subreddit.save()
+
             # create Submission object
             submission_obj = Submission(id=submission.id,
+                                        subreddit=subreddit,
                                         title=submission.title,
                                         author=author or None,
                                         rank=rank,
                                         rank_previous=rank,
                                         rank_peak=rank,
-                                        karma_peak=submission.score,
-                                        comments_peak=submission.num_comments,
-                                        subreddit=submission.subreddit,
+                                        score=submission.score,
+                                        num_comments=submission.num_comments,
                                         polarity=polarity,
                                         subjectivity=subjectivity,
                                         domain=submission.domain,
@@ -197,21 +211,6 @@ def get_top_submissions():
                                         locked=submission.locked,
                                         created_at=created_at)
             submission_obj.save()
-
-            # create SubmissionScore object
-            submission_score = SubmissionScore(submission=submission_obj,
-                                               score=submission.score)
-            submission_score.save()
-
-            # create SubmissionNumComments object
-            submission_num_comments = SubmissionNumComments(submission=submission_obj,
-                                                            num_comments=submission.num_comments)
-            submission_num_comments.save()
-
-            # create SubmissionUpvoteRatio object
-            submission_upvote_ratio = SubmissionUpvoteRatio(submission=submission_obj,
-                                                            upvote_ratio=submission.upvote_ratio)
-            submission_upvote_ratio.save()
 
             # create Comment objects
             submission.comments.replace_more(limit=0)
@@ -227,6 +226,18 @@ def get_top_submissions():
 
             for comment in comments:
                 create_comment_obj(comment, submission_obj)
+
+        # create new tracker objects
+        submission_score = SubmissionScore(submission=submission_obj,
+                                           score=submission.score)
+        submission_score.save()
+        submission_num_comments = SubmissionNumComments(submission=submission_obj,
+                                                        num_comments=submission.num_comments)
+        submission_num_comments.save()
+        submission_upvote_ratio = SubmissionUpvoteRatio(submission=submission_obj,
+                                                        upvote_ratio=submission.upvote_ratio)
+        submission_upvote_ratio.save()
+
         rank += 1
 
     # reset rank for submissions no longer in top 100
