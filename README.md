@@ -5,7 +5,7 @@
 AlienDB is an analytics platform for trending Reddit threads. It stores historical data for the top threads on Reddit at any given time, including karma trends and comment stats. More information is available at https://aliendb.info/about.
 
 ## Project structure
-AlienDB is structured as 5 Docker services. 3 of these, `PostgreSQL`, `Redis`, and `RabbitMQ`, use images from the public Docker repository. The other two, `nginx` and `web` need to be built manually. The project makes use of [docker-compose](https://docs.docker.com/compose/) to handle service definitions.
+AlienDB is structured as 4 Docker services. 3 of these, `PostgreSQL`, `Redis`, and `RabbitMQ`, use images from the public Docker repository. The final one, `web` needs to be built manually. The project makes use of [docker-compose](https://docs.docker.com/compose/) to handle service definitions.
 
 The web app itself uses Django as a backend. The main code is put in the app called 'analytics' which is found in `web/aliendb/apps/analytics`. Celery is used to automate scheduled tasks, notably the `get_top_submissions` task, which retrieves the top 100 posts on /r/all to update their stats.
 

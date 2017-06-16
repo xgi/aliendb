@@ -5,7 +5,11 @@ WORKDIR /usr/src/app
 
 # install dependencies
 RUN apt-get update --fix-missing
-RUN apt-get install -y supervisor netcat
+RUN apt-get install -y nginx supervisor netcat
+
+# copy nginx config to container
+RUN rm /etc/nginx/sites-enabled/default
+ADD ./nginx/sites-enabled/ /etc/nginx/sites-enabled
 
 # install module dependencies
 COPY requirements.txt /usr/src/app/

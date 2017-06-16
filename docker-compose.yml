@@ -32,8 +32,7 @@ services:
     command: /usr/src/app/startup.sh
     build: ./web
     ports:
-      - "8000:8000"
-      - "5555:5555"
+      - "80:80"
     links:
       - postgres:postgres
       - redis:redis
@@ -43,16 +42,6 @@ services:
     env_file: .env
     environment:
       DEBUG: 'true'
-
-  nginx:
-    restart: always
-    build: ./nginx/
-    ports:
-      - "80:80"
-    volumes:
-      - /www/static
-    links:
-      - web:web
 
 volumes:
   pgdata:
