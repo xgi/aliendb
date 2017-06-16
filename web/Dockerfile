@@ -16,8 +16,8 @@ ENV NLTK_DATA /usr/local/lib/nltk_data
 RUN python -m textblob.download_corpora
 
 # copy nginx config to container
-RUN rm /etc/nginx/sites-enabled/default
-ADD ./nginx/sites-enabled/ /etc/nginx/sites-enabled
+#RUN rm /etc/nginx/nginx.conf
+ADD nginx.conf /etc/nginx/nginx.conf
 
 # copy local project dir to container
 ADD ./ /usr/src/app
