@@ -7,10 +7,6 @@ WORKDIR /usr/src/app
 RUN apt-get update --fix-missing
 RUN apt-get install -y nginx supervisor netcat
 
-# copy nginx config to container
-RUN rm /etc/nginx/sites-enabled/default
-ADD ./nginx/sites-enabled/ /etc/nginx/sites-enabled
-
 # install module dependencies
 COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
@@ -18,6 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir /usr/local/lib/nltk_data
 ENV NLTK_DATA /usr/local/lib/nltk_data
 RUN python -m textblob.download_corpora
+
+# copy nginx config to container
+RUN rm /etc/nginx/sites-enabled/default
+ADD ./nginx/sites-enabled/ /etc/nginx/sites-enabled
 
 # copy local project dir to container
 ADD ./ /usr/src/app
