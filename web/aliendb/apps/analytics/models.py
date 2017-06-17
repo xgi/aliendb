@@ -1,7 +1,7 @@
 from django.db import models
 
 class Subreddit(models.Model):
-    name = models.CharField(primary_key=True, unique=True, max_length=20)
+    name = models.CharField(primary_key=True, unique=True, max_length=21)
     score = models.IntegerField(default=0)
     num_comments = models.IntegerField(default=0)
     tracked_submissions = models.IntegerField(default=0)
