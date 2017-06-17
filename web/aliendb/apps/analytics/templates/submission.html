@@ -19,7 +19,7 @@
       <div class="card card-inverse card-primary">
         <div class="card-block">
           <h4 class="card-title"><a href="https://redd.it/{{ submission.id }}">{{ submission.title }}</a></h4>
-          <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit }}">/r/{{ submission.subreddit }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+          <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
         </div>
       </div>
     </div>

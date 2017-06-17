@@ -35,21 +35,7 @@ def home(request):
     })
 
 def subreddits(request):
-    subreddit_objs = Submission.objects.values_list('subreddit').annotate(sub_count=Count('subreddit')).order_by('-sub_count')[:100]
-
-    subreddits = []
-    for subreddit in subreddit_objs:
-        submissions = Submission.objects.filter(subreddit__iexact=subreddit[0])
-        total_karma = sum(submission.karma_peak for submission in submissions)
-        total_comments = sum(submission.comments_peak for submission in submissions)
-
-        subreddits.append({
-            'name': subreddit[0],
-            'total_karma': total_karma,
-            'total_comments': total_comments,
-            'total_submissions': len(submissions)
-        })
-
+    subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
 
     return render(request, 'subreddits.html', {
         'page_category': 'subreddits',
@@ -92,19 +78,15 @@ def submission(request, id):
     })
 
 def subreddit(request, subreddit):
-    submissions = Submission.objects.filter(subreddit__iexact=subreddit).order_by('-karma_peak')
+    subreddit = Subreddit.objects.get(name=subreddit)
+    submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
 
     if len(submissions) == 0:
         raise Http404("Subreddit has no recorded submissions")
 
-    total_karma = sum(submission.karma_peak for submission in submissions)
-    total_comments = sum(submission.comments_peak for submission in submissions)
-
     return render(request, 'subreddit.html', {
         'page_category': 'subreddits',
         'subreddit': subreddit,
-        'total_karma': total_karma,
-        'total_comments': total_comments,
         'submissions': submissions,
     })
 
@@ -136,9 +118,9 @@ def search(request):
             # order submissions
             # order_by == 'relevance' is just the default order
             if order_by == 'karma':
-                submissions = submissions.order_by('-karma_peak')
+                submissions = submissions.order_by('-score')
             elif order_by == 'comments':
-                submissions = submissions.order_by('-comments_peak')
+                submissions = submissions.order_by('-num_comments')
 
             # remove submissions not in time frame
             if time and time != 'all':
@@ -157,11 +139,17 @@ def search(request):
 
             # remove submissions not in requested subreddits
             if subreddits is not None and subreddits is not '':
-                subreddits_arr = subreddits.split(',')
-                # create query which ORs iexact matches of subreddit names
+                subreddit_objs = ['']
+                for subreddit in subreddits.split(','):
+                    try:
+                        subreddit_objs.append(Subreddit.objects.get(name=subreddit))
+                    except Subreddit.DoesNotExist:
+                        continue
+
+                # create query which ORs subreddit matches
                 query_objs = Q()
-                for s in subreddits_arr:
-                    query_objs.add(Q(subreddit__iexact=s), Q.OR)
+                for subreddit in subreddit_objs:
+                    query_objs.add(Q(subreddit=subreddit), Q.OR)
 
                 submissions = submissions.filter(query_objs)
 

@@ -91,12 +91,12 @@
           <tbody>
             {% for submission in submissions|slice:":100" %}
             <tr>
-              <td id="karma">{{ submission.karma_peak|intcomma }}</th>
+              <td id="karma">{{ submission.score|intcomma }}</th>
               <td id="title">
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
                 <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
               </td>
-              <td id="subreddit" class="hidden-sm-down"><a href="/subreddit/{{ submission.subreddit }}">r/{{ submission.subreddit }}</a></td>
+              <td id="subreddit" class="hidden-sm-down"><a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
             </tr>
             {% endfor %}
           </tbody>

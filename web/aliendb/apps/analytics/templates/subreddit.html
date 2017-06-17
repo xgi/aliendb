@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% block title %}r/{{ subreddit }} - AlienDB{% endblock title %}
+{% block title %}r/{{ subreddit.name }} - AlienDB{% endblock title %}
 {% block content %}
 {% load humanize %}
 <div class="container-fluid">
@@ -7,7 +7,7 @@
     <div class="col-12 col-md-2 col-lg-2">
       <div class="card card-inverse card-primary text-center">
         <div class="card-block">
-          <h2>{{ submissions|length }}</h2>
+          <h2>{{ subreddit.tracked_submissions }}</h2>
           <span>Total submissions</span>
         </div>
       </div>
@@ -15,7 +15,7 @@
     <div class="col-12 col-md-2 col-lg-2">
       <div class="card card-inverse card-primary text-center">
         <div class="card-block">
-          <h2>{{ total_karma|intcomma }}</h2>
+          <h2>{{ subreddit.score|intcomma }}</h2>
           <span>Total karma</span>
         </div>
       </div>
@@ -23,7 +23,7 @@
     <div class="col-12 col-md-2 col-lg-2">
       <div class="card card-inverse card-primary text-center">
         <div class="card-block">
-          <h2>{{ total_comments|intcomma }}</h2>
+          <h2>{{ subreddit.num_comments|intcomma }}</h2>
           <span>Total comments</span>
         </div>
       </div>
@@ -35,7 +35,7 @@
         <table class="table table-striped table-hover table-bordered">
           <thead class="thead-inverse">
             <tr>
-              <th class="table-caption" colspan="4">Top posts from /r/{{ subreddit }}</th>
+              <th class="table-caption" colspan="4">Top posts from /r/{{ subreddit.name }}</th>
             </tr>
           </thead>
           <thead class="thead-inverse">
@@ -48,8 +48,8 @@
           <tbody>
             {% for submission in submissions|slice:":100" %}
             <tr>
-              <td id="karma">{{ submission.karma_peak|intcomma }}</td>
-              <td id="comments">{{ submission.comments_peak|intcomma }}</td>
+              <td id="karma">{{ submission.score|intcomma }}</td>
+              <td id="comments">{{ submission.num_comments|intcomma }}</td>
               <td id="title">
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
                 <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>

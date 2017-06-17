@@ -23,9 +23,9 @@
           <tbody>
             {% for subreddit in subreddits|slice:":100" %}
             <tr>
-              <td id="submissions">{{ subreddit.total_submissions|intcomma }}</td>
-              <td id="karma">{{ subreddit.total_karma|intcomma }}</td>
-              <td id="comments" class="hidden-sm-down">{{ subreddit.total_comments|intcomma }}</td>
+              <td id="submissions">{{ subreddit.tracked_submissions|intcomma }}</td>
+              <td id="karma">{{ subreddit.score|intcomma }}</td>
+              <td id="comments" class="hidden-sm-down">{{ subreddit.num_comments|intcomma }}</td>
               <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
             </tr>
             {% endfor %}
