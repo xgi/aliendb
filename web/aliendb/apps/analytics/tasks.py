@@ -145,8 +145,8 @@ def get_top_submissions():
 
             # update subreddit stats
             subreddit = submission_obj.subreddit
-            subreddit.score = subreddit.score + (submission_obj.score - submission.score)
-            subreddit.num_comments = subreddit.num_comments + (submission_obj.num_comments - submission.num_comments)
+            subreddit.score = subreddit.score + (submission.score - submission_obj.score)
+            subreddit.num_comments = subreddit.num_comments + (submission.num_comments - submission_obj.num_comments)
             subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             subreddit.save()
 
