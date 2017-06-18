@@ -129,7 +129,11 @@ def get_top_submissions():
             submission_objs.append(submission_obj)
 
             # update Submission obj
-            submission.comments.replace_more(limit=0)
+            try:
+                submission.comments.replace_more(limit=0)
+            except prawcore.exceptions.RequestException:
+                # reddit api is likely unavailable
+                continue
             comments = submission.comments.list()
 
             # update submission details
@@ -151,13 +155,17 @@ def get_top_submissions():
             subreddit.save()
 
             # create new Comment objects if necessary
-            if submission.num_comments > 500:
-                # get the submission again, sorted by oldest comments
-                submission = r.submission(id=submission.id)
-                submission.comment_sort = 'old'
-                submission.comments.replace_more(limit=0)
-                # append new flattened comments to comments array
-                comments += submission.comments.list()
+            try:
+                if submission.num_comments > 500:
+                    # get the submission again, sorted by oldest comments
+                    submission = r.submission(id=submission.id)
+                    submission.comment_sort = 'old'
+                    submission.comments.replace_more(limit=0)
+                    # append new flattened comments to comments array
+                    comments += submission.comments.list()
+            except prawcore.exceptions.RequestException:
+                # reddit api is likely unavailable
+                continue
 
             for comment in comments:
                 create_comment_obj(comment, submission_obj)
@@ -213,16 +221,24 @@ def get_top_submissions():
             submission_obj.save()
 
             # create Comment objects
-            submission.comments.replace_more(limit=0)
+            try:
+                submission.comments.replace_more(limit=0)
+            except prawcore.exceptions.RequestException:
+                # reddit api is likely unavailable
+                continue
             comments = submission.comments.list()
 
-            if submission.num_comments > 500:
-                # get the submission again, sorted by oldest comments
-                submission.comment_sort = 'old'
-                submission = r.submission(id=submission.id)
-                submission.comments.replace_more(limit=0)
-                # append new flattened comments to comments array
-                comments += submission.comments.list()
+            try:
+                if submission.num_comments > 500:
+                    # get the submission again, sorted by oldest comments
+                    submission.comment_sort = 'old'
+                    submission = r.submission(id=submission.id)
+                    submission.comments.replace_more(limit=0)
+                    # append new flattened comments to comments array
+                    comments += submission.comments.list()
+            except prawcore.exceptions.RequestException:
+                # reddit api is likely unavailable
+                continue
 
             for comment in comments:
                 create_comment_obj(comment, submission_obj)
