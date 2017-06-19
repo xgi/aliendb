@@ -90,7 +90,8 @@ def create_comment_obj(comment, submission_obj):
             subreddit.average_is_mod = (int(is_mod) + subreddit.average_is_mod * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
             subreddit.average_is_admin = (int(is_admin) + subreddit.average_is_admin * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
             subreddit.average_is_special = (int(is_special) + subreddit.average_is_special * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
-        subreddit.average_gilded = (comment.gilded + subreddit.average_gilded * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+        if comment.gilded > 0:
+            subreddit.average_gilded = (comment.gilded + subreddit.average_gilded * subreddit.tracked_submissions) / (subreddit.tracked_submissions)
         subreddit.average_comments_polarity = (polarity + subreddit.average_comments_polarity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
         subreddit.average_comments_subjectivity = (subjectivity + subreddit.average_comments_subjectivity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
