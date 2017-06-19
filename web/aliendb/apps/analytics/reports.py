@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.http import Http404
 
 from .models import *
 import datetime
