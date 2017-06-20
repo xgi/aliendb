@@ -258,7 +258,7 @@ def get_top_submissions():
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
             # update subreddit stats with final upvote_ratio and gilded
-            subreddit = submission_obj.subredit
+            subreddit = submission_obj.subreddit
             subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             current_gilded = sum(c.gilded for c in Comment.objects.filter(submission=submission_obj))
             subreddit.average_gilded = (current_gilded + subreddit.average_gilded * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
