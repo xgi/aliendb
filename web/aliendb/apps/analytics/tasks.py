@@ -90,8 +90,6 @@ def create_comment_obj(comment, submission_obj):
             subreddit.average_is_mod = (int(is_mod) + subreddit.average_is_mod * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
             subreddit.average_is_admin = (int(is_admin) + subreddit.average_is_admin * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
             subreddit.average_is_special = (int(is_special) + subreddit.average_is_special * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
-        if comment.gilded > 0:
-            subreddit.average_gilded = (comment.gilded + subreddit.average_gilded * subreddit.tracked_submissions) / (subreddit.tracked_submissions)
         subreddit.average_comments_polarity = (polarity + subreddit.average_comments_polarity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
         subreddit.average_comments_subjectivity = (subjectivity + subreddit.average_comments_subjectivity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
@@ -152,7 +150,6 @@ def get_top_submissions():
             subreddit = submission_obj.subreddit
             subreddit.score = subreddit.score + (submission.score - submission_obj.score)
             subreddit.num_comments = subreddit.num_comments + (submission.num_comments - submission_obj.num_comments)
-            subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             subreddit.save()
 
             # create new Comment objects if necessary
@@ -193,7 +190,6 @@ def get_top_submissions():
                 subreddit = Subreddit(name=submission.subreddit)
             subreddit.score = subreddit.score + submission.score
             subreddit.num_comments = subreddit.num_comments + submission.num_comments
-            subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             subreddit.average_submission_polarity = (polarity + subreddit.average_submission_polarity * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             subreddit.average_submission_subjectivity = (subjectivity + subreddit.average_submission_subjectivity * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             subreddit.tracked_submissions = subreddit.tracked_submissions + 1
@@ -261,6 +257,11 @@ def get_top_submissions():
     submission_ids = [submission.id for submission in submissions]
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
+            # update subreddit stats with final upvote_ratio and gilded
+            subreddit = submission_obj.subredit
+            subreddit.average_upvote_ratio = (submission.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
+            current_gilded = sum(c.gilded for c in Comment.objects.filter(submission=submission_obj))
+            subreddit.average_gilded = (current_gilded + subreddit.average_gilded * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
             submission_obj.rank = -1
             submission_obj.save()
 
