@@ -40,10 +40,10 @@ def submission(request):
         [c.is_special for c in comments].count(True)
     ]
     special_users_subreddit = [
-        subreddit.average_is_op,
-        subreddit.average_is_mod,
-        subreddit.average_is_admin,
-        subreddit.average_is_special,
+        float("{0:.2f}".format(subreddit.average_is_op)),
+        float("{0:.2f}".format(subreddit.average_is_mod)),
+        float("{0:.2f}".format(subreddit.average_is_admin)),
+        float("{0:.2f}".format(subreddit.average_is_special)),
     ]
 
     ## gilded
@@ -51,22 +51,22 @@ def submission(request):
 
     ## polarity
     polarity_submission = [
-        submission.polarity,
-        sum(c.polarity for c in comments) / len(comments)
+        float("{0:.4f}".format(submission.polarity)),
+        float("{0:.4f}".format(sum(c.polarity for c in comments) / len(comments)))
     ]
     polarity_subreddit = [
-        subreddit.average_submission_polarity,
-        subreddit.average_comments_polarity
+        float("{0:.4f}".format(subreddit.average_submission_polarity)),
+        float("{0:.4f}".format(subreddit.average_comments_polarity))
     ]
 
     ## subjectivity
     subjectivity_submission = [
-        submission.subjectivity,
-        sum(c.subjectivity for c in comments) / len(comments)
+        float("{0:.4f}".format(submission.subjectivity)),
+        float("{0:.4f}".format(sum(c.subjectivity for c in comments) / len(comments)))
     ]
     subjectivity_subreddit = [
-        subreddit.average_submission_subjectivity,
-        subreddit.average_comments_subjectivity
+        float("{0:.4f}".format(subreddit.average_submission_subjectivity)),
+        float("{0:.4f}".format(subreddit.average_comments_subjectivity))
     ]
 
     data = {
@@ -76,7 +76,7 @@ def submission(request):
         },
         'upvote_ratio': {
             'upvote_ratios': upvote_ratios,
-            'average_upvote_ratio': subreddit.average_upvote_ratio
+            'average_upvote_ratio': float("{0:.2f}".format(subreddit.average_upvote_ratio))
         },
         'special_users': {
             'submission': special_users_submission,
@@ -85,7 +85,7 @@ def submission(request):
         'gilded': {
             'data': [
                 gilded_submission,
-                subreddit.average_gilded
+                float("{0:.2f}".format(subreddit.average_gilded))
             ]
         },
         'polarity': {
