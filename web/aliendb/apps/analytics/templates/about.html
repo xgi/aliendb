@@ -14,11 +14,12 @@
         <p>AlienDB monitors the top 100 submissions on
           <a href="https://reddit.com/r/all">/r/all</a> and periodically records
           information including each submission's rank, its number of comments,
-          and its current karma. Additionally, each comment is analyzed using
-          the <a href="http://nltk.org">Natural Language Toolkit</a> (NLTK) and
-          <a href="https://textblob.readthedocs.io">TextBlob</a> for
-          statistics such as polarity, subjectivity, gold given, and special
-          user presence. Comment text is <b>not</b> stored.
+          and its current karma. Each comment is processed to record cumulative
+          gold given and special user presence. Comment text is <b>not</b>
+          stored. Additionally, submissions are analyzed using the
+          <a href="http://nltk.org">Natural Language Toolkit</a> (NLTK) and
+          <a href="https://textblob.readthedocs.io">TextBlob</a> for recording
+          the polarity and subjectivity of submission titles and comments.
         </p>
         <p>Statistics from individual submissions are also used to provide
           subreddit averages. It is important to note that only submissions
