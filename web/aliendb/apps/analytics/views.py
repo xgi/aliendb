@@ -78,7 +78,10 @@ def submission(request, id):
     })
 
 def subreddit(request, subreddit):
-    subreddit = Subreddit.objects.get(name=subreddit)
+    try:
+        subreddit = Subreddit.objects.get(name=subreddit)
+    except Subreddit.DoesNotExist:
+        raise Http404("Subreddit was not found")
     submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
 
     if len(submissions) == 0:
