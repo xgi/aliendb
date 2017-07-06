@@ -145,7 +145,7 @@ def search(request):
                 subreddit_objs = ['']
                 for subreddit in subreddits.split(','):
                     try:
-                        subreddit_objs.append(Subreddit.objects.get(name=subreddit))
+                        subreddit_objs.append(Subreddit.objects.get(name__iexact=subreddit))
                     except Subreddit.DoesNotExist:
                         continue
 
