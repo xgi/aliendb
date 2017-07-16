@@ -1,5 +1,10 @@
 {% extends "_base.html" %}
 {% block title %}r/{{ subreddit.name }} - AlienDB{% endblock title %}
+{% block metadata %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="AlienDB - /r/{{ subreddit.name }}">
+<meta property="og:description" content="Analytics for /r/{{ subreddit.name }} on AlienDB.">
+{% endblock %}
 {% block content %}
 {% load humanize %}
 <div class="header header-oneline">
