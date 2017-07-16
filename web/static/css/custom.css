@@ -19,7 +19,7 @@
 /* General */
 
 body {
-  padding-top: 120px;
+  padding-top: 72px;
   font-family: 'Lato', Arial, sans-serif;
 }
 
@@ -34,7 +34,7 @@ a:hover {
 /* Navbar */
 
 .navbar {
-  min-height: 72px;
+  height: 72px;
 }
 
 .navbar .container-fluid {
@@ -55,22 +55,18 @@ a:hover {
 
 .header {
   min-height: 150px;
-}
-
-.header-box {
-  position: fixed;
-  top: 4rem;
   width: 100%;
   color: white;
   text-align: center;
   background-color: #263238;
   margin-bottom: 2rem;
-  padding-top: 3rem;
+  padding-top: 1.8rem;
   padding-bottom: 1rem;
 }
 
 .header h1 {
   color: white;
+  font-weight: bold;
 }
 
 .lead a {
