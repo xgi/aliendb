@@ -56,6 +56,12 @@ a:hover {
   margin-top: 1rem;
 }
 
+@media (max-width: 1023px) {
+  .navbar-nav {
+    margin-top: 0.5rem;
+  }
+}
+
 /* Page header */
 
 .header {
