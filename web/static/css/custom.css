@@ -35,7 +35,6 @@ a:hover {
 
 .navbar {
   min-height: 72px;
-  margin-bottom: 1rem;
 }
 
 .navbar .container-fluid {
@@ -50,6 +49,35 @@ a:hover {
 .navbar-toggler {
   color: white;
   border-color: white !important;
+}
+
+/* Page header */
+
+.header {
+  min-height: 150px;
+}
+
+.header-box {
+  position: fixed;
+  top: 4rem;
+  width: 100%;
+  color: white;
+  background-color: #263238;
+  margin-bottom: 2rem;
+  padding-top: 3rem;
+  padding-bottom: 1rem;
+}
+
+.header h1 {
+  color: white;
+}
+
+.lead a {
+  color: #2196F3;
+}
+
+.lead a:hover {
+  text-decoration: underline;
 }
 
 /* Table */

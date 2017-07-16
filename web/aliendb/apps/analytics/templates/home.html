@@ -1,20 +1,22 @@
 {% extends "_base.html" %}
 {% block title %}AlienDB{% endblock title %}
 {% block content %}
-<div class="container-fluid">
-  <div class="row justify-content-sm-center">
-    <div class="col-xs-12 col-md-11 col-lg-10">
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <h1 class="display-5">Welcome to AlienDB!</h1>
-          <p class="lead">AlienDB is an analytics platform for trending Reddit
-            threads. It stores historical data for the top threads on Reddit,
-            including karma trends and comment stats.</p>
-          <a class="btn btn-primary btn-lg" href="/about" role="button">Learn more</a>
+<div class="header">
+  <div class="header-box">
+    <div class="container-fluid">
+      <div class="row justify-content-sm-center">
+        <div class="col-xs-12 col-md-11 col-lg-10">
+          <h1>AlienDB</h1>
+          <p class="lead">An analytics platform for trending Reddit
+            threads. <a href="/about">Learn more.</a>
+          </p>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<div class="container-fluid">
   <div class="row justify-content-sm-center">
     <div class="col-xs-12 col-md-11 col-lg-10">
       <div class="bs-component">
