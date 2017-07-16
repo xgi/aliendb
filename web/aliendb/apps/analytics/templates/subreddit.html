@@ -19,41 +19,45 @@
 
 <div class="container-fluid">
   <div class="row justify-content-sm-center">
-    <div class="col-6 col-md-3 col-xl-2">
-      <div class="card card-inverse card-primary text-center">
-        <div class="card-block">
-          <h5>{{ subreddit.tracked_submissions }}</h5>
-          <span>Posts</span>
+    <div class="col-12 col-md-11 col-lg-10">
+      <div class="row justify-content-sm-center">
+        <div class="col-6 col-md-3 col-xl-2">
+          <div class="card card-inverse card-primary text-center">
+            <div class="card-block">
+              <h5>{{ subreddit.tracked_submissions }}</h5>
+              <span>Posts</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3 col-xl-2">
-      <div class="card card-inverse card-primary text-center">
-        <div class="card-block">
-          <h5>{{ subreddit.score|intcomma }}</h5>
-          <span>Karma</span>
+        <div class="col-6 col-md-3 col-xl-2">
+          <div class="card card-inverse card-primary text-center">
+            <div class="card-block">
+              <h5>{{ subreddit.score|intcomma }}</h5>
+              <span>Karma</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3 col-xl-2">
-      <div class="card card-inverse card-primary text-center">
-        <div class="card-block">
-          <h5>{{ subreddit.num_comments|intcomma }}</h5>
-          <span>Comments</span>
+        <div class="col-6 col-md-3 col-xl-2">
+          <div class="card card-inverse card-primary text-center">
+            <div class="card-block">
+              <h5>{{ subreddit.num_comments|intcomma }}</h5>
+              <span>Comments</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3 col-xl-2">
-      <div class="card card-inverse card-primary text-center">
-        <div class="card-block">
-          <h5>{% widthratio subreddit.average_upvote_ratio 1 100 %}%</h5>
-          <span>Upvoted</span>
+        <div class="col-6 col-md-3 col-xl-2">
+          <div class="card card-inverse card-primary text-center">
+            <div class="card-block">
+              <h5>{% widthratio subreddit.average_upvote_ratio 1 100 %}%</h5>
+              <span>Upvoted</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="row justify-content-sm-center">
-    <div class="col-xs-12 col-md-11 col-lg-10">
+    <div class="col-12 col-md-11 col-lg-10">
       <div class="bs-component">
         <table class="table table-striped table-hover table-bordered">
           <thead class="thead-inverse">
