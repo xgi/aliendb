@@ -34,7 +34,8 @@ a:hover {
 /* Navbar */
 
 .navbar {
-  height: 72px;
+  min-height: 72px;
+  padding: 0;
 }
 
 .navbar .container-fluid {
@@ -49,6 +50,10 @@ a:hover {
 .navbar-toggler {
   color: white;
   border-color: white !important;
+}
+
+.navbar-brand.hidden-md-up, .navbar-toggler {
+  margin-top: 1rem;
 }
 
 /* Page header */
