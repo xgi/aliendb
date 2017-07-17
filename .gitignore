@@ -1,4 +1,5 @@
 __pycache__
+.vscode
 .atom-build.yml
 .env-custom
 .env-production
