@@ -240,22 +240,30 @@ def get_top_submissions():
             current_is_admin = [c.is_admin for c in comments].count(True)
             current_is_special = [c.is_special for c in comments].count(True)
 
-            update_average(subreddit.average_submission_polarity, submission_obj.polarity,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_submission_subjectivity, submission_obj.subjectivity,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_upvote_ratio, submission_obj.upvote_ratio,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_gilded, current_gilded,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_is_op, current_is_op,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_is_mod, current_is_mod,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_is_admin, current_is_admin,
-                           subreddit.tracked_submissions)
-            update_average(subreddit.average_is_special, current_is_special,
-                           subreddit.tracked_submissions)
+            subreddit.average_submission_polarity = update_average(subreddit.average_submission_polarity, 
+                                                                   submission_obj.polarity,
+                                                                   subreddit.tracked_submissions)
+            subreddit.average_submission_subjectivity = update_average(subreddit.average_submission_subjectivity,
+                                                                       submission_obj.subjectivity,
+                                                                       subreddit.tracked_submissions)
+            subreddit.average_upvote_ratio = update_average(subreddit.average_upvote_ratio,
+                                                            submission_obj.upvote_ratio,
+                                                            subreddit.tracked_submissions)
+            subreddit.average_gilded = update_average(subreddit.average_gilded,
+                                                      current_gilded,
+                                                      subreddit.tracked_submissions)
+            subreddit.average_is_op = update_average(subreddit.average_is_op,
+                                                     current_is_op,
+                                                     subreddit.tracked_submissions)
+            subreddit.average_is_mod = update_average(subreddit.average_is_mod,
+                                                      current_is_mod,
+                                                      subreddit.tracked_submissions)
+            subreddit.average_is_admin = update_average(subreddit.average_is_admin,
+                                                        current_is_admin,
+                                                        subreddit.tracked_submissions)
+            subreddit.average_is_special = update_average(subreddit.average_is_special,
+                                                          current_is_special,
+                                                          subreddit.tracked_submissions)
 
             subreddit.score = subreddit.score + submission_obj.score
             subreddit.num_comments = subreddit.num_comments + submission_obj.num_comments
