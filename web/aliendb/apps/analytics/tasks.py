@@ -1,21 +1,21 @@
-from celery import Celery
-from django.conf import settings
 import datetime
-import math
 import os
-import praw, prawcore
 import string
+from celery import Celery
+import praw
+import prawcore
 from textblob import TextBlob
+from .helpers import *
 from .models import *
 
 app = Celery('tasks')
 app.config_from_object('django.conf:settings')
 
-r = praw.Reddit(client_id=os.environ['PRAW_CLIENT_ID'],
-                client_secret=os.environ['PRAW_CLIENT_SECRET'],
-                username=os.environ['PRAW_REDDIT_USERNAME'],
-                password=os.environ['PRAW_REDDIT_PASSWORD'],
-                user_agent=os.environ['PRAW_USER_AGENT'])
+reddit = praw.Reddit(client_id=os.environ['PRAW_CLIENT_ID'],
+                     client_secret=os.environ['PRAW_CLIENT_SECRET'],
+                     username=os.environ['PRAW_REDDIT_USERNAME'],
+                     password=os.environ['PRAW_REDDIT_PASSWORD'],
+                     user_agent=os.environ['PRAW_USER_AGENT'])
 
 def create_comment_obj(comment, submission_obj):
     # creates comment model from praw comment
@@ -28,7 +28,7 @@ def create_comment_obj(comment, submission_obj):
 
         # determine comment distinguised properties
         if comment.author is not None:
-            is_op = comment.author.name==submission_obj.author
+            is_op = comment.author.name == submission_obj.author
             if comment.distinguished:
                 is_mod = 'moderator' in comment.distinguished
                 is_admin = 'admin' in comment.distinguished
@@ -50,18 +50,6 @@ def create_comment_obj(comment, submission_obj):
         subjectivity = blob.subjectivity
 
         num_characters = sum(c in string.ascii_letters for c in comment.body)
-
-        # determine complexity of comment with ARI
-        # see: https://en.wikipedia.org/wiki/Automated_readability_index
-        #if len(blob.words) > 0 and len(blob.sentences) > 0:
-        #    num_characters = 0
-        #    for word in blob.words:
-        #        num_characters += len(word)
-        #    ari = math.ceil(
-        #        4.71 * (num_characters / len(blob.words)) +
-        #        0.5 * (len(blob.words) / len(blob.sentences)) - 21.43)
-        #else:
-        #    ari = 0
 
         created_at = datetime.datetime.utcfromtimestamp(comment.created_utc)
         created_at = created_at.replace(tzinfo=datetime.timezone.utc)
@@ -85,8 +73,10 @@ def create_comment_obj(comment, submission_obj):
 
         # update subreddit stats
         subreddit = comment_obj.submission.subreddit
-        subreddit.average_comments_polarity = (polarity + subreddit.average_comments_polarity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
-        subreddit.average_comments_subjectivity = (subjectivity + subreddit.average_comments_subjectivity * subreddit.tracked_comments) / (1 + subreddit.tracked_comments)
+        update_average(subreddit.average_comments_polarity, polarity,
+                       subreddit.tracked_comments)
+        update_average(subreddit.average_comments_subjectivity, subjectivity,
+                       subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
         subreddit.save()
 
@@ -99,7 +89,7 @@ def create_comment_obj(comment, submission_obj):
 
 @app.task
 def get_top_submissions():
-    subreddit = r.subreddit('all')
+    subreddit = reddit.subreddit('all')
 
     try:
         submissions = [submission for submission in subreddit.hot(limit=100)]
@@ -145,7 +135,7 @@ def get_top_submissions():
             try:
                 if submission.num_comments > 500:
                     # get the submission again, sorted by oldest comments
-                    submission = r.submission(id=submission.id)
+                    submission = reddit.submission(id=submission.id)
                     submission.comment_sort = 'old'
                     submission.comments.replace_more(limit=0)
                     # append new flattened comments to comments array
@@ -212,7 +202,7 @@ def get_top_submissions():
                 if submission.num_comments > 500:
                     # get the submission again, sorted by oldest comments
                     submission.comment_sort = 'old'
-                    submission = r.submission(id=submission.id)
+                    submission = reddit.submission(id=submission.id)
                     submission.comments.replace_more(limit=0)
                     # append new flattened comments to comments array
                     comments += submission.comments.list()
@@ -244,23 +234,31 @@ def get_top_submissions():
             subreddit = submission_obj.subreddit
             comments = Comment.objects.filter(submission=submission_obj)
 
-            subreddit.score = subreddit.score + submission_obj.score
-            subreddit.num_comments = subreddit.num_comments + submission_obj.num_comments
-            subreddit.average_submission_polarity = (submission_obj.polarity + subreddit.average_submission_polarity * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-            subreddit.average_submission_subjectivity = (submission_obj.subjectivity + subreddit.average_submission_subjectivity * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-
             current_gilded = sum(c.gilded for c in comments)
             current_is_op = [c.is_op for c in comments].count(True)
             current_is_mod = [c.is_mod for c in comments].count(True)
             current_is_admin = [c.is_admin for c in comments].count(True)
             current_is_special = [c.is_special for c in comments].count(True)
 
-            subreddit.average_upvote_ratio = (submission_obj.upvote_ratio + subreddit.average_upvote_ratio * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-            subreddit.average_gilded = (current_gilded + subreddit.average_gilded * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-            subreddit.average_is_op = (current_is_op + subreddit.average_is_op * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-            subreddit.average_is_mod = (current_is_mod + subreddit.average_is_mod * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-            subreddit.average_is_admin = (current_is_admin + subreddit.average_is_admin * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
-            subreddit.average_is_special = (current_is_special + subreddit.average_is_special * subreddit.tracked_submissions) / (1 + subreddit.tracked_submissions)
+            update_average(subreddit.average_submission_polarity, submission_obj.polarity,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_submission_subjectivity, submission_obj.subjectivity,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_upvote_ratio, submission_obj.upvote_ratio,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_gilded, current_gilded,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_is_op, current_is_op,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_is_mod, current_is_mod,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_is_admin, current_is_admin,
+                           subreddit.tracked_submissions)
+            update_average(subreddit.average_is_special, current_is_special,
+                           subreddit.tracked_submissions)
+
+            subreddit.score = subreddit.score + submission_obj.score
+            subreddit.num_comments = subreddit.num_comments + submission_obj.num_comments
             subreddit.tracked_submissions = subreddit.tracked_submissions + 1
             subreddit.save()
 
