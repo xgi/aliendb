@@ -17,6 +17,102 @@ reddit = praw.Reddit(client_id=os.environ['PRAW_CLIENT_ID'],
                      password=os.environ['PRAW_REDDIT_PASSWORD'],
                      user_agent=os.environ['PRAW_USER_AGENT'])
 
+def create_submission_obj(submission, rank):
+    created_at = datetime.datetime.utcfromtimestamp(submission.created_utc)
+    created_at = created_at.replace(tzinfo=datetime.timezone.utc)
+
+    # get subreddit
+    try:
+        subreddit = Subreddit.objects.get(name=submission.subreddit)
+    except Subreddit.DoesNotExist:
+        subreddit = Subreddit.objects.create(name=submission.subreddit)
+
+    if hasattr(submission, 'author'):
+        if submission.author is not None:
+            author = submission.author.name
+
+    # perform sentiment analysis on submission title
+    blob = TextBlob(submission.title)
+    polarity = blob.polarity
+    subjectivity = blob.subjectivity
+
+    # create Submission object
+    submission_obj = Submission(id=submission.id,
+                                subreddit=subreddit,
+                                title=submission.title,
+                                author=author or None,
+                                rank=rank,
+                                rank_previous=rank,
+                                rank_peak=rank,
+                                score=submission.score,
+                                num_comments=submission.num_comments,
+                                polarity=polarity,
+                                subjectivity=subjectivity,
+                                domain=submission.domain,
+                                link_flair_text=submission.link_flair_text or '',
+                                upvote_ratio=submission.upvote_ratio,
+                                stickied=submission.stickied,
+                                over_18=submission.over_18,
+                                spoiler=submission.spoiler,
+                                locked=submission.locked,
+                                created_at=created_at)
+    submission_obj.save()
+
+    # create Comment objects
+    submission.comments.replace_more(limit=0)
+    comments = submission.comments.list()
+
+    if submission.num_comments > 500:
+        # get the submission again, sorted by oldest comments
+        submission.comment_sort = 'old'
+        submission = reddit.submission(id=submission.id)
+        submission.comments.replace_more(limit=0)
+        # append new flattened comments to comments array
+        comments += submission.comments.list()
+
+    for comment in comments:
+        create_comment_obj(comment, submission_obj)
+
+    return submission_obj
+
+def update_submission_obj(submission, rank):
+    submission_obj = Submission.objects.get(id=submission.id)
+
+    # determine rank on /r/all
+    submission_obj.rank_previous = submission_obj.rank
+    submission_obj.rank = rank
+    if rank < submission_obj.rank_peak:
+        submission_obj.rank_peak = rank
+
+    # update Submission obj
+    submission.comments.replace_more(limit=0)
+    comments = submission.comments.list()
+
+    # update submission details
+    submission_obj.score = submission.score
+    submission_obj.num_comments = submission.num_comments
+    if submission.link_flair_text is not None:
+        submission_obj.link_flair_text = submission.link_flair_text
+    submission_obj.upvote_ratio = submission.upvote_ratio
+    submission_obj.stickied = submission.stickied
+    submission_obj.over_18 = submission.over_18
+    submission_obj.spoiler = submission.spoiler
+    submission_obj.locked = submission.locked
+
+    # create new Comment objects if necessary
+    if submission.num_comments > 500:
+        # get the submission again, sorted by oldest comments
+        submission = reddit.submission(id=submission.id)
+        submission.comment_sort = 'old'
+        submission.comments.replace_more(limit=0)
+        # append new flattened comments to comments array
+        comments += submission.comments.list()
+
+    for comment in comments:
+        create_comment_obj(comment, submission_obj)
+
+    return submission_obj
+
 def create_comment_obj(comment, submission_obj):
     # creates comment model from praw comment
 
@@ -73,10 +169,12 @@ def create_comment_obj(comment, submission_obj):
 
         # update subreddit stats
         subreddit = comment_obj.submission.subreddit
-        update_average(subreddit.average_comments_polarity, polarity,
-                       subreddit.tracked_comments)
-        update_average(subreddit.average_comments_subjectivity, subjectivity,
-                       subreddit.tracked_comments)
+        subreddit.average_comments_polarity = update_average(subreddit.average_comments_polarity,
+                                                             polarity,
+                                                             subreddit.tracked_comments)
+        subreddit.average_comments_subjectivity = update_average(subreddit.average_comments_subjectivity,
+                                                                 subjectivity,
+                                                                 subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
         subreddit.save()
 
@@ -97,121 +195,19 @@ def get_top_submissions():
         # reddit api is likely unavailable
         return
 
-    rank = 1
+    rank = 0
     submission_objs = []
     for submission in submissions:
+        rank += 1
         try:
-            # Submission.objects.get() can raise Submission.DoesNotExist
-            submission_obj = Submission.objects.get(id=submission.id)
-
-            # determine rank on /r/all
-            submission_obj.rank_previous = submission_obj.rank
-            submission_obj.rank = rank
-            if rank < submission_obj.rank_peak:
-                submission_obj.rank_peak = rank
-            # don't save this obj yet - ranks will be repeated
+            if Submission.objects.filter(id=submission.id):
+                submission_obj = update_submission_obj(submission, rank)
+            else:
+                submission_obj = create_submission_obj(submission, rank)
             submission_objs.append(submission_obj)
-
-            # update Submission obj
-            try:
-                submission.comments.replace_more(limit=0)
-            except prawcore.exceptions.RequestException:
-                # reddit api is likely unavailable
-                continue
-            comments = submission.comments.list()
-
-            # update submission details
-            submission_obj.score = submission.score
-            submission_obj.num_comments = submission.num_comments
-            if submission.link_flair_text is not None:
-                submission_obj.link_flair_text = submission.link_flair_text
-            submission_obj.upvote_ratio = submission.upvote_ratio
-            submission_obj.stickied = submission.stickied
-            submission_obj.over_18 = submission.over_18
-            submission_obj.spoiler = submission.spoiler
-            submission_obj.locked = submission.locked
-
-            # create new Comment objects if necessary
-            try:
-                if submission.num_comments > 500:
-                    # get the submission again, sorted by oldest comments
-                    submission = reddit.submission(id=submission.id)
-                    submission.comment_sort = 'old'
-                    submission.comments.replace_more(limit=0)
-                    # append new flattened comments to comments array
-                    comments += submission.comments.list()
-            except prawcore.exceptions.RequestException:
-                # reddit api is likely unavailable
-                continue
-
-            for comment in comments:
-                create_comment_obj(comment, submission_obj)
-
-        except Submission.DoesNotExist:
-            # submission has not been added to db yet
-
-            created_at = datetime.datetime.utcfromtimestamp(submission.created_utc)
-            created_at = created_at.replace(tzinfo=datetime.timezone.utc)
-
-            # get subreddit
-            try:
-                subreddit = Subreddit.objects.get(name=submission.subreddit)
-            except Subreddit.DoesNotExist:
-                subreddit = Subreddit.objects.create(name=submission.subreddit)
-
-            if hasattr(submission, 'author'):
-                if submission.author is not None:
-                    author = submission.author.name
-
-            # perform sentiment analysis on submission title
-            blob = TextBlob(submission.title)
-            polarity = blob.polarity
-            subjectivity = blob.subjectivity
-
-            # create Submission object
-            submission_obj = Submission(id=submission.id,
-                                        subreddit=subreddit,
-                                        title=submission.title,
-                                        author=author or None,
-                                        rank=rank,
-                                        rank_previous=rank,
-                                        rank_peak=rank,
-                                        score=submission.score,
-                                        num_comments=submission.num_comments,
-                                        polarity=polarity,
-                                        subjectivity=subjectivity,
-                                        domain=submission.domain,
-                                        link_flair_text=submission.link_flair_text or '',
-                                        upvote_ratio=submission.upvote_ratio,
-                                        stickied=submission.stickied,
-                                        over_18=submission.over_18,
-                                        spoiler=submission.spoiler,
-                                        locked=submission.locked,
-                                        created_at=created_at)
-            submission_obj.save()
-
-            # create Comment objects
-            try:
-                submission.comments.replace_more(limit=0)
-            except prawcore.exceptions.RequestException:
-                # reddit api is likely unavailable
-                continue
-            comments = submission.comments.list()
-
-            try:
-                if submission.num_comments > 500:
-                    # get the submission again, sorted by oldest comments
-                    submission.comment_sort = 'old'
-                    submission = reddit.submission(id=submission.id)
-                    submission.comments.replace_more(limit=0)
-                    # append new flattened comments to comments array
-                    comments += submission.comments.list()
-            except prawcore.exceptions.RequestException:
-                # reddit api is likely unavailable
-                continue
-
-            for comment in comments:
-                create_comment_obj(comment, submission_obj)
+        except prawcore.exceptions.RequestException:
+            # reddit api is likely unavailable
+            continue
 
         # create new tracker objects
         submission_score = SubmissionScore(submission=submission_obj,
@@ -223,8 +219,6 @@ def get_top_submissions():
         submission_upvote_ratio = SubmissionUpvoteRatio(submission=submission_obj,
                                                         upvote_ratio=submission.upvote_ratio)
         submission_upvote_ratio.save()
-
-        rank += 1
 
     # reset rank for submissions no longer in top 100
     submission_ids = [submission.id for submission in submissions]
