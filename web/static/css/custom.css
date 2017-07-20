@@ -65,18 +65,14 @@ a:hover {
 /* Page header */
 
 .header {
+  display: flex;
   min-height: 150px;
   width: 100%;
   color: white;
   text-align: center;
   background-color: #263238;
   margin-bottom: 2rem;
-  padding-top: 1.8rem;
-  padding-bottom: 1rem;
-}
-
-.header-oneline {
-  padding-top: 3.2rem;
+  padding-top: 1rem;
 }
 
 .header h1 {
