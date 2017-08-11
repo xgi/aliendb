@@ -102,7 +102,7 @@ def subreddit(request, subreddit):
         raise Http404("Subreddit was not found")
 
     # try to get response from cache
-    response = cache.get("subreddit_response_%s" % subreddit)
+    response = cache.get("subreddit_response_%s" % subreddit.name)
     if response is not None:
         return response
 
@@ -116,7 +116,7 @@ def subreddit(request, subreddit):
         'subreddit': subreddit,
         'submissions': submissions,
     })
-    cache.set("subreddit_response_%s" % subreddit, response, 600)
+    cache.set("subreddit_response_%s" % subreddit.name, response, 600)
     return response
 
 def search(request):
