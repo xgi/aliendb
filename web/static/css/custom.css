@@ -166,6 +166,10 @@ td#title span {
   color: #ddd;
 }
 
+.subreddit-overview .card-block .card-text {
+  font-size: 1.2em;
+}
+
 /* Tabs */
 
 .nav-tabs-custom:before {

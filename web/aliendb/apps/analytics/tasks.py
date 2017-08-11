@@ -25,7 +25,14 @@ def create_submission_obj(submission, rank):
     try:
         subreddit = Subreddit.objects.get(name=submission.subreddit)
     except Subreddit.DoesNotExist:
+        # subreddit obj doesn't exist; create it
         subreddit = Subreddit.objects.create(name=submission.subreddit)
+        subreddit.title = submission.subreddit.title
+        if hasattr(submission.subreddit, 'public_description'):
+            subreddit.description = submission.subreddit.public_description
+        else:
+            subreddit.description = ''
+        subreddit.save()
 
     if hasattr(submission, 'author'):
         if submission.author is not None:
