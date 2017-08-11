@@ -40,8 +40,6 @@ services:
     volumes:
       - /usr/src/app
     env_file: .env
-    environment:
-      DEBUG: 'true'
 
 volumes:
   pgdata:
