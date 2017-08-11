@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.core.cache import cache
 from django.http import Http404
 from .models import *
@@ -15,7 +16,7 @@ def submission(request):
 
     # try to get full data variable from cache
     data = cache.get("submission_data_%s" % id)
-    if data is not None:
+    if data is not None and settings.DEBUG is False:
         return data
 
     subreddit = submission.subreddit

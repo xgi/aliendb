@@ -1,17 +1,18 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse, Http404
-from django.core.cache import cache
-from django.db.models import Q, Count
-from .models import *
-from . import reports
-
 from datetime import datetime, timedelta
 import time
+
+from django.conf import settings
+from django.core.cache import cache
+from django.db.models import Q, Count
+from django.http import JsonResponse, Http404
+from django.shortcuts import render, redirect
+from .models import *
+from . import reports
 
 def home(request):
     # try to get response from cache
     response = cache.get("home_response")
-    if response is not None:
+    if response is not None and settings.DEBUG is False:
         return response
 
     submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
@@ -41,7 +42,7 @@ def home(request):
 def subreddits(request):
     # try to get response from cache
     response = cache.get("subreddits_response")
-    if response is not None:
+    if response is not None and settings.DEBUG is False:
         return response
 
     subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
@@ -74,7 +75,7 @@ def submission(request, id):
 
     # try to get response from cache
     response = cache.get("submission_response_%s" % id)
-    if response is not None:
+    if response is not None and settings.DEBUG is False:
         return response
 
     submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
@@ -103,7 +104,7 @@ def subreddit(request, subreddit):
 
     # try to get response from cache
     response = cache.get("subreddit_response_%s" % subreddit.name)
-    if response is not None:
+    if response is not None and settings.DEBUG is False:
         return response
 
     submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
