@@ -9,44 +9,49 @@ from datetime import datetime, timedelta
 import time
 
 def home(request):
-    # try to get submissions from cache
-    submissions = cache.get("top_submissions")
-    if submissions is None:
-        submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
+    # try to get response from cache
+    response = cache.get("home_response")
+    if response is not None:
+        return response
 
-        # calculate rank deltas
-        for submission in submissions:
-            rank_delta = submission.rank_previous - submission.rank
-            if rank_delta > 0:
-                shape = '▲'
-                color = 'green'
-            elif rank_delta < 0:
-                shape = '▼'
-                color = 'red'
-            else:
-                shape = '▬'
-                color = 'orange'
-            submission.delta_color = color
-            submission.delta_string = "%s%d" % (shape, rank_delta)
+    submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
 
-        cache.set("top_submissions", submissions, 600)
+    # calculate rank deltas
+    for submission in submissions:
+        rank_delta = submission.rank_previous - submission.rank
+        if rank_delta > 0:
+            shape = '▲'
+            color = 'green'
+        elif rank_delta < 0:
+            shape = '▼'
+            color = 'red'
+        else:
+            shape = '▬'
+            color = 'orange'
+        submission.delta_color = color
+        submission.delta_string = "%s%d" % (shape, rank_delta)
 
-    return render(request, 'home.html', {
+    response = render(request, 'home.html', {
         'page_category': 'posts',
         'submissions': submissions,
     })
+    cache.set("home_response", response, 600)
+    return response
 
 def subreddits(request):
-    # try to get subreddits from cache
-    subreddits = cache.get("top_subreddits")
-    if subreddits is None:
-        subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
-        cache.set("top_subreddits", subreddits, 600)
+    # try to get response from cache
+    response = cache.get("subreddits_response")
+    if response is not None:
+        return response
 
-    return render(request, 'subreddits.html', {
+    subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
+
+    response = render(request, 'subreddits.html', {
         'page_category': 'subreddits',
         'subreddits': subreddits
     })
+    cache.set("subreddits_response", response, 600)
+    return response
 
 def about(request):
     return render(request, 'about.html', {
@@ -67,11 +72,12 @@ def submission(request, id):
     except Submission.DoesNotExist:
         raise Http404("Submission was not found")
 
-    # try to get submission scores from cache
-    submission_scores = cache.get("submission_scores_%s" % id)
-    if submission_scores is None:
-        submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
-        cache.set("submission_scores_%s" % id, submission_scores, 600)
+    # try to get response from cache
+    response = cache.get("submission_response_%s" % id)
+    if response is not None:
+        return response
+
+    submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
 
     # lifetime and rise time
     lifetime_delta = submission_scores[len(submission_scores) - 1].timestamp - submission_scores[0].timestamp
@@ -80,12 +86,14 @@ def submission(request, id):
     rise_time_delta = submission_scores[0].timestamp - submission.created_at
     rise_time = time.strftime('%H:%M:%S', time.gmtime(rise_time_delta.seconds))
 
-    return render(request, 'submission.html', {
+    response = render(request, 'submission.html', {
         'page_category': 'posts',
         'submission': submission,
         'lifetime': lifetime,
         'rise_time': rise_time,
     })
+    cache.set("submission_response_%s" % id, response, 600)
+    return response
 
 def subreddit(request, subreddit):
     try:
@@ -93,20 +101,23 @@ def subreddit(request, subreddit):
     except Subreddit.DoesNotExist:
         raise Http404("Subreddit was not found")
 
-    # try to get submissions from cache
-    submissions = cache.get("subreddit_submissions_%s" % subreddit)
-    if submissions is None:
-        submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
-        cache.set("subreddit_submissions_%s" % subreddit, submissions, 600)
+    # try to get response from cache
+    response = cache.get("subreddit_response_%s" % subreddit)
+    if response is not None:
+        return response
+
+    submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
 
     if len(submissions) == 0:
         raise Http404("Subreddit has no recorded submissions")
 
-    return render(request, 'subreddit.html', {
+    response = render(request, 'subreddit.html', {
         'page_category': 'subreddits',
         'subreddit': subreddit,
         'submissions': submissions,
     })
+    cache.set("subreddit_response_%s" % subreddit, response, 600)
+    return response
 
 def search(request):
     query = request.GET.get('q', '')
