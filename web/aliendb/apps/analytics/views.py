@@ -1,33 +1,35 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, Http404
+from django.core.cache import cache
 from django.db.models import Q, Count
 from .models import *
 from . import reports
-from redis import Redis
 
 from datetime import datetime, timedelta
 import time
 
-redis = Redis(host='redis', port=6379)
-
-
 def home(request):
-    submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
+    # try to get submissions from cache
+    submissions = cache.get("top_submissions")
+    if submissions is None:
+        submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
 
-    # calculate rank deltas
-    for submission in submissions:
-        rank_delta = submission.rank_previous - submission.rank
-        if rank_delta > 0:
-            shape = '▲'
-            color = 'green'
-        elif rank_delta < 0:
-            shape = '▼'
-            color = 'red'
-        else:
-            shape = '▬'
-            color = 'orange'
-        submission.delta_color = color
-        submission.delta_string = "%s%d" % (shape, rank_delta)
+        # calculate rank deltas
+        for submission in submissions:
+            rank_delta = submission.rank_previous - submission.rank
+            if rank_delta > 0:
+                shape = '▲'
+                color = 'green'
+            elif rank_delta < 0:
+                shape = '▼'
+                color = 'red'
+            else:
+                shape = '▬'
+                color = 'orange'
+            submission.delta_color = color
+            submission.delta_string = "%s%d" % (shape, rank_delta)
+
+        cache.set("top_submissions", submissions, 600)
 
     return render(request, 'home.html', {
         'page_category': 'posts',
@@ -35,7 +37,11 @@ def home(request):
     })
 
 def subreddits(request):
-    subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
+    # try to get subreddits from cache
+    subreddits = cache.get("top_subreddits")
+    if subreddits is None:
+        subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
+        cache.set("top_subreddits", subreddits, 600)
 
     return render(request, 'subreddits.html', {
         'page_category': 'subreddits',
@@ -61,7 +67,11 @@ def submission(request, id):
     except Submission.DoesNotExist:
         raise Http404("Submission was not found")
 
-    submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
+    # try to get submission scores from cache
+    submission_scores = cache.get("submission_scores_%s" % id)
+    if submission_scores is None:
+        submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
+        cache.set("submission_scores_%s" % id, submission_scores, 600)
 
     # lifetime and rise time
     lifetime_delta = submission_scores[len(submission_scores) - 1].timestamp - submission_scores[0].timestamp
@@ -82,7 +92,12 @@ def subreddit(request, subreddit):
         subreddit = Subreddit.objects.get(name=subreddit)
     except Subreddit.DoesNotExist:
         raise Http404("Subreddit was not found")
-    submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
+
+    # try to get submissions from cache
+    submissions = cache.get("subreddit_submissions_%s" % subreddit)
+    if submissions is None:
+        submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
+        cache.set("subreddit_submissions_%s" % subreddit, submissions, 600)
 
     if len(submissions) == 0:
         raise Http404("Subreddit has no recorded submissions")
