@@ -5,6 +5,7 @@ from celery import Celery
 import praw
 import prawcore
 from textblob import TextBlob
+from django.core.cache import cache
 from .helpers import *
 from .models import *
 
@@ -277,3 +278,7 @@ def get_top_submissions():
     # save all submission db objects
     for submission_obj in submission_objs:
         submission_obj.save()
+
+    # delete cached page responses
+    cache.delete("home_response")
+    cache.delete("subreddits_response")
