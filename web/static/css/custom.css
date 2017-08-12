@@ -31,6 +31,18 @@ a:hover {
   text-decoration: none;
 }
 
+.green {
+  color: green;
+}
+
+.orange {
+  color: orange;
+}
+
+.red {
+  color: red;
+}
+
 /* Navbar */
 
 .navbar {

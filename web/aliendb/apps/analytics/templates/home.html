@@ -37,7 +37,7 @@
             {% for submission in submissions|slice:":100" %}
             <tr>
               <td id="rank">{{ submission.rank }}</td>
-              <td id="delta"><span style="color: {{ submission.delta_color }}">{{ submission.delta_string }}</span></td>
+              <td id="delta"><span class="{{ submission.delta_color }}">{{ submission.delta_string }}</span></td>
               <td id="title">
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
                 <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
