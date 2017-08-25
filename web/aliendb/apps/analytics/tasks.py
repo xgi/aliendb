@@ -35,6 +35,7 @@ def create_submission_obj(submission, rank):
             subreddit.description = ''
         subreddit.save()
 
+    author = ''
     if hasattr(submission, 'author'):
         if submission.author is not None:
             author = submission.author.name
@@ -48,7 +49,7 @@ def create_submission_obj(submission, rank):
     submission_obj = Submission(id=submission.id,
                                 subreddit=subreddit,
                                 title=submission.title,
-                                author=author or None,
+                                author=author,
                                 rank=rank,
                                 rank_previous=rank,
                                 rank_peak=rank,
