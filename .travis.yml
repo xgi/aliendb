@@ -22,7 +22,8 @@ script:
 
 after_success:
   - docker-compose run web coverage run --source='.' manage.py test
-  - docker-compose run web codecov
+  - docker exec -it aliendb_web_1 cat .coverage > .coverage
+  - codecov
 
 notifications:
   email: false
