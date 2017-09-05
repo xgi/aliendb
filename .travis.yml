@@ -1,0 +1,29 @@
+sudo: required
+
+language: python
+
+python:
+  - "3.6"
+
+services:
+  - docker
+
+before_install:
+  - pip install coverage codecov
+  - docker-compose build
+  - docker-compose up -d
+
+install: true
+
+before_script:
+  - docker-compose run web /usr/src/app/wait_until_up.sh
+
+script:
+  - docker-compose run web python manage.py test
+
+after_success:
+  - coverage run --source='.' manage.py test
+  - codecov
+
+notifications:
+  email: false
