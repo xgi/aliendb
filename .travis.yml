@@ -24,7 +24,7 @@ script:
 after_success:
   - docker exec -it aliendb_web_1 coverage run --source='.' manage.py test
   - docker exec -it aliendb_web_1 cat .coverage > .coverage
-  - sed -i -e 's/\/usr\/src\/app/web/g' .coverage
+  - sed -i -e "s@/usr/src/app@$(pwd)/web@g" .coverage
   - codecov
 
 notifications:
