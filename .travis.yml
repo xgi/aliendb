@@ -22,9 +22,9 @@ script:
   - docker-compose run web python manage.py test
 
 after_success:
-  - cd web
   - docker exec -it aliendb_web_1 coverage run --source='.' manage.py test
   - docker exec -it aliendb_web_1 cat .coverage > .coverage
+  - sed -i -e 's/\/usr\/src\/app/web/g' .coverage
   - codecov
 
 notifications:
