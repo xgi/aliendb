@@ -1,5 +1,7 @@
 # AlienDB
 
+[![Build Status](https://travis-ci.org/xgi/aliendb.svg?branch=master)](https://travis-ci.org/xgi/aliendb) [![codecov](https://codecov.io/gh/xgi/aliendb/branch/master/graph/badge.svg)](https://codecov.io/gh/xgi/aliendb)
+
 ## Overview
 
 AlienDB is an analytics platform for trending Reddit threads. It stores historical data for the top threads on Reddit at any given time, including karma trends and comment stats. More information is available at https://aliendb.info/about.
