@@ -1,11 +1,13 @@
 from django.test import TestCase, Client
+from django.test.utils import override_settings
 from .models import *
 from .views import *
 import datetime
 
+@override_settings(DEBUG=True)
 class ViewsTest(TestCase):
     def setUp(self):
-        self.client = Client()                          
+        self.client = Client()                         
         subreddit = Subreddit.objects.create(name="testsubreddit", title="testsubreddit title",
                                              description="testsubreddit description")
         submission = Submission.objects.create(id="000001",
