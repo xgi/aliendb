@@ -23,7 +23,7 @@ script:
 
 after_success:
   - cd web
-  - docker-compose run web coverage run --source='.' manage.py test
+  - docker exec -it aliendb_web_1 coverage run --source='.' manage.py test
   - docker exec -it aliendb_web_1 cat .coverage > .coverage
   - codecov
 
