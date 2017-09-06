@@ -19,10 +19,10 @@ before_script:
   - docker-compose run web /usr/src/app/wait_until_up.sh
 
 script:
-  - docker-compose run web python manage.py test
+  - docker-compose run web python manage.py test --noinput
 
 after_success:
-  - docker exec -it aliendb_web_1 coverage run --source='.' manage.py test
+  - docker exec -it aliendb_web_1 coverage run --source='.' manage.py test --noinput
   - docker exec -it aliendb_web_1 cat .coverage > .coverage
   - sed -i -e "s@/usr/src/app@$(pwd)/web@g" .coverage
   - codecov
