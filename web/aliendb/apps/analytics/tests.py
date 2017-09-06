@@ -4,10 +4,17 @@ from django.core.cache import cache
 from .models import *
 from .views import *
 import datetime
+import logging
+
+# raise logger level for tests to reduce noise
+logger = logging.getLogger('django.request')
+logger.setLevel(logging.ERROR)
 
 def create_dummy_models():
     subreddit = Subreddit.objects.create(name="testsubreddit", title="testsubreddit title",
                                          description="testsubreddit description")
+    subreddit2 = Subreddit.objects.create(name="emptysubreddit", title="emptysubreddit title",
+                                          description="emptysubreddit description")
     submission = Submission.objects.create(id="000001",
                                            subreddit=subreddit,
                                            title="mytitle",
@@ -66,12 +73,24 @@ class ViewsTest(TestCase):
     def test_api_200(self):
         response = self.client.get('/api?name=submission&id=000001')
         self.assertEqual(response.status_code, 200)
+    def test_api_404(self):
+        response = self.client.get('/api?name=submission&id=222222')
+        self.assertEqual(response.status_code, 404)
     def test_submission_200(self):
         response = self.client.get('/submission/000001')
         self.assertEqual(response.status_code, 200)
+    def test_submission_404(self):
+        response = self.client.get('/submission/222222')
+        self.assertEqual(response.status_code, 404)
     def test_subreddit_200(self):
         response = self.client.get('/subreddit/testsubreddit')
         self.assertEqual(response.status_code, 200)
+    def test_subreddit_404(self):
+        response = self.client.get('/subreddit/notarealsubreddit')
+        self.assertEqual(response.status_code, 404)
+    def test_empty_subreddit_404(self):
+        response = self.client.get('/subreddit/emptysubreddit')
+        self.assertEqual(response.status_code, 404)
     def test_search_200(self):
         response = self.client.get('/search')
         self.assertEqual(response.status_code, 200)
