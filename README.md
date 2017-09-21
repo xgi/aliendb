@@ -4,6 +4,8 @@
 
 ## Overview
 
+https://aliendb.info
+
 AlienDB is an analytics platform for trending Reddit threads. It stores historical data for the top threads on Reddit at any given time, including karma trends and comment stats. More information is available at https://aliendb.info/about.
 
 ## Project structure
