@@ -98,7 +98,7 @@ def submission(request, id):
 
 def subreddit(request, subreddit):
     try:
-        subreddit = Subreddit.objects.get(name=subreddit)
+        subreddit = Subreddit.objects.get(name__iexact=subreddit)
     except Subreddit.DoesNotExist:
         raise Http404("Subreddit was not found")
 
