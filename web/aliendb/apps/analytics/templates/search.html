@@ -15,11 +15,11 @@
 
 <div class="container-fluid">
   <div class="row justify-content-sm-center">
-    <div class="col-xs-12 col-md-11 col-lg-10">
+    <div class="col-12 col-md-11 col-lg-10">
       <div class="card">
         <div class="card-block">
           <h3 class="card-title">Search</h3>
-          <div class="col-xs-12 col-md-8 col-lg-5">
+          <div class="col-12 col-md-8 col-lg-5">
             <form>
               <!-- regular settings -->
               <div class="form-group">
@@ -55,7 +55,7 @@
                 </button>
               </p>
               <!-- advanced section open by default if settings were changed -->
-              {% if subreddits is None or subreddits == '' %}
+              {% if from_subreddits is None or from_subreddits == '' %}
               <div class="collapse" id="advanced-settings">
               {% else %}
               <div class="collapse show" id="advanced-settings">
@@ -63,7 +63,7 @@
                 <div class="form-group row">
                   <label class="col-3 col-sm-2 col-form-label">Subreddit filter</label>
                   <div class="col-9 col-sm-10">
-                    <input class="form-control" type="text" name="subreddits" value="{{ subreddits }}" placeholder="Subreddits">
+                    <input class="form-control" type="text" name="from_subreddits" value="{{ from_subreddits }}" placeholder="Subreddits">
                     <small class="form-text text-muted">Enter names of subreddits, separated by commas.</small>
                   </div>
                 </div><br />
@@ -77,14 +77,32 @@
     </div>
   </div>
   {% if query %}
+
   <div class="row justify-content-sm-center">
-    <div class="col-xs-12 col-md-11 col-lg-10">
+    <div class="col-12 col-md-11 col-lg-10">
       <p>Found {{ submissions|length }} matches for "{{ query }}"</p>
     </div>
   </div>
+  {% if relevant_subreddits|length > 0 %}
+  <div class="row justify-content-sm-center">
+    <div class="col-12 col-md-11 col-lg-10">
+      <div class="card">
+        <div class="card-block">
+          <div class="row">
+              {% for relevant_subreddit in relevant_subreddits %}
+              <div class="col-6 col-md-3">
+                <p class="text-center"><a href="/subreddit/{{ relevant_subreddit }}">r/{{ relevant_subreddit }}</a></p>
+              </div>
+              {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   {% if submissions|length > 0 %}
   <div class="row justify-content-sm-center">
-    <div class="col-xs-12 col-md-11 col-lg-10">
+    <div class="col-12 col-md-11 col-lg-10">
       <div class="bs-component">
         <table class="table table-striped table-hover table-bordered">
           <thead class="thead-inverse">

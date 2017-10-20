@@ -124,7 +124,7 @@ def search(request):
     query = request.GET.get('q', '')
     order_by = request.GET.get('order_by', '')
     time = request.GET.get('time', '')
-    subreddits = request.GET.get('subreddits', '')
+    from_subreddits = request.GET.get('from_subreddits', '')
 
     # if no query was given
     if not query:
@@ -168,11 +168,11 @@ def search(request):
                 submissions = submissions.filter(created_at__gte=prev_time)
 
             # remove submissions not in requested subreddits
-            if subreddits is not None and subreddits is not '':
+            if from_subreddits is not None and from_subreddits is not '':
                 subreddit_objs = ['']
-                for subreddit in subreddits.split(','):
+                for from_subreddit in from_subreddits.split(','):
                     try:
-                        subreddit_objs.append(Subreddit.objects.get(name__iexact=subreddit))
+                        subreddit_objs.append(Subreddit.objects.get(name__iexact=from_subreddit))
                     except Subreddit.DoesNotExist:
                         continue
 
@@ -183,10 +183,23 @@ def search(request):
 
                 submissions = submissions.filter(query_objs)
 
+            # get relevant subreddits
+            relevant_subreddits = []
+            for term in query.split(' '):
+                try:
+                    subreddit = Subreddit.objects.get(name__iexact=term)
+                    relevant_subreddits.append(subreddit.name)
+                except Subreddit.DoesNotExist:
+                    continue
+            for submission in submissions:
+                if submission.subreddit.name not in relevant_subreddits:
+                    relevant_subreddits.append(submission.subreddit.name)
+
         return render(request, 'search.html', {
             'submissions': submissions,
             'query': query,
             'order_by': order_by,
             'time': time,
-            'subreddits': subreddits,
+            'from_subreddits': from_subreddits,
+            'relevant_subreddits': relevant_subreddits[:8]
         })

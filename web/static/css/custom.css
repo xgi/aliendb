@@ -27,6 +27,11 @@ h2, h5{
   color: #fff;
 }
 
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
 a:hover {
   text-decoration: none;
 }
