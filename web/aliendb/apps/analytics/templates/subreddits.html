@@ -32,7 +32,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for subreddit in subreddits|slice:":100" %}
+            {% for subreddit in subreddits %}
             <tr>
               <td id="submissions">{{ subreddit.tracked_submissions|intcomma }}</td>
               <td id="karma">{{ subreddit.score|intcomma }}</td>

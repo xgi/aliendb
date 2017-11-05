@@ -45,7 +45,7 @@ def subreddits(request):
     if response is not None and settings.DEBUG is False:
         return response
 
-    subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:100]
+    subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:50]
 
     response = render(request, 'subreddits.html', {
         'page_category': 'subreddits',
