@@ -95,7 +95,7 @@ class ViewsTest(TestCase):
         response = self.client.get('/search')
         self.assertEqual(response.status_code, 200)
     def test_search_match(self):
-        response = self.client.get('/search?q=mytitle&order_by=karma&time=today&subreddits=testsubreddit')
+        response = self.client.get('/search?q=mytitle&order_by=karma&time=all&subreddits=testsubreddit')
         self.assertContains(response, "Found 1 match")
 
 @override_settings(DEBUG=False)
