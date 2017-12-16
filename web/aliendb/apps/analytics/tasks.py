@@ -218,7 +218,7 @@ def get_top_submissions():
             # reddit api is likely unavailable
             continue
 
-        # create new tracker objects
+        # create new submission tracker objects
         submission_score = SubmissionScore(submission=submission_obj,
                                            score=submission.score)
         submission_score.save()
@@ -231,6 +231,10 @@ def get_top_submissions():
 
     # reset rank for submissions no longer in top 100
     submission_ids = [submission.id for submission in submissions]
+    modified_subreddits = []
+    frontpage_score = 0
+    frontpage_num_comments = 0
+
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
             # update subreddit stats
@@ -273,8 +277,41 @@ def get_top_submissions():
             subreddit.tracked_submissions = subreddit.tracked_submissions + 1
             subreddit.save()
 
+            # update running variables
+            if subreddit not in modified_subreddits:
+                modified_subreddits.append(subreddit)
+            frontpage_score += submission_obj.score
+            frontpage_num_comments += submission_obj.num_comments
+
+            # create new cumulative tracker objects
+            try:
+                latest_score = TotalScore.objects.latest('timestamp').score
+                latest_num_comments = TotalNumComments.objects.latest('timestamp').num_comments
+            except TotalScore.DoesNotExist:
+                latest_score = 0
+                latest_num_comments = 0
+            total_score = TotalScore(score=latest_score+submission_obj.score)
+            total_score.save()
+            total_num_comments = TotalNumComments(num_comments=latest_num_comments+submission_obj.num_comments)
+            total_num_comments.save()
+
             submission_obj.rank = -1
             submission_obj.save()
+
+    # create new subreddit tracker objects
+    for subreddit in modified_subreddits:
+        subreddit_score = SubredditScore(subreddit=subreddit,
+                                         score=subreddit.score)
+        subreddit_score.save()
+        subreddit_num_comments = SubredditNumComments(subreddit=subreddit,
+                                                      num_comments=subreddit.num_comments)
+        subreddit_num_comments.save()
+
+    # create new frontpage tracker objects
+    average_score = AverageScore(score=frontpage_score/100)
+    average_score.save()
+    average_num_comments = AverageNumComments(num_comments=frontpage_num_comments/100)
+    average_num_comments.save()
 
     # save all submission db objects
     for submission_obj in submission_objs:

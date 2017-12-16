@@ -1,5 +1,21 @@
 from django.db import models
 
+class TotalScore(models.Model):
+    score = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class TotalNumComments(models.Model):
+    num_comments = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class AverageScore(models.Model):
+    score = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class AverageNumComments(models.Model):
+    num_comments = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 class Subreddit(models.Model):
     name = models.CharField(primary_key=True, unique=True, max_length=21)
     title = models.CharField(max_length=100, blank=True)
@@ -45,6 +61,16 @@ class Submission(models.Model):
 
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
+
+class SubredditScore(models.Model):
+    subreddit = models.ForeignKey(Subreddit)
+    score = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class SubredditNumComments(models.Model):
+    subreddit = models.ForeignKey(Subreddit)
+    num_comments = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 # models with many-to-one relationship with Submission
 class Comment(models.Model):
