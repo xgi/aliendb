@@ -302,6 +302,12 @@ td#title span {
   }
 }
 
+/* Search page */
+
+.btn-link:hover, .btn-link:focus {
+    text-decoration: none;
+}
+
 /* Error message */
 
 .error {
