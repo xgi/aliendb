@@ -45,11 +45,20 @@ def subreddits(request):
     if response is not None and settings.DEBUG is False:
         return response
 
-    subreddits = Subreddit.objects.all().order_by('-tracked_submissions')[:50]
+    subreddits = Subreddit.objects.order_by('-tracked_submissions')[:50]
+    agreeable_subreddits = Subreddit.objects \
+        .exclude(tracked_submissions__lt=30) \
+        .order_by('-average_upvote_ratio')[:5]
+    controversial_subreddits = Subreddit.objects \
+        .exclude(tracked_submissions__lt=30) \
+        .order_by('average_upvote_ratio')[:5]
 
     response = render(request, 'subreddits.html', {
         'page_category': 'subreddits',
-        'subreddits': subreddits
+        'subreddits': subreddits,
+        'agreeable_subreddits': agreeable_subreddits,
+        'controversial_subreddits': controversial_subreddits
+
     })
     cache.set("subreddits_response", response, 600)
     return response

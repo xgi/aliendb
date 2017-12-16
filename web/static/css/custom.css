@@ -115,12 +115,12 @@ a:hover {
   border-bottom: 0 !important;
 }
 
-th#rank, th#delta, th#karma, th#comments, th#submissions {
+th#rank, th#delta, th#karma, th#comments, th#submissions, th#ratio {
   width: 1rem;
   text-align: center;
 }
 
-td#rank, td#delta, td#karma, td#comments, td#submissions {
+td#rank, td#delta, td#karma, td#comments, td#submissions, td#ratio {
   font-size: 1.2em;
   text-align: center;
   vertical-align: middle;
