@@ -101,3 +101,34 @@ def submission(request):
     cache.set("submission_data_%s" % id, data, 600)
 
     return data
+
+def subreddit(request):
+    id = request.GET.get('id', '')
+
+    try:
+        subreddit = Subreddit.objects.get(name=id)
+    except Subreddit.DoesNotExist:
+        raise Http404("Submission was not found")
+
+    # try to get full data variable from cache
+    data = cache.get("subreddit_data_%s" % id)
+    if data is not None and settings.DEBUG is False:
+        return data
+
+    subreddit_scores = SubredditScore.objects.filter(subreddit=subreddit).order_by('timestamp')
+    subreddit_num_comments = SubredditNumComments.objects.filter(subreddit=subreddit).order_by('timestamp')
+
+    ## activity
+    score_tallies = [[int((s.timestamp - epoch).total_seconds()) * 1000.0, s.score] for s in subreddit_scores]
+    comment_tallies = [[int((c.timestamp - epoch).total_seconds()) * 1000.0, c.num_comments] for c in subreddit_num_comments]
+
+    data = {
+        'activity': {
+            'scores': score_tallies,
+            'comments': comment_tallies
+        }
+    }
+
+    cache.set("subreddit_data_%s" % id, data, 600)
+
+    return data

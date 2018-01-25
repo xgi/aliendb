@@ -73,6 +73,8 @@ def api(request):
 
     if name == 'submission':
         data = reports.submission(request)
+    elif name == 'subreddit':
+        data = reports.subreddit(request)
 
     return JsonResponse(data)
 

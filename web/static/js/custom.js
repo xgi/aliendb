@@ -1,11 +1,11 @@
 function submission_charts(id) {
     $.getJSON('/api?name=submission&id=' + id, function (data) {
-        polarity_chart(data);
-        subjectivity_chart(data);
-        activity_chart(data);
-        upvote_ratio_chart(data);
-        special_users_chart(data);
-        gilded_chart(data);
+        submission_polarity_chart(data);
+        submission_subjectivity_chart(data);
+        submission_activity_chart(data);
+        submission_upvote_ratio_chart(data);
+        submission_special_users_chart(data);
+        submission_gilded_chart(data);
     }).always(function () {
         // hide loaders
         $('.loader').each(function () {
@@ -16,8 +16,8 @@ function submission_charts(id) {
     });
 }
 
-function polarity_chart(data) {
-    Highcharts.chart('chart_polarity', {
+function submission_polarity_chart(data) {
+    Highcharts.chart('submission_polarity_chart', {
         chart: {
             type: 'bar'
         },
@@ -54,8 +54,8 @@ function polarity_chart(data) {
     });
 }
 
-function subjectivity_chart(data) {
-    Highcharts.chart('chart_subjectivity', {
+function submission_subjectivity_chart(data) {
+    Highcharts.chart('submission_subjectivity_chart', {
         chart: {
             type: 'bar'
         },
@@ -92,8 +92,8 @@ function subjectivity_chart(data) {
     });
 }
 
-function activity_chart(data) {
-    Highcharts.chart('chart_activity', {
+function submission_activity_chart(data) {
+    Highcharts.chart('submission_activity_chart', {
         chart: {
             zoomType: 'x'
         },
@@ -143,8 +143,8 @@ function activity_chart(data) {
     });
 }
 
-function upvote_ratio_chart(data) {
-    Highcharts.chart('chart_upvote_ratio', {
+function submission_upvote_ratio_chart(data) {
+    Highcharts.chart('submission_upvote_ratio_chart', {
         chart: {
             zoomType: 'x'
         },
@@ -198,8 +198,8 @@ function upvote_ratio_chart(data) {
     });
 }
 
-function special_users_chart(data) {
-    Highcharts.chart('chart_special_users', {
+function submission_special_users_chart(data) {
+    Highcharts.chart('submission_special_users_chart', {
         chart: {
             type: 'column'
         },
@@ -244,8 +244,8 @@ function special_users_chart(data) {
     });
 }
 
-function gilded_chart(data) {
-    Highcharts.chart('chart_gilded', {
+function submission_gilded_chart(data) {
+    Highcharts.chart('submission_gilded_chart', {
         chart: {
             type: 'bar'
         },
@@ -280,6 +280,75 @@ function gilded_chart(data) {
         colors: [
             'rgba(218, 165, 32, 0.65)',
             'rgba(160, 82, 45, 0.65)'
+        ]
+    });
+}
+
+function subreddit_charts(id) {
+    $.getJSON('/api?name=subreddit&id=' + id, function (data) {
+        subreddit_activity_chart(data);
+    }).always(function () {
+        // hide loaders
+        $('.loader').each(function () {
+            $(this).hide();
+        });
+    }).fail(function (data, status, error) {
+        $(".chart").append("<div class='error'><h5>An error occurred while loading this chart.</h5><p>Wait a moment, then try reloading the page.<br><i>(" + error + ")</i></p>");
+    });
+}
+
+function subreddit_activity_chart(data) {
+    Highcharts.chart('subreddit_activity_chart', {
+        chart: {
+            zoomType: 'x'
+        },
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        tooltip: {
+            shared: true
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [
+            {
+                title: {
+                    text: 'Karma'
+                }
+            },
+            {
+                title: {
+                    text: 'Comments'
+                },
+                opposite: true
+            }
+        ],
+        plotOptions: {
+            series: {
+                lineWidth: 3
+            }
+        },
+        series: [
+            {
+                type: 'line',
+                name: 'Karma',
+                yAxis: 0,
+                data: data['activity']['scores']
+            },
+            {
+                type: 'line',
+                name: 'Comments',
+                yAxis: 1,
+                data: data['activity']['comments']
+            }
+        ],
+        colors: [
+            'rgba(255, 69, 0, 1)',
+            'rgba(47, 79, 79, 1)'
         ]
     });
 }

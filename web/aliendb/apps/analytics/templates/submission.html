@@ -42,7 +42,6 @@
     </div>
     <div class="col-12 col-md-10 col-lg-8">
       <div class="tab-content">
-        <script>submission_charts('{{ submission.id }}');</script>
         <div class="tab-pane active" id="overview"> <!-- overview tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12">
@@ -56,7 +55,7 @@
                     <div class="rect4"></div>
                     <div class="rect5"></div>
                   </div>
-                  <div id="chart_activity"></div>
+                  <div id="submission_activity_chart"></div>
                 </div>
               </div>
             </div>
@@ -147,7 +146,7 @@
                     <div class="rect4"></div>
                     <div class="rect5"></div>
                   </div>
-                  <div id="chart_upvote_ratio"></div>
+                  <div id="submission_upvote_ratio_chart"></div>
                 </div>
               </div>
             </div>
@@ -166,7 +165,7 @@
                     <div class="rect4"></div>
                     <div class="rect5"></div>
                   </div>
-                  <div id="chart_polarity"></div>
+                  <div id="submission_polarity_chart"></div>
                 </div>
               </div>
             </div>
@@ -181,7 +180,7 @@
                     <div class="rect4"></div>
                     <div class="rect5"></div>
                   </div>
-                  <div id="chart_subjectivity"></div>
+                  <div id="submission_subjectivity_chart"></div>
                 </div>
               </div>
             </div>
@@ -200,7 +199,7 @@
                     <div class="rect4"></div>
                     <div class="rect5"></div>
                   </div>
-                  <div id="chart_special_users"></div>
+                  <div id="submission_special_users_chart"></div>
                 </div>
               </div>
             </div>
@@ -215,7 +214,7 @@
                     <div class="rect4"></div>
                     <div class="rect5"></div>
                   </div>
-                  <div id="chart_gilded"></div>
+                  <div id="submission_gilded_chart"></div>
                 </div>
               </div>
             </div>
@@ -226,4 +225,5 @@
     </div>
   </div>
 </div> <!-- container -->
+<script>submission_charts('{{ submission.id }}');</script>
 {% endblock content %}
