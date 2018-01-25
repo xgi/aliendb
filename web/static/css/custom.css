@@ -97,6 +97,10 @@ a:hover {
   font-weight: bold;
 }
 
+.lead {
+    font-weight: 400;
+}
+
 .lead a {
   color: #2196F3;
 }
