@@ -4,7 +4,7 @@ def update_average(field, value, tracked) -> float:
     Args:
         field: the current average;
         value: the new value to include in the average;
-        tracked: the number of elements used to form the _original_ average;
+        tracked: the number of elements used to form the _original_ average
 
     Returns:
         float: the updated average
