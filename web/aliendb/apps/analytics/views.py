@@ -105,8 +105,8 @@ def api(request) -> JsonResponse:
 
     Args:
         request: a standard HttpRequest;
-        name: (HTTP parameter): type of data to retrieve;
-        id: (HTTP parameter): identifier for the data, if applicable
+        name: (HTTP parameter) type of data to retrieve;
+        id: (HTTP parameter) identifier for the data, if applicable
 
     Returns:
         JsonResponse: a JSON formatted data set
@@ -208,10 +208,10 @@ def search(request) -> HttpResponse:
 
     Args:
         request: a standard HttpRequest;
-        query: (HTTP parameter): the search query;
-        order_by: (HTTP parameter): how to sort the resulting submissions;
-        time: (HTTP parameter): time frame which submissions must be within;
-        from_subreddits: (HTTP parameter): comma separated list of subreddits
+        query: (HTTP parameter) the search query;
+        order_by: (HTTP parameter) how to sort the resulting submissions;
+        time: (HTTP parameter) time frame which submissions must be within;
+        from_subreddits: (HTTP parameter) comma separated list of subreddits
 
     Returns:
         HttpResponse: a standard HttpResponse from templates/search.html

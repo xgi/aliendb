@@ -19,7 +19,7 @@ def submission(request) -> dict:
 
     Args:
         request: a standard HttpRequest;
-        id: (HTTP parameter): the submission id
+        id: (HTTP parameter) the submission id
 
     Returns:
         dict: data needed to generate graphs for the submission page.
@@ -132,7 +132,7 @@ def subreddit(request) -> dict:
 
     Args:
         request: a standard HttpRequest;
-        id: (HTTP parameter): the name of the subreddit
+        id: (HTTP parameter) the name of the subreddit
 
     Returns:
         dict: data needed to generate graphs for the submission page.
