@@ -200,12 +200,14 @@ def create_comment_obj(comment, submission_obj):
 
         # update subreddit stats
         subreddit = comment_obj.submission.subreddit
-        subreddit.average_comments_polarity = update_average(subreddit.average_comments_polarity,
-                                                             polarity,
-                                                             subreddit.tracked_comments)
-        subreddit.average_comments_subjectivity = update_average(subreddit.average_comments_subjectivity,
-                                                                 subjectivity,
-                                                                 subreddit.tracked_comments)
+        subreddit.average_comments_polarity = update_average(
+            subreddit.average_comments_polarity,
+            polarity,
+            subreddit.tracked_comments)
+        subreddit.average_comments_subjectivity = update_average(
+            subreddit.average_comments_subjectivity,
+            subjectivity,
+            subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
         subreddit.save()
 
@@ -348,36 +350,45 @@ def create_subreddit_tracker_objs(subreddit, ):
 
 @app.task
 def get_top_submissions():
+    """Retrieves the top 100 posts on /r/all and creates appropriate DB objs.
+
+    This function is the main driver for collecting stats. It retrieves a list
+    of the top submissions and creates corresponding objects in the database.
+
+    Subreddit and cumulative tracker objects are created when submissions leave
+    the top 100, as a way to ensure they are only tallied once.
+    """
     subreddit = reddit.subreddit('all')
 
+    # get current top 100 submissions
     try:
         submissions = [submission for submission in subreddit.hot(limit=100)]
     except prawcore.exceptions.RequestException:
         # reddit api is likely unavailable
         return
 
+    # create/update db submission objects
     rank = 0
     submission_objs = []
     for submission in submissions:
         rank += 1
         try:
+            # check if this submission already exists in the db
             if Submission.objects.filter(id=submission.id):
                 submission_obj = update_submission_obj(submission, rank)
             else:
                 submission_obj = create_submission_obj(submission, rank)
             submission_objs.append(submission_obj)
+            create_submission_tracker_objs(submission_obj, submission)
         except prawcore.exceptions.RequestException:
             # reddit api is likely unavailable
             continue
-
-        create_submission_tracker_objs(submission_obj, submission)
 
     # reset rank for submissions no longer in top 100
     submission_ids = [submission.id for submission in submissions]
     modified_subreddits = []
     frontpage_score = 0
     frontpage_num_comments = 0
-
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
             subreddit = update_subreddit_obj(subreddit, submission_obj)
