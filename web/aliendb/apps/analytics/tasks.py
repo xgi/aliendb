@@ -216,6 +216,136 @@ def create_comment_obj(comment, submission_obj):
         comment_obj.gilded = comment.gilded
         comment_obj.save()
 
+def update_subreddit_obj(subreddit, submission_obj) -> Subreddit:
+    """Updates an existing models.Subreddit object with a submission's stats.
+
+    Args:
+        subreddit: the existing models.Subreddit object;
+        submission_obj: the models.Submission object to get stats from
+
+    Returns:
+        Subreddit: the updated models.Subreddit object
+    """
+    subreddit = submission_obj.subreddit
+    comments = Comment.objects.filter(submission=submission_obj)
+
+    current_gilded = sum(c.gilded for c in comments)
+    current_is_op = [c.is_op for c in comments].count(True)
+    current_is_mod = [c.is_mod for c in comments].count(True)
+    current_is_admin = [c.is_admin for c in comments].count(True)
+    current_is_special = [c.is_special for c in comments].count(True)
+
+    subreddit.average_submission_polarity = update_average(
+        subreddit.average_submission_polarity,
+        submission_obj.polarity,
+        subreddit.tracked_submissions)
+    subreddit.average_submission_subjectivity = update_average(
+        subreddit.average_submission_subjectivity,
+        submission_obj.subjectivity,
+        subreddit.tracked_submissions)
+    subreddit.average_upvote_ratio = update_average(
+        subreddit.average_upvote_ratio,
+        submission_obj.upvote_ratio,
+        subreddit.tracked_submissions)
+    subreddit.average_gilded = update_average(
+        subreddit.average_gilded,
+        current_gilded,
+        subreddit.tracked_submissions)
+    subreddit.average_is_op = update_average(
+        subreddit.average_is_op,
+        current_is_op,
+        subreddit.tracked_submissions)
+    subreddit.average_is_mod = update_average(
+        subreddit.average_is_mod,
+        current_is_mod,
+        subreddit.tracked_submissions)
+    subreddit.average_is_admin = update_average(
+        subreddit.average_is_admin,
+        current_is_admin,
+        subreddit.tracked_submissions)
+    subreddit.average_is_special = update_average(
+        subreddit.average_is_special,
+        current_is_special,
+        subreddit.tracked_submissions)
+
+    subreddit.score = subreddit.score + submission_obj.score
+    subreddit.num_comments = subreddit.num_comments + submission_obj.num_comments
+    subreddit.tracked_submissions = subreddit.tracked_submissions + 1
+    subreddit.save()
+
+    return subreddit
+
+def create_submission_tracker_objs(submission_obj, submission):
+    """Creates tracker objects for a given submission.
+
+    Creates the following objects in the database for this submission:
+        SubmissionScore, SubmissionNumComments, SubmissionUpvoteRatio
+
+    Args:
+        submission_obj: the source models.Submission object;
+        submission: the source Praw submission object
+    """
+    submission_score = SubmissionScore(
+        submission=submission_obj,
+        score=submission.score)
+    submission_num_comments = SubmissionNumComments(
+        submission=submission_obj,
+        num_comments=submission.num_comments)
+    submission_upvote_ratio = SubmissionUpvoteRatio(
+        submission=submission_obj,
+        upvote_ratio=submission.upvote_ratio)
+
+    submission_score.save()
+    submission_num_comments.save()
+    submission_upvote_ratio.save()
+
+def create_cumulative_tracker_objs(submission_obj):
+    """Creates cumulative tracker objects from a given submission.
+
+    This function should only be run once for each submission -- presumably
+    at the moment the submission leaves the top 100.
+
+    Creates the following objects in the database:
+        SubmissionScore, SubmissionNumComments, SubmissionUpvoteRatio
+
+    Args:
+        submission_obj: models.Submission object to get stats from
+    """
+    try:
+        latest_score = TotalScore.objects.latest('timestamp').score
+        latest_num_comments = TotalNumComments.objects.latest('timestamp').num_comments
+    except TotalScore.DoesNotExist:
+        latest_score = 0
+        latest_num_comments = 0
+
+    total_score = TotalScore(
+        score=latest_score + submission_obj.score)
+    total_num_comments = TotalNumComments(
+        num_comments=latest_num_comments + submission_obj.num_comments)
+
+    total_score.save()
+    total_num_comments.save()
+
+def create_subreddit_tracker_objs(subreddit, ):
+    """Creates tracker objects for a given subreddit.
+
+    Creates the following objects in the database for this submission:
+        SubmissionScore, SubmissionNumComments, SubmissionUpvoteRatio
+
+    Args:
+        submission_obj: the source models.Submission object;
+        submission: the source Praw submission object
+    """
+    subreddit_score = SubredditScore(
+        subreddit=subreddit,
+        score=subreddit.score)
+    subreddit_num_comments = SubredditNumComments(
+        subreddit=subreddit,
+        num_comments=subreddit.num_comments)
+
+    subreddit_score.save()
+    subreddit_num_comments.save()
+
 @app.task
 def get_top_submissions():
     subreddit = reddit.subreddit('all')
@@ -240,16 +370,7 @@ def get_top_submissions():
             # reddit api is likely unavailable
             continue
 
-        # create new submission tracker objects
-        submission_score = SubmissionScore(submission=submission_obj,
-                                           score=submission.score)
-        submission_score.save()
-        submission_num_comments = SubmissionNumComments(submission=submission_obj,
-                                                        num_comments=submission.num_comments)
-        submission_num_comments.save()
-        submission_upvote_ratio = SubmissionUpvoteRatio(submission=submission_obj,
-                                                        upvote_ratio=submission.upvote_ratio)
-        submission_upvote_ratio.save()
+        create_submission_tracker_objs(submission_obj, submission)
 
     # reset rank for submissions no longer in top 100
     submission_ids = [submission.id for submission in submissions]
@@ -259,45 +380,7 @@ def get_top_submissions():
 
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
-            # update subreddit stats
-            subreddit = submission_obj.subreddit
-            comments = Comment.objects.filter(submission=submission_obj)
-
-            current_gilded = sum(c.gilded for c in comments)
-            current_is_op = [c.is_op for c in comments].count(True)
-            current_is_mod = [c.is_mod for c in comments].count(True)
-            current_is_admin = [c.is_admin for c in comments].count(True)
-            current_is_special = [c.is_special for c in comments].count(True)
-
-            subreddit.average_submission_polarity = update_average(subreddit.average_submission_polarity, 
-                                                                   submission_obj.polarity,
-                                                                   subreddit.tracked_submissions)
-            subreddit.average_submission_subjectivity = update_average(subreddit.average_submission_subjectivity,
-                                                                       submission_obj.subjectivity,
-                                                                       subreddit.tracked_submissions)
-            subreddit.average_upvote_ratio = update_average(subreddit.average_upvote_ratio,
-                                                            submission_obj.upvote_ratio,
-                                                            subreddit.tracked_submissions)
-            subreddit.average_gilded = update_average(subreddit.average_gilded,
-                                                      current_gilded,
-                                                      subreddit.tracked_submissions)
-            subreddit.average_is_op = update_average(subreddit.average_is_op,
-                                                     current_is_op,
-                                                     subreddit.tracked_submissions)
-            subreddit.average_is_mod = update_average(subreddit.average_is_mod,
-                                                      current_is_mod,
-                                                      subreddit.tracked_submissions)
-            subreddit.average_is_admin = update_average(subreddit.average_is_admin,
-                                                        current_is_admin,
-                                                        subreddit.tracked_submissions)
-            subreddit.average_is_special = update_average(subreddit.average_is_special,
-                                                          current_is_special,
-                                                          subreddit.tracked_submissions)
-
-            subreddit.score = subreddit.score + submission_obj.score
-            subreddit.num_comments = subreddit.num_comments + submission_obj.num_comments
-            subreddit.tracked_submissions = subreddit.tracked_submissions + 1
-            subreddit.save()
+            subreddit = update_subreddit_obj(subreddit, submission_obj)
 
             # update running variables
             if subreddit not in modified_subreddits:
@@ -305,29 +388,13 @@ def get_top_submissions():
             frontpage_score += submission_obj.score
             frontpage_num_comments += submission_obj.num_comments
 
-            # create new cumulative tracker objects
-            try:
-                latest_score = TotalScore.objects.latest('timestamp').score
-                latest_num_comments = TotalNumComments.objects.latest('timestamp').num_comments
-            except TotalScore.DoesNotExist:
-                latest_score = 0
-                latest_num_comments = 0
-            total_score = TotalScore(score=latest_score+submission_obj.score)
-            total_score.save()
-            total_num_comments = TotalNumComments(num_comments=latest_num_comments+submission_obj.num_comments)
-            total_num_comments.save()
+            create_cumulative_tracker_objs(submission_obj)
 
             submission_obj.rank = -1
             submission_obj.save()
 
-    # create new subreddit tracker objects
     for subreddit in modified_subreddits:
-        subreddit_score = SubredditScore(subreddit=subreddit,
-                                         score=subreddit.score)
-        subreddit_score.save()
-        subreddit_num_comments = SubredditNumComments(subreddit=subreddit,
-                                                      num_comments=subreddit.num_comments)
-        subreddit_num_comments.save()
+        create_subreddit_tracker_objs(subreddit)
 
     # create new frontpage tracker objects
     average_score = AverageScore(score=frontpage_score/100)
