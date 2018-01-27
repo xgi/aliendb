@@ -6,7 +6,24 @@ from .models import *
 
 epoch = datetime.datetime.utcfromtimestamp(0)
 
-def submission(request):
+def submission(request) -> dict:
+    """Retrieves data needed to generate graphs for a submission's page.
+
+    Retrieves data for the following categories, accessible by name from the
+    base of the returned dict (i.e. data['category']):
+        activity; upvote_ratio; special_users; gilded; polarity; subjectivity
+
+    After retrieving the data, it is temporarily added to the cache. This
+    function checks whether the data is available in the cache, and will use it
+    if available to save resources.
+
+    Args:
+        request: a standard HttpRequest;
+        id: (HTTP parameter): the submission id
+
+    Returns:
+        dict: data needed to generate graphs for the submission page.
+    """
     id = request.GET.get('id', '')
 
     try:
@@ -102,7 +119,24 @@ def submission(request):
 
     return data
 
-def subreddit(request):
+def subreddit(request) -> dict:
+    """Retrieves data needed to generate graphs for a subreddit's page.
+
+    Retrieves data for the following categories, accessible by name from the
+    base of the returned dict (i.e. data['category']):
+        activity
+
+    After retrieving the data, it is temporarily added to the cache. This
+    function checks whether the data is available in the cache, and will use it
+    if available to save resources.
+
+    Args:
+        request: a standard HttpRequest;
+        id: (HTTP parameter): the name of the subreddit
+
+    Returns:
+        dict: data needed to generate graphs for the submission page.
+    """
     id = request.GET.get('id', '')
 
     try:
