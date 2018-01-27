@@ -2,9 +2,8 @@ import datetime
 from django.conf import settings
 from django.core.cache import cache
 from django.http import Http404
+from .helpers import *
 from .models import *
-
-epoch = datetime.datetime.utcfromtimestamp(0)
 
 def submission(request) -> dict:
     """Retrieves data needed to generate graphs for a submission's page.
@@ -43,11 +42,11 @@ def submission(request) -> dict:
     submission_upvote_ratios = SubmissionUpvoteRatio.objects.filter(submission=submission).order_by('timestamp')
 
     ## activity
-    score_tallies = [[int((s.timestamp - epoch).total_seconds()) * 1000.0, s.score] for s in submission_scores]
-    comment_tallies = [[int((c.timestamp - epoch).total_seconds()) * 1000.0, c.num_comments] for c in submission_num_comments]
+    score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in submission_scores]
+    comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in submission_num_comments]
 
     ## upvote_ratio
-    upvote_ratios = [[int((s.timestamp - epoch).total_seconds()) * 1000.0, s.upvote_ratio] for s in submission_upvote_ratios]
+    upvote_ratios = [[timestamp_to_ms(s.timestamp), s.upvote_ratio] for s in submission_upvote_ratios]
 
     ## special_users
     special_users_submission = [
@@ -153,8 +152,8 @@ def subreddit(request) -> dict:
     subreddit_num_comments = SubredditNumComments.objects.filter(subreddit=subreddit).order_by('timestamp')
 
     ## activity
-    score_tallies = [[int((s.timestamp - epoch).total_seconds()) * 1000.0, s.score] for s in subreddit_scores]
-    comment_tallies = [[int((c.timestamp - epoch).total_seconds()) * 1000.0, c.num_comments] for c in subreddit_num_comments]
+    score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in subreddit_scores]
+    comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in subreddit_num_comments]
 
     data = {
         'activity': {
