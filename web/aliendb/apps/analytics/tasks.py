@@ -18,7 +18,16 @@ reddit = praw.Reddit(client_id=os.environ['PRAW_CLIENT_ID'],
                      password=os.environ['PRAW_REDDIT_PASSWORD'],
                      user_agent=os.environ['PRAW_USER_AGENT'])
 
-def create_submission_obj(submission, rank):
+def create_submission_obj(submission, rank) -> Submission:
+    """Creates a models.Submission object from a Praw submission object.
+
+    Args:
+        submission: the source Praw submission object;
+        rank: the current rank (1-100) of the submission
+
+    Returns:
+        Submission: the created models.Submission object
+    """
     created_at = datetime.datetime.utcfromtimestamp(submission.created_utc)
     created_at = created_at.replace(tzinfo=datetime.timezone.utc)
 
@@ -84,7 +93,16 @@ def create_submission_obj(submission, rank):
 
     return submission_obj
 
-def update_submission_obj(submission, rank):
+def update_submission_obj(submission, rank) -> Submission:
+    """Updates an existing models.Submission object from a Praw submission object.
+
+    Args:
+        submission: the source Praw submission object;
+        rank: the current rank (1-100) of the submission
+
+    Returns:
+        Submission: the updated models.Submission object
+    """
     submission_obj = Submission.objects.get(id=submission.id)
 
     # determine rank on /r/all
@@ -123,8 +141,12 @@ def update_submission_obj(submission, rank):
     return submission_obj
 
 def create_comment_obj(comment, submission_obj):
-    # creates comment model from praw comment
+    """Creates a models.Comment object from a Praw comment object.
 
+    Args:
+        comment: the source Praw comment object;
+        submission_obj: the models.Submission object parent to the comment
+    """
     # check if comment already exists in db
     if not Comment.objects.filter(id=comment.id).exists():
         # check if comment has been deleted

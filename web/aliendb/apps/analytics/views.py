@@ -4,12 +4,24 @@ import time
 from django.conf import settings
 from django.core.cache import cache
 from django.db.models import Q, Count
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from .models import *
 from . import reports
 
-def home(request):
+def home(request) -> HttpResponse:
+    """View for the index/landing page.
+
+    After rendering the HttpResponse, it is temporarily added to the cache.
+    This function checks whether the response is available in the cache,
+    and will use it if available to save resources.
+
+    Args:
+        request: a standard HttpRequest
+
+    Returns:
+        HttpResponse: a standard HttpResponse from templates/home.html
+    """
     # try to get response from cache
     response = cache.get("home_response")
     if response is not None and settings.DEBUG is False:
@@ -39,7 +51,19 @@ def home(request):
     cache.set("home_response", response, 600)
     return response
 
-def subreddits(request):
+def subreddits(request) -> HttpResponse:
+    """View for the subreddits listing page.
+
+    After rendering the HttpResponse, it is temporarily added to the cache.
+    This function checks whether the response is available in the cache,
+    and will use it if available to save resources.
+
+    Args:
+        request: a standard HttpRequest
+
+    Returns:
+        HttpResponse: a standard HttpResponse from templates/subreddits.html
+    """
     # try to get response from cache
     response = cache.get("subreddits_response")
     if response is not None and settings.DEBUG is False:
@@ -63,12 +87,30 @@ def subreddits(request):
     cache.set("subreddits_response", response, 600)
     return response
 
-def about(request):
+def about(request) -> HttpResponse:
+    """View for the about page.
+
+    Args:
+        request: a standard HttpRequest
+
+    Returns:
+        HttpResponse: a standard HttpResponse from templates/about.html
+    """
     return render(request, 'about.html', {
         'page_category': 'about'
     })
 
-def api(request):
+def api(request) -> JsonResponse:
+    """View for accessing the public API.
+
+    Args:
+        request: a standard HttpRequest;
+        name: (HTTP parameter): type of data to retrieve;
+        id: (HTTP parameter): identifier for the data, if applicable
+
+    Returns:
+        JsonResponse: a JSON formatted data set
+    """
     name = request.GET.get('name', '')
 
     if name == 'submission':
@@ -78,7 +120,20 @@ def api(request):
 
     return JsonResponse(data)
 
-def submission(request, id):
+def submission(request, id) -> HttpResponse:
+    """View for an individual submission's page.
+
+    After rendering the HttpResponse, it is temporarily added to the cache.
+    This function checks whether the response is available in the cache,
+    and will use it if available to save resources.
+
+    Args:
+        request: a standard HttpRequest;
+        id: the submission's id
+
+    Returns:
+        HttpResponse: a standard HttpResponse from templates/submission.html
+    """
     try:
         submission = Submission.objects.get(id=id)
     except Submission.DoesNotExist:
@@ -107,7 +162,20 @@ def submission(request, id):
     cache.set("submission_response_%s" % id, response, 600)
     return response
 
-def subreddit(request, subreddit):
+def subreddit(request, subreddit) -> HttpResponse:
+    """View for an individual subreddit's page.
+
+    After rendering the HttpResponse, it is temporarily added to the cache.
+    This function checks whether the response is available in the cache,
+    and will use it if available to save resources.
+
+    Args:
+        request: a standard HttpRequest;
+        subreddit: the name of the subreddit
+
+    Returns:
+        HttpResponse: a standard HttpResponse from templates/subreddit.html
+    """
     try:
         subreddit = Subreddit.objects.get(name__iexact=subreddit)
     except Subreddit.DoesNotExist:
@@ -131,7 +199,23 @@ def subreddit(request, subreddit):
     cache.set("subreddit_response_%s" % subreddit.name, response, 600)
     return response
 
-def search(request):
+def search(request) -> HttpResponse:
+    """View for the search page.
+
+    Primitively provides search functionality by retrieving a list of
+    submissions which wholly contain the given query. Additionally retrieves
+    a list of subreddits based on the subreddit of top results.
+
+    Args:
+        request: a standard HttpRequest;
+        query: (HTTP parameter): the search query;
+        order_by: (HTTP parameter): how to sort the resulting submissions;
+        time: (HTTP parameter): time frame which submissions must be within;
+        from_subreddits: (HTTP parameter): comma separated list of subreddits
+
+    Returns:
+        HttpResponse: a standard HttpResponse from templates/search.html
+    """
     query = request.GET.get('q', '')
     order_by = request.GET.get('order_by', '')
     time = request.GET.get('time', '')
