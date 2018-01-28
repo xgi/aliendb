@@ -31,7 +31,10 @@ def home(request) -> HttpResponse:
 
     # calculate rank deltas
     for submission in submissions:
-        rank_delta = submission.rank_previous - submission.rank
+        rank_delta = 0
+        if submission.rank_previous != -1 and submission.rank != -1:
+            rank_delta = submission.rank_previous - submission.rank
+
         if rank_delta > 0:
             shape = '▲'
             color = 'green'
