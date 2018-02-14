@@ -3,6 +3,7 @@ from django.test.utils import override_settings
 from django.core.cache import cache
 from .models import *
 from .views import *
+from .helpers import *
 import datetime
 import logging
 
@@ -120,3 +121,15 @@ class CacheTest(TestCase):
         response = self.client.get('/subreddit/testsubreddit')
         cached = cache.get("subreddit_response_testsubreddit")
         self.assertEqual(response.content, cached.content)
+
+class HelpersTest(TestCase):
+    def test_update_average(self):
+        average = 10
+        value = 20
+        tracked = 4
+        new_average = update_average(average, value, tracked)
+        self.assertEqual(new_average, 12)
+    def test_timestamp_to_ms(self):
+        date = datetime.datetime(2005, 6, 23)
+        date_in_ms = timestamp_to_ms(date)
+        self.assertEqual(date_in_ms, 1119484800000.0)
