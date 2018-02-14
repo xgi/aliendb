@@ -317,3 +317,7 @@ td#title span {
 .error {
   text-align: center;
 }
+
+.error h5 {
+    color: #666;
+}
