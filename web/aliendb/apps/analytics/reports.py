@@ -114,6 +114,7 @@ def submission(request) -> dict:
         }
     }
 
+    # cache for 10 minutes
     cache.set("submission_data_%s" % id, data, 600)
 
     return data
@@ -162,6 +163,86 @@ def subreddit(request) -> dict:
         }
     }
 
+    # cache for 10 minutes
     cache.set("subreddit_data_%s" % id, data, 600)
+
+    return data
+
+def cumulative(request) -> dict:
+    """Retrieves data needed to generate graphs for the main page.
+
+    Retrieves data for the following categories, accessible by name from the
+    base of the returned dict (i.e. data['category']):
+        total; average; front
+
+    After retrieving the data, it is temporarily added to the cache. This
+    function checks whether the data is available in the cache, and will use it
+    if available to save resources.
+
+    Args:
+        request: a standard HttpRequest
+        timerange: (HTTP parameter) the time range to retrieve data from, can
+            be: day; week; fortnight; month; year
+
+    Returns:
+        dict: data needed to generate graphs for the main page.
+    """
+    timerange = request.GET.get('timerange', '')
+    if timerange not in ['day', 'week', 'fortnight', 'month', 'year']:
+        # should probably be 400
+        raise Http404("Invalid timerange parameter")
+
+    # try to get full data variable from cache
+    data = cache.get("cumulative_data_%s" % timerange)
+    if data is not None and settings.DEBUG is False:
+        return data
+
+    # get datetime object for earliest possible date based on range
+    today = datetime.date.today()
+    if timerange == 'day':
+        start_date = today - datetime.timedelta(days=1)
+    if timerange == 'week':
+        start_date = today - datetime.timedelta(weeks=1)
+    elif timerange == 'fortnight':
+        start_date = today - datetime.timedelta(weeks=2)
+    elif timerange == 'month':
+        start_date = today - datetime.timedelta(weeks=4)
+    elif timerange == 'year':
+        start_date = today - datetime.timedelta(weeks=52)
+
+    total_scores = TotalScore.objects.filter(timestamp__gt=start_date).order_by('timestamp')
+    total_num_comments = TotalNumComments.objects.filter(timestamp__gt=start_date).order_by('timestamp')
+    average_scores = AverageScore.objects.filter(timestamp__gt=start_date).order_by('timestamp')
+    average_num_comments = AverageNumComments.objects.filter(timestamp__gt=start_date).order_by('timestamp')
+
+    ## total
+    total_score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in total_scores]
+    total_comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in total_num_comments]
+
+    ## average
+    average_score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in average_scores]
+    average_comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in average_num_comments]
+
+    ## front
+    front_score_tallies = [[tally[0], tally[1] * 100] for tally in average_score_tallies]
+    front_comment_tallies = [[tally[0], tally[1] * 100] for tally in average_comment_tallies]
+
+    data = {
+        'total': {
+            'scores': total_score_tallies,
+            'comments': total_comment_tallies
+        },
+        'average': {
+            'scores': average_score_tallies,
+            'comments': average_comment_tallies
+        },
+        'front': {
+            'scores': front_score_tallies,
+            'comments': front_comment_tallies
+        }
+    }
+
+    # cache for 1 hour
+    cache.set("cumulative_data_%s" % timerange, data, 3600)
 
     return data

@@ -120,6 +120,8 @@ def api(request) -> JsonResponse:
         data = reports.submission(request)
     elif name == 'subreddit':
         data = reports.subreddit(request)
+    elif name == 'cumulative':
+        data = reports.cumulative(request)
 
     return JsonResponse(data)
 
