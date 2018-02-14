@@ -352,3 +352,76 @@ function subreddit_activity_chart(data) {
         ]
     });
 }
+
+function cumulative_charts(timerange) {
+    $.getJSON('/api?name=cumulative&timerange=' + timerange, function (data) {
+        cumulative_activity_front_chart(data);
+    }).always(function () {
+        // hide loaders
+        $('.loader').each(function () {
+            $(this).hide();
+        });
+    }).fail(function (data, status, error) {
+        $(".chart").append("<div class='error'><h5>An error occurred while loading this chart.</h5><p>Wait a moment, then try reloading the page.<br><i>(" + error + ")</i></p>");
+    });
+}
+
+function cumulative_activity_front_chart(data) {
+    Highcharts.chart('cumulative_activity_front_chart', {
+        chart: {
+            height: '300px',
+            zoomType: 'x'
+        },
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            shared: true
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [
+            {
+                title: {
+                    text: 'Karma'
+                }
+            },
+            {
+                title: {
+                    text: 'Comments'
+                },
+                opposite: true
+            }
+        ],
+        plotOptions: {
+            series: {
+                lineWidth: 3
+            }
+        },
+        series: [
+            {
+                type: 'line',
+                name: 'Karma',
+                yAxis: 0,
+                data: data['front']['scores']
+            },
+            {
+                type: 'line',
+                name: 'Comments',
+                yAxis: 1,
+                data: data['front']['comments']
+            }
+        ],
+        colors: [
+            'rgba(255, 69, 0, 1)',
+            'rgba(47, 79, 79, 1)'
+        ]
+    });
+}
