@@ -370,8 +370,15 @@ def get_top_submissions():
     # create/update db submission objects
     rank = 0
     submission_objs = []
+    frontpage_score = 0
+    frontpage_num_comments = 0
     for submission in submissions:
         rank += 1
+
+        # track running variables
+        frontpage_score += submission.score
+        frontpage_num_comments += submission.num_comments
+        
         try:
             # check if this submission already exists in the db
             if Submission.objects.filter(id=submission.id):
@@ -387,19 +394,13 @@ def get_top_submissions():
     # reset rank for submissions no longer in top 100
     submission_ids = [submission.id for submission in submissions]
     modified_subreddits = []
-    frontpage_score = 0
-    frontpage_num_comments = 0
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
+            create_cumulative_tracker_objs(submission_obj)
             subreddit = update_subreddit_obj(subreddit, submission_obj)
 
-            # update running variables
             if subreddit not in modified_subreddits:
                 modified_subreddits.append(subreddit)
-            frontpage_score += submission_obj.score
-            frontpage_num_comments += submission_obj.num_comments
-
-            create_cumulative_tracker_objs(submission_obj)
 
             submission_obj.rank = -1
             submission_obj.save()
