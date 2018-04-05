@@ -240,12 +240,12 @@ td#title span {
 /* About page */
 
 .about {
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
-.about p {
+/*.about p {
   text-align: justify;
-}
+}*/
 
 .about ul {
   list-style: none;

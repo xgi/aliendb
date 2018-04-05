@@ -14,31 +14,39 @@
 
 <div class="container-fluid">
   <div class="row justify-content-sm-center">
-    <div class="col-xs-12 col-md-10 col-lg-6">
+    <div class="col-xs-12 col-md-10 col-lg-8 col-xl-6">
       <div class="about">
-        <h4>About</h4>
-        <p>AlienDB is an analytics platform for trending Reddit threads. It
-          stores historical data for the top threads on Reddit, including karma
-          trends and comment stats. This website is <b>not</b> affiliated with
-          Reddit, and only accesses data which is publicly available.
+        <h4>Overview</h4>
+        <p>AlienDB is an analytics platform for Reddit. It tracks and stores
+            historical data for the top threads on Reddit in order to provide
+            karma trends, comment stats, and subreddit profiles. This website
+            is <b>not</b> affiliated with Reddit, and only access data which
+            is publicly available.
         </p>
+        <h4>Method</h4>
         <p>AlienDB monitors the top 100 submissions on
-          <a href="https://reddit.com/r/all">/r/all</a> and periodically records
-          information including each submission's rank, its number of comments,
-          and its current karma. Each comment is processed to record cumulative
-          gold given and special user presence. Comment text is <b>not</b>
-          stored. Additionally, submissions are analyzed using the
-          <a href="http://nltk.org">Natural Language Toolkit</a> (NLTK) and
-          <a href="https://textblob.readthedocs.io">TextBlob</a> for recording
-          the polarity and subjectivity of submission titles and comments.
+            <a href="https://reddit.com/r/all">/r/all</a> and periodically records
+            information including each submission's rank, its number of comments,
+            and its current karma. Each comment is processed to record cumulative
+            gold given and special user presence. Comment text is <b>not</b>
+            stored. Additionally, submissions are analyzed using the
+            <a href="http://nltk.org">Natural Language Toolkit</a> (NLTK) and
+            <a href="https://textblob.readthedocs.io">TextBlob</a> for recording
+            the polarity and subjectivity of submission titles and comments.
         </p>
+        <h4>Subreddit Profiles</h4>
         <p>Statistics from individual submissions are also used to provide
-          subreddit averages. It is important to note that only submissions
-          which reach the top of Reddit are included in these averages, so
-          subreddit averages should not be used as a way to describe a subreddit
-          as a whole. Rather, it is a useful tool to determine whether an
-          individual submission is significantly different than others which
-          were also highly upvoted from the subreddit.
+            subreddit averages. It is important to note that only submissions
+            which reach the top of Reddit are included in these averages, so
+            subreddit averages should not be used as a way to describe a subreddit
+            as a whole. Rather, it is a useful tool to determine whether an
+            individual submission is significantly different than others which
+            were also highly upvoted from the subreddit.
+        <h4>Open Source</h4>
+        <p>AlienDB is open source! This website is a Django web application with
+            Docker-based microservices. You can report issues or contribute
+            code at <a href="https://github.com/xgi/aliendb">https://github.com/xgi/aliendb</a>.
+        </p>
         <h4>Contact</h4>
         <p>AlienDB was created by xgi as part of
           <a href="https://faltro.com">Faltro</a>. You can contact me in the
