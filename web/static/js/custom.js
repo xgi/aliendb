@@ -401,6 +401,11 @@ function cumulative_activity_front_chart(data) {
             }
         ],
         plotOptions: {
+            line: {
+                marker: {
+                    enabled: false
+                }
+            },
             series: {
                 lineWidth: 3
             }
