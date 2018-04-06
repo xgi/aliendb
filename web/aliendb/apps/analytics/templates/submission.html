@@ -6,45 +6,72 @@
 <meta property="og:description" content="Analytics for this Reddit post on AlienDB.">
 {% endblock %}
 {% block content %}
-<div class="container-fluid container-spaced">
-  <div class="row justify-content-sm-center">
-    <div class="col-12 col-md-2 col-lg-2">
-      <div class="card card-inverse card-primary text-center">
-        <div class="card-block">
+<div class="header">
+  <div class="container-fluid align-self-center">
+    <div class="row justify-content-sm-center">
+      <div class="hidden-sm-down col-md-2 col-lg-2">
+        <div class="row justify-content-sm-center">
           {% if submission.rank == -1 %}
-          <h2><b>#???</b></h2>
+          <h1>#???</h1>
           {% else %}
-          <h2><b>#{{ submission.rank }}</b></h2>
+          <h1>#{{ submission.rank }}</h1>
           {% endif %}
+        </div>
+        <div class="row justify-content-sm-center">
           <span>Peak: {{ submission.rank_peak }}</span>
         </div>
       </div>
+      <div class="hidden-md-up col-12">
+        <div class="row justify-content-center">
+          <div class="col-3">
+            {% if submission.rank == -1 %}
+            <h1>#???</h1>
+            {% else %}
+            <h1>#{{ submission.rank }}</h1>
+            {% endif %}
+          </div>
+          <div class="col-9">
+            <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+          </div>
+          <div class="col-12">
+            <h4>{{ submission.title }}</h4>
+          </div>
+        </div>
+      </div>
+      <div class="hidden-sm-down col-12 col-md-10 col-lg-8 col-xl-7">
+        <h4>{{ submission.title }}</h4>
+        <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+      </div>
     </div>
-    <div class="col-12 col-md-10 col-lg-8">
-      <div class="card card-inverse card-primary">
-        <div class="card-block">
-          <h4 class="card-title"><a href="https://redd.it/{{ submission.id }}">{{ submission.title }}</a></h4>
-          <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+  </div>
+</div>
+<div class="subheader">
+  <div class="container-fluid align-self-center">
+    <div class="subheader-tabs">
+      <div class="row justify-content-center">
+        <div class="col-6 col-md-3 col-lg-2">
+          <a class="btn btn-primary tab-item active" href="#overview" data-toggle="tab">Overview</a>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+          <a class="btn btn-secondary tab-item" href="#details" data-toggle="tab">Details</a>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+          <a class="btn btn-secondary tab-item" href="#sentiment" data-toggle="tab">Sentiment</a>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+          <a class="btn btn-secondary tab-item" href="#comments" data-toggle="tab">Comments</a>
         </div>
       </div>
     </div>
   </div>
-
-
+</div>
+<div class="container-fluid">
   <div class="row justify-content-sm-center">
-    <div class="col-12 col-md-2 col-lg-2">
-      <ul class="nav nav-tabs-custom flex-column">
-        <li class="nav-item"><a class="nav-link active" href="#overview" data-toggle="tab">Overview</a></li>
-        <li class="nav-item"><a class="nav-link" href="#details" data-toggle="tab">Details</a></li>
-        <li class="nav-item"><a class="nav-link" href="#sentiment" data-toggle="tab">Sentiment</a></li>
-        <li class="nav-item"><a class="nav-link" href="#comments" data-toggle="tab">Comments</a></li>
-      </ul>
-    </div>
-    <div class="col-12 col-md-10 col-lg-8">
+    <div class="col-12 col-lg-10 col-xl-8">
       <div class="tab-content">
         <div class="tab-pane active" id="overview"> <!-- overview tab -->
           <div class="row justify-content-sm-center">
-            <div class="col-12">
+            <div class="col-12 col-md-8 col-lg-9">
               <div class="card">
                 <div class="card-header">Activity</div>
                 <div class="card-block chart">
@@ -59,25 +86,25 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row justify-content-sm-center">
-            <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Lifetime</div>
-                <div class="card-block text-center">
-                  <p>Time spent in the top 100:</p>
-                  <h1>{{ lifetime }}</h1>
-                  <p>±10 minutes</p>
+            <div class="col-12 col-md-4 col-lg-3">
+              <div class="row justify-content-center">
+                <div class="card">
+                  <div class="card-header">Lifetime</div>
+                  <div class="card-block text-center">
+                    <p>Time spent in the top 100:</p>
+                    <h1>{{ lifetime }}</h1>
+                    <p>±10 minutes</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Rise Time</div>
-                <div class="card-block text-center">
-                  <p>Time before reaching top 100:</p>
-                  <h1>{{ rise_time }}</h1>
-                  <p>±10 minutes</p>
+              <div class="row justify-content-center">
+                <div class="card">
+                  <div class="card-header">Rise Time</div>
+                  <div class="card-block text-center">
+                    <p>Time before reaching top 100:</p>
+                    <h1>{{ rise_time }}</h1>
+                    <p>±10 minutes</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -85,57 +112,59 @@
         </div>
         <div class="tab-pane" id="details"> <!-- details tab -->
           <div class="row justify-content-sm-center">
-            <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Details</div>
-                <div class="card-block">
-                  <table class="table">
-                    <tbody>
-                      <tr>
-                        <th>Domain</td>
-                        <td>{{ submission.domain }}</td>
-                      </tr>
-                      <tr>
-                        <th>Flair text</td>
-                        <td>{{ submission.link_flair_text }}</td>
-                      </tr>
-                      <tr>
-                        <th>Upvote ratio</td>
-                        <td>{{ submission.upvote_ratio }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <div class="col-12 col-md-4 col-lg-3">
+              <div class="row justify-content-center">
+                <div class="card">
+                  <div class="card-header">Details</div>
+                  <div class="card-block">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th>Domain</td>
+                          <td>{{ submission.domain }}</td>
+                        </tr>
+                        <tr>
+                          <th>Flair text</td>
+                          <td>{{ submission.link_flair_text }}</td>
+                        </tr>
+                        <tr>
+                          <th>Upvote ratio</td>
+                          <td>{{ submission.upvote_ratio }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="card">
+                  <div class="card-header">Modifiers</div>
+                  <div class="card-block">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th>Stickied</td>
+                          <td>{{ submission.stickied }}</td>
+                        </tr>
+                        <tr>
+                          <th>NSFW</td>
+                          <td>{{ submission.over_18 }}</td>
+                        </tr>
+                        <tr>
+                          <th>Spoiler</td>
+                          <td>{{ submission.spoiler }}</td>
+                        </tr>
+                        <tr>
+                          <th>Locked</td>
+                          <td>{{ submission.locked }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Modifiers</div>
-                <div class="card-block">
-                  <table class="table">
-                    <tbody>
-                      <tr>
-                        <th>Stickied</td>
-                        <td>{{ submission.stickied }}</td>
-                      </tr>
-                      <tr>
-                        <th>NSFW</td>
-                        <td>{{ submission.over_18 }}</td>
-                      </tr>
-                      <tr>
-                        <th>Spoiler</td>
-                        <td>{{ submission.spoiler }}</td>
-                      </tr>
-                      <tr>
-                        <th>Locked</td>
-                        <td>{{ submission.locked }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
+            <div class="col-12 col-md-8 col-lg-9">
               <div class="card">
                 <div class="card-header">Upvote Ratio</div>
                 <div class="card-block chart">
@@ -220,10 +249,21 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane" id="settings">Settings Tab.</div>
       </div>
     </div>
   </div>
 </div> <!-- container -->
-<script>submission_charts('{{ submission.id }}');</script>
+<script>
+submission_charts('{{ submission.id }}');
+
+// properly change active tab
+$('.subheader-tabs').on('show.bs.tab', function (e) {
+  $('.subheader-tabs .active').addClass('btn-secondary')
+  $('.subheader-tabs .active').removeClass('btn-primary active');
+});
+$('.subheader-tabs').on('shown.bs.tab', function (e) {
+  $('.subheader-tabs .active').addClass('btn-primary')
+  $('.subheader-tabs .active').removeClass('btn-secondary');
+});
+</script>
 {% endblock content %}

@@ -82,7 +82,10 @@ a:hover {
 /* Page header */
 
 .header {
-  display: flex;
+    display: flex;
+}
+
+.header, .subheader {
   min-height: 150px;
   width: 100%;
   color: white;
@@ -92,9 +95,50 @@ a:hover {
   padding-top: 1rem;
 }
 
-.header h1 {
+.header h1, .subheader h1 {
   color: white;
   font-weight: bold;
+}
+
+.header h4, .subheader h4 {
+    color: white;
+    text-align: left;
+}
+
+.header p, .subheader p {
+    color: #bbb;
+    text-align: left;
+}
+
+.header a {
+    color: #2196F3;
+}
+
+.header a:hover {
+    color: white;
+}
+
+.subheader {
+    min-height: 0 !important;
+    padding-bottom: 1rem;
+    padding-top: 0.5rem;
+    margin-top: -2rem;
+    background-color: #2c3a41;
+}
+
+.subheader.container-fluid {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.subheader .nav {
+    display: inline;
+}
+
+.subheader a.btn {
+    min-width: 60%;
+    margin-top: 0.5rem;
+    text-transform: none;
 }
 
 .lead {
@@ -174,7 +218,8 @@ td#title span {
 /* Cards */
 
 .card {
-  margin-bottom: 1rem;
+    min-width: 95%;
+    margin-bottom: 1rem;
 }
 
 .card-inverse a {
