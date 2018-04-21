@@ -2,23 +2,24 @@ from django.test import TestCase
 from ..models import Submission
 from ..tasks import *
 from .common.db import create_dummy_models
-import vcr
+import pickle
 
 
 class TasksTest(TestCase):
+    def setUp(self):
+        self.my_dir = os.path.dirname(os.path.realpath(__file__))
+
     def test_create_submission_obj(self):
-        submission_id = '4vx5ko'
-        with vcr.use_cassette('cassettes/submission1.yaml'):
-            submission = reddit.submission(id=submission_id)
-            submission.score
+        submission_id = '8djsdf'
+        with open(self.my_dir + '/data/submission_%s.pk1' % submission_id, 'rb') as obj_file:
+            submission = pickle.load(obj_file)
         create_submission_obj(submission, 1)
         assert Submission.objects.filter(id=submission_id).exists()
 
     def test_update_submission_obj(self):
-        submission_id = '4vx5ko'
-        with vcr.use_cassette('cassettes/submission1.yaml'):
-            submission = reddit.submission(id=submission_id)
-            submission.score
+        submission_id = '8djsdf'
+        with open(self.my_dir + '/data/submission_%s.pk1' % submission_id, 'rb') as obj_file:
+            submission = pickle.load(obj_file)
         submission_obj = create_submission_obj(submission, 1)
 
         new_score = 51
@@ -38,18 +39,16 @@ class TasksTest(TestCase):
     def test_create_comment_obj(self):
         create_dummy_models()
         comment_id = 'dnz8azn'
-        with vcr.use_cassette('cassettes/comment1.yaml'):
-            comment = reddit.comment(id=comment_id)
-            comment.score
+        with open(self.my_dir + '/data/comment_%s.pk1' % comment_id, 'rb') as obj_file:
+            comment = pickle.load(obj_file)
         submission_obj = Submission.objects.get(id='000001')
         create_comment_obj(comment, submission_obj)
         assert Comment.objects.filter(id=comment_id).exists()
 
     def test_create_submission_tracker_objs(self):
-        submission_id = '4vx5ko'
-        with vcr.use_cassette('cassettes/submission1.yaml'):
-            submission = reddit.submission(id=submission_id)
-            submission.score
+        submission_id = '8djsdf'
+        with open(self.my_dir + '/data/submission_%s.pk1' % submission_id, 'rb') as obj_file:
+            submission = pickle.load(obj_file)
         submission_obj = create_submission_obj(submission, 1)
         create_submission_tracker_objs(submission_obj, submission)
         assert SubmissionScore.objects.filter(
@@ -60,10 +59,9 @@ class TasksTest(TestCase):
             submission=submission_obj).exists()
 
     def test_create_cumulative_tracker_objs(self):
-        submission_id = '4vx5ko'
-        with vcr.use_cassette('cassettes/submission1.yaml'):
-            submission = reddit.submission(id=submission_id)
-            submission.score
+        submission_id = '8djsdf'
+        with open(self.my_dir + '/data/submission_%s.pk1' % submission_id, 'rb') as obj_file:
+            submission = pickle.load(obj_file)
         submission_obj = create_submission_obj(submission, 1)
         create_cumulative_tracker_objs(submission_obj)
         assert TotalScore.objects.filter(score=submission_obj.score).exists()
