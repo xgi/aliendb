@@ -218,11 +218,10 @@ def create_comment_obj(comment, submission_obj):
         comment_obj.gilded = comment.gilded
         comment_obj.save()
 
-def update_subreddit_obj(subreddit, submission_obj) -> Subreddit:
+def update_subreddit_obj(submission_obj) -> Subreddit:
     """Updates an existing models.Subreddit object with a submission's stats.
 
     Args:
-        subreddit: the existing models.Subreddit object;
         submission_obj: the models.Submission object to get stats from
 
     Returns:
@@ -328,15 +327,14 @@ def create_cumulative_tracker_objs(submission_obj):
     total_score.save()
     total_num_comments.save()
 
-def create_subreddit_tracker_objs(subreddit, ):
+def create_subreddit_tracker_objs(subreddit):
     """Creates tracker objects for a given subreddit.
 
-    Creates the following objects in the database for this submission:
-        SubmissionScore, SubmissionNumComments, SubmissionUpvoteRatio
+    Creates the following objects in the database for this subreddit:
+        SubredditScore, SubredditNumComments
 
     Args:
-        submission_obj: the source models.Submission object;
-        submission: the source Praw submission object
+        subreddit: the source models.Subreddit object
     """
     subreddit_score = SubredditScore(
         subreddit=subreddit,
@@ -397,7 +395,7 @@ def get_top_submissions():
     for submission_obj in Submission.objects.filter(rank__gt=0):
         if submission_obj.id not in submission_ids:
             create_cumulative_tracker_objs(submission_obj)
-            subreddit = update_subreddit_obj(subreddit, submission_obj)
+            subreddit = update_subreddit_obj(submission_obj)
 
             if subreddit not in modified_subreddits:
                 modified_subreddits.append(subreddit)
