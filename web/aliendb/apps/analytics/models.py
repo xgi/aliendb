@@ -41,7 +41,7 @@ class Subreddit(models.Model):
 # models with many-to-one relationship with Subreddit
 class Submission(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=7)
-    subreddit = models.ForeignKey(Subreddit)
+    subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     title = models.CharField(max_length=300)
     author = models.CharField(max_length=20)
     rank = models.IntegerField()
@@ -63,19 +63,19 @@ class Submission(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class SubredditScore(models.Model):
-    subreddit = models.ForeignKey(Subreddit)
+    subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     score = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class SubredditNumComments(models.Model):
-    subreddit = models.ForeignKey(Subreddit)
+    subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     num_comments = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 # models with many-to-one relationship with Submission
 class Comment(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=7)
-    submission = models.ForeignKey(Submission)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
 
     score = models.IntegerField()
     is_root = models.BooleanField()
@@ -94,16 +94,16 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class SubmissionScore(models.Model):
-    submission = models.ForeignKey(Submission)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     score = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class SubmissionNumComments(models.Model):
-    submission = models.ForeignKey(Submission)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     num_comments = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class SubmissionUpvoteRatio(models.Model):
-    submission = models.ForeignKey(Submission)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     upvote_ratio = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
