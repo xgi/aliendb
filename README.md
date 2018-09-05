@@ -43,28 +43,28 @@ Most settings given in the provided .env file are suitable for development use. 
 # Building
 
 1. Install [Docker](https://docs.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
-1. Build the Docker services:
+2. Build the Docker services:
 
 ```bash
 docker-compose -f docker-compose-dev.yml build --no-cache
 ```
 
-1. Create and start the Docker containers:
+3. Create and start the Docker containers:
 
 ```bash
 docker-compose -f docker-compose-dev.yml up [-d]
 ```
 
-1. Connect to the website at `http://localhost`
-1. Make any necessary changes to the code.
-1. Stop and remove the `web` container.
+4. Connect to the website at `http://localhost`
+5. Make any necessary changes to the code.
+6. Stop and remove the `web` container.
 
 ```bash
 docker-compose -f docker-compose-dev.yml stop web
 docker-compose -f docker-compose-dev.yml rm web
 ```
 
-1. Build the new image and create+start a new container.
+7. Build the new image and create+start a new container.
 
 ```bash
 docker-compose -f docker-compose-dev.yml up [-d] --build
