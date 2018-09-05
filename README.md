@@ -68,4 +68,4 @@ docker-compose -f docker-compose-dev.yml run --rm web \
 ```
 
 # License
-[3-Clause BSD License](https://github.com/xgi/aliendb/blob/master/LICENSE.txt)
+[3-Clause BSD License](https://github.com/xgi/aliendb/blob/master/LICENSE)
