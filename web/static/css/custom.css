@@ -285,6 +285,10 @@ td#title span {
     list-style: none;
 }
 
+.about h5 {
+    color: #444;
+}
+
 /* Loading spinner */
 
 .loader {
