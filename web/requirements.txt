@@ -1,4 +1,4 @@
-django==2.0.7
+django==2.1.2
 gunicorn==19.9.0
 psycopg2==2.7.5
 redis==2.10.6
