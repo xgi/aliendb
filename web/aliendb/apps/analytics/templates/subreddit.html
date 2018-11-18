@@ -19,61 +19,48 @@
         <div class="col-12 col-md-12 col-xl-4">
           <div class="row justify-content-sm-center">
             <div class="col-12">
-              <div class="card card-outline-primary subreddit-overview">
+              <div class="card subreddit-overview">
                 <div class="card-block">
-                  <h4 class="card-title"><a href="https://reddit.com/r/{{ subreddit.name }}">/r/{{ subreddit.name }}</a> - {{ subreddit.title }}</h4>
+                  <h4 class="card-title">{{ subreddit.title }}</h4>
                   <p class="card-text">{{ subreddit.description }}</p>
                 </div>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
-              <div class="card card-inverse card-primary text-center">
-                <div class="card-block">
-                  <h5>{{ subreddit.tracked_submissions }}</h5>
-                  <span>Posts</span>
-                </div>
+              <div class="card card-stat text-center">
+                <h4>{{ subreddit.tracked_submissions|intcomma }}</h4>
+                <span>Posts</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
-              <div class="card card-inverse card-primary text-center">
-                <div class="card-block">
-                  <h5>{{ subreddit.score|intcomma }}</h5>
-                  <span>Karma</span>
-                </div>
+              <div class="card card-stat text-center">
+                <h4>{{ subreddit.score|intcomma }}</h4>
+                <span>Karma</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
-              <div class="card card-inverse card-primary text-center">
-                <div class="card-block">
-                  <h5>{{ subreddit.num_comments|intcomma }}</h5>
-                  <span>Comments</span>
-                </div>
+              <div class="card card-stat text-center">
+                <h4>{{ subreddit.num_comments|intcomma }}</h4>
+                <span>Comments</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
-              <div class="card card-inverse card-primary text-center">
-                <div class="card-block">
-                  <h5>{% widthratio subreddit.average_upvote_ratio 1 100 %}%</h5>
-                  <span>Upvoted</span>
-                </div>
+              <div class="card card-stat text-center">
+                <h4>{% widthratio subreddit.average_upvote_ratio 1 100 %}%</h4>
+                <span>Upvoted</span>
               </div>
             </div>
           </div>
         </div>
         <div class="hidden-sm-down col-md-12 col-xl-8">
-          <div class="card">
-            <div class="card-header">Activity</div>
-            <div class="card-block chart">
-              <div class="loader">
-                <div class="rect1"></div>
-                <div class="rect2"></div>
-                <div class="rect3"></div>
-                <div class="rect4"></div>
-                <div class="rect5"></div>
-              </div>
-              <div id="subreddit_activity_chart"></div>
-            </div>
+          <div class="loader">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+            <div class="rect5"></div>
           </div>
+          <div id="subreddit_activity_chart"></div>
         </div>
       </div>
     </div>
@@ -101,7 +88,8 @@
               <td id="comments">{{ submission.num_comments|intcomma }}</td>
               <td id="title">
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
-                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
+                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince}}
+                  ago</span>
               </td>
             </tr>
             {% endfor %}

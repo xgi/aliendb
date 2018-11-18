@@ -31,7 +31,9 @@
             {% endif %}
           </div>
           <div class="col-9">
-            <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+            <p class="card-text">Submitted to
+              <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a>
+              on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
           </div>
           <div class="col-12">
             <h4>{{ submission.title }}</h4>
@@ -40,7 +42,9 @@
       </div>
       <div class="hidden-sm-down col-12 col-md-10 col-lg-8 col-xl-7">
         <h4>{{ submission.title }}</h4>
-        <p class="card-text">Submitted to <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a> on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
+        <p class="card-text">Submitted to
+          <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a>
+          on {{ submission.created_at|date }} at {{ submission.created_at|time }} UTC</p>
       </div>
     </div>
   </div>
@@ -69,48 +73,39 @@
   <div class="row justify-content-sm-center">
     <div class="col-12 col-lg-10 col-xl-8">
       <div class="tab-content">
-        <div class="tab-pane active" id="overview"> <!-- overview tab -->
+        <div class="tab-pane active" id="overview">
+          <!-- overview tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-8 col-lg-9">
-              <div class="card">
-                <div class="card-header">Activity</div>
-                <div class="card-block chart">
-                  <div class="loader">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                  </div>
-                  <div id="submission_activity_chart"></div>
-                </div>
+              <div class="loader">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
               </div>
+              <div id="submission_activity_chart"></div>
             </div>
             <div class="col-12 col-md-4 col-lg-3">
               <div class="row justify-content-center">
-                <div class="card">
-                  <div class="card-header">Lifetime</div>
-                  <div class="card-block text-center">
+                <div class="col-6 col-lg-12">
+                  <div class="card card-stat">
                     <p>Time spent in the top 100:</p>
                     <h1>{{ lifetime }}</h1>
-                    <p>±10 minutes</p>
                   </div>
                 </div>
-              </div>
-              <div class="row justify-content-center">
-                <div class="card">
-                  <div class="card-header">Rise Time</div>
-                  <div class="card-block text-center">
+                <div class="col-6 col-lg-12">
+                  <div class="card card-stat">
                     <p>Time before reaching top 100:</p>
                     <h1>{{ rise_time }}</h1>
-                    <p>±10 minutes</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="tab-pane" id="details"> <!-- details tab -->
+        <div class="tab-pane" id="details">
+          <!-- details tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-4 col-lg-3">
               <div class="row justify-content-center">
@@ -181,7 +176,8 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane" id="sentiment"> <!-- sentiment tab -->
+        <div class="tab-pane" id="sentiment">
+          <!-- sentiment tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-6">
               <div class="card">
@@ -215,7 +211,8 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane" id="comments"> <!-- comments tab -->
+        <div class="tab-pane" id="comments">
+          <!-- comments tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-6">
               <div class="card">
@@ -254,16 +251,16 @@
   </div>
 </div> <!-- container -->
 <script>
-submission_charts('{{ submission.id }}');
+  submission_charts('{{ submission.id }}');
 
-// properly change active tab
-$('.subheader-tabs').on('show.bs.tab', function (e) {
-  $('.subheader-tabs .active').addClass('btn-secondary')
-  $('.subheader-tabs .active').removeClass('btn-primary active');
-});
-$('.subheader-tabs').on('shown.bs.tab', function (e) {
-  $('.subheader-tabs .active').addClass('btn-primary')
-  $('.subheader-tabs .active').removeClass('btn-secondary');
-});
+  // properly change active tab
+  $('.subheader-tabs').on('show.bs.tab', function (e) {
+    $('.subheader-tabs .active').addClass('btn-secondary')
+    $('.subheader-tabs .active').removeClass('btn-primary active');
+  });
+  $('.subheader-tabs').on('shown.bs.tab', function (e) {
+    $('.subheader-tabs .active').addClass('btn-primary')
+    $('.subheader-tabs .active').removeClass('btn-secondary');
+  });
 </script>
 {% endblock content %}

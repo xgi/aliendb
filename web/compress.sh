@@ -12,10 +12,10 @@ cat bootstrap.css \
   | python -m rcssmin > main.min.css
 
 cd $ROOT/static/js
-cat custom.js \
-  highcharts.js \
+cat highcharts.js \
   jquery.min.js \
   moment.min.js \
   tether.min.js \
   bootstrap.min.js \
+  custom.js \
   | python -m rjsmin > main.min.js

@@ -149,17 +149,39 @@ def subreddit(request) -> dict:
     if data is not None and settings.DEBUG is False:
         return data
 
-    subreddit_scores = SubredditScore.objects.filter(subreddit=subreddit).order_by('timestamp')
-    subreddit_num_comments = SubredditNumComments.objects.filter(subreddit=subreddit).order_by('timestamp')
+    today = datetime.date.today()
+    start_date = today - datetime.timedelta(weeks=4)
+
+    subreddit_scores = SubredditScore.objects.filter(timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
+    subreddit_num_comments = SubredditNumComments.objects.filter(timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
 
     ## activity
-    score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in subreddit_scores]
-    comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in subreddit_num_comments]
+    score_tallies_raw = [[timestamp_to_ms(s.timestamp), s.score] for s in subreddit_scores]
+    comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in subreddit_num_comments]
+
+    # throw out tallies within the same day
+    score_tallies = []
+    comment_tallies = []
+    time_to_beat = 0
+    for i in range(len(score_tallies_raw)):
+        if score_tallies_raw[i][0] >= time_to_beat:
+            score_tallies.append(score_tallies_raw[i])
+            comment_tallies.append(comment_tallies_raw[i])
+            time_to_beat = score_tallies_raw[i][0] + 86400000
+
+    # calculate differentials
+    score_differentials = []
+    comment_differentials = []
+    for i in range(1, len(score_tallies)):
+        score_differentials.append([score_tallies[i][0], score_tallies[i][1] - score_tallies[i-1][1]])
+        comment_differentials.append([comment_tallies[i][0], comment_tallies[i][1] - comment_tallies[i-1][1]])
 
     data = {
         'activity': {
             'scores': score_tallies,
-            'comments': comment_tallies
+            'comments': comment_tallies,
+            'score_differentials': score_differentials,
+            'comment_differentials': comment_differentials
         }
     }
 

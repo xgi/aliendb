@@ -1,3 +1,11 @@
+Highcharts.setOptions({
+    chart: {
+        style: {
+            fontFamily: '"Lato","Helvetica Neue",Helvetica,Arial,sans-serif'
+        }
+    }
+});
+
 function submission_charts(id) {
     $.getJSON('/api?name=submission&id=' + id, function (data) {
         submission_polarity_chart(data);
@@ -34,7 +42,7 @@ function submission_polarity_chart(data) {
             tickPositioner: function () {
                 var maxDeviation = Math.round((Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)) + .05) * 10) / 10;
                 var halfMaxDeviation = maxDeviation / 2;
-                
+
                 return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
             },
             title: {
@@ -72,7 +80,7 @@ function submission_subjectivity_chart(data) {
             tickPositioner: function () {
                 var maxDeviation = Math.round((Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)) + .05) * 10) / 10;
                 var halfMaxDeviation = maxDeviation / 2;
-                
+
                 return [0, halfMaxDeviation, maxDeviation];
             },
             title: {
@@ -107,38 +115,44 @@ function submission_activity_chart(data) {
             shared: true
         },
         xAxis: {
-            type: 'datetime'
+            type: 'datetime',
+            crosshair: true
         },
         yAxis: [
             {
                 title: {
-                    text: 'Karma'
+                    text: 'Comments'
                 }
             },
             {
                 title: {
-                    text: 'Comments'
+                    text: 'Karma'
                 },
                 opposite: true
             }
         ],
         series: [
             {
-                type: 'line',
-                name: 'Karma',
+                type: 'column',
+                name: 'Comments',
                 yAxis: 0,
-                data: data['activity']['scores']
+                data: data['activity']['comments'],
+                lineWidth: 4
             },
             {
-                type: 'line',
-                name: 'Comments',
+                type: 'spline',
+                name: 'Karma',
                 yAxis: 1,
-                data: data['activity']['comments']
+                data: data['activity']['scores'],
+                lineWidth: 4,
+                marker: {
+                    radius: 6
+                }
             }
         ],
         colors: [
-            'rgba(255, 69, 0, 1)',
-            'rgba(47, 79, 79, 1)'
+            'rgba(47, 79, 79, 1)',
+            'rgba(255, 69, 0, 1)'
         ]
     });
 }
@@ -317,12 +331,12 @@ function subreddit_activity_chart(data) {
         yAxis: [
             {
                 title: {
-                    text: 'Karma'
+                    text: 'Δ Comments (per day)'
                 }
             },
             {
                 title: {
-                    text: 'Comments'
+                    text: 'Δ Karma (per day)'
                 },
                 opposite: true
             }
@@ -334,21 +348,21 @@ function subreddit_activity_chart(data) {
         },
         series: [
             {
-                type: 'line',
-                name: 'Karma',
+                type: 'column',
+                name: 'Δ Comments',
                 yAxis: 0,
-                data: data['activity']['scores']
+                data: data['activity']['comment_differentials']
             },
             {
                 type: 'line',
-                name: 'Comments',
+                name: 'Δ Karma',
                 yAxis: 1,
-                data: data['activity']['comments']
+                data: data['activity']['score_differentials']
             }
         ],
         colors: [
-            'rgba(255, 69, 0, 1)',
-            'rgba(47, 79, 79, 1)'
+            'rgba(47, 79, 79, 1)',
+            'rgba(255, 69, 0, 1)'
         ]
     });
 }
@@ -373,7 +387,7 @@ function cumulative_activity_front_chart(data) {
             zoomType: 'x'
         },
         title: {
-            text: null
+            text: "ACTIVITY OF TOP 100 THREADS ON /R/ALL"
         },
         credits: {
             enabled: false
@@ -385,48 +399,44 @@ function cumulative_activity_front_chart(data) {
             shared: true
         },
         xAxis: {
-            type: 'datetime'
+            type: 'datetime',
+            crosshair: true
         },
         yAxis: [
             {
                 title: {
-                    text: 'Karma'
+                    text: 'Comments'
                 }
             },
             {
                 title: {
-                    text: 'Comments'
+                    text: 'Karma'
                 },
                 opposite: true
             }
         ],
-        plotOptions: {
-            line: {
-                marker: {
-                    enabled: false
-                }
-            },
-            series: {
-                lineWidth: 3
-            }
-        },
         series: [
+            {
+                type: 'column',
+                name: 'Comments',
+                yAxis: 0,
+                data: data['front']['comments'],
+                lineWidth: 4
+            },
             {
                 type: 'line',
                 name: 'Karma',
-                yAxis: 0,
-                data: data['front']['scores']
-            },
-            {
-                type: 'line',
-                name: 'Comments',
                 yAxis: 1,
-                data: data['front']['comments']
+                data: data['front']['scores'],
+                lineWidth: 4,
+                marker: {
+                    radius: 6
+                }
             }
         ],
         colors: [
-            'rgba(255, 69, 0, 1)',
-            'rgba(47, 79, 79, 1)'
+            'rgba(47, 79, 79, 1)',
+            'rgba(255, 69, 0, 1)'
         ]
     });
 }

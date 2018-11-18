@@ -157,7 +157,22 @@ a:hover {
     padding-top: 1rem;
 }
 
+.header-alert {
+    margin-top: -22px;
+    margin-bottom: 10px;
+    border-radius: 0;
+}
+
 /* Table */
+
+.table-container-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.table-container-col {
+    padding: 0;
+}
 
 .table-caption {
     border-bottom: 0 !important;
@@ -229,6 +244,12 @@ td#title span {
     font-size: 1.2em;
 }
 
+.card-stat {
+    border: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
 /* Tabs */
 
 .nav-tabs-custom:before {
@@ -278,7 +299,7 @@ td#title span {
 /* About page */
 
 .about {
-    font-size: 1.1rem;
+    font-size: 1.0rem;
 }
 
 .about ul {
