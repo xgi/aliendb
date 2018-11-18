@@ -304,6 +304,7 @@ td#title span {
 
 .about ul {
     list-style: none;
+    padding-left: 0;
 }
 
 .about h5 {
