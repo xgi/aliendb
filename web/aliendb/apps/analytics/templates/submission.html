@@ -109,70 +109,57 @@
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-4 col-lg-3">
               <div class="row justify-content-center">
-                <div class="card">
-                  <div class="card-header">Details</div>
-                  <div class="card-block">
-                    <table class="table">
-                      <tbody>
-                        <tr>
-                          <th>Domain</td>
-                          <td>{{ submission.domain }}</td>
-                        </tr>
-                        <tr>
-                          <th>Flair text</td>
-                          <td>{{ submission.link_flair_text }}</td>
-                        </tr>
-                        <tr>
-                          <th>Upvote ratio</td>
-                          <td>{{ submission.upvote_ratio }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <h6>Details</h6>
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <th>Domain</td>
+                      <td>{{ submission.domain }}</td>
+                    </tr>
+                    <tr>
+                      <th>Flair text</td>
+                      <td>{{ submission.link_flair_text }}</td>
+                    </tr>
+                    <tr>
+                      <th>Upvote ratio</td>
+                      <td>{{ submission.upvote_ratio }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <div class="row justify-content-center">
-                <div class="card">
-                  <div class="card-header">Modifiers</div>
-                  <div class="card-block">
-                    <table class="table">
-                      <tbody>
-                        <tr>
-                          <th>Stickied</td>
-                          <td>{{ submission.stickied }}</td>
-                        </tr>
-                        <tr>
-                          <th>NSFW</td>
-                          <td>{{ submission.over_18 }}</td>
-                        </tr>
-                        <tr>
-                          <th>Spoiler</td>
-                          <td>{{ submission.spoiler }}</td>
-                        </tr>
-                        <tr>
-                          <th>Locked</td>
-                          <td>{{ submission.locked }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <h6>Modifiers</h6>
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <th>Stickied</td>
+                      <td>{{ submission.stickied }}</td>
+                    </tr>
+                    <tr>
+                      <th>NSFW</td>
+                      <td>{{ submission.over_18 }}</td>
+                    </tr>
+                    <tr>
+                      <th>Spoiler</td>
+                      <td>{{ submission.spoiler }}</td>
+                    </tr>
+                    <tr>
+                      <th>Locked</td>
+                      <td>{{ submission.locked }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
             <div class="col-12 col-md-8 col-lg-9">
-              <div class="card">
-                <div class="card-header">Upvote Ratio</div>
-                <div class="card-block chart">
-                  <div class="loader">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                  </div>
-                  <div id="submission_upvote_ratio_chart"></div>
-                </div>
+              <div class="loader">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
               </div>
+              <div id="submission_upvote_ratio_chart"></div>
             </div>
           </div>
         </div>
@@ -180,34 +167,24 @@
           <!-- sentiment tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Polarity</div>
-                <div class="card-block chart">
-                  <div class="loader">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                  </div>
-                  <div id="submission_polarity_chart"></div>
-                </div>
+              <div class="loader">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
               </div>
+              <div id="submission_polarity_chart"></div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Subjectivity</div>
-                <div class="card-block chart">
-                  <div class="loader">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                  </div>
-                  <div id="submission_subjectivity_chart"></div>
-                </div>
+              <div class="loader">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
               </div>
+              <div id="submission_subjectivity_chart"></div>
             </div>
           </div>
         </div>
@@ -215,34 +192,24 @@
           <!-- comments tab -->
           <div class="row justify-content-sm-center">
             <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Special User Presence</div>
-                <div class="card-block chart">
-                  <div class="loader">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                  </div>
-                  <div id="submission_special_users_chart"></div>
-                </div>
+              <div class="loader">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
               </div>
+              <div id="submission_special_users_chart"></div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="card">
-                <div class="card-header">Gold Given</div>
-                <div class="card-block chart">
-                  <div class="loader">
-                    <div class="rect1"></div>
-                    <div class="rect2"></div>
-                    <div class="rect3"></div>
-                    <div class="rect4"></div>
-                    <div class="rect5"></div>
-                  </div>
-                  <div id="submission_gilded_chart"></div>
-                </div>
+              <div class="loader">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
               </div>
+              <div id="submission_gilded_chart"></div>
             </div>
           </div>
         </div>

@@ -30,7 +30,7 @@ function submission_polarity_chart(data) {
             type: 'bar'
         },
         title: {
-            text: null
+            text: "Polarity of this thread"
         },
         credits: {
             enabled: false
@@ -53,10 +53,28 @@ function submission_polarity_chart(data) {
             {
                 name: 'This post',
                 data: data['polarity']['submission'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
             },
             {
                 name: 'Subreddit avg.',
                 data: data['polarity']['subreddit'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
             }
         ]
     });
@@ -68,7 +86,7 @@ function submission_subjectivity_chart(data) {
             type: 'bar'
         },
         title: {
-            text: null
+            text: "Subjectivity of this thread"
         },
         credits: {
             enabled: false
@@ -91,10 +109,28 @@ function submission_subjectivity_chart(data) {
             {
                 name: 'This post',
                 data: data['subjectivity']['submission'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
             },
             {
                 name: 'Subreddit avg.',
                 data: data['subjectivity']['subreddit'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
             }
         ]
     });
@@ -163,7 +199,7 @@ function submission_upvote_ratio_chart(data) {
             zoomType: 'x'
         },
         title: {
-            text: null
+            text: "Upvote ratio over time"
         },
         credits: {
             enabled: false
@@ -218,7 +254,7 @@ function submission_special_users_chart(data) {
             type: 'column'
         },
         title: {
-            text: null
+            text: "Special user presence"
         },
         credits: {
             enabled: false
@@ -264,7 +300,7 @@ function submission_gilded_chart(data) {
             type: 'bar'
         },
         title: {
-            text: null
+            text: "Gold given"
         },
         credits: {
             enabled: false
