@@ -178,28 +178,36 @@ a:hover {
     border-bottom: 0 !important;
 }
 
+.thead-inverse th {
+    background-color: #555;
+}
+
+.table th, .table td {
+    padding: 0.5rem;
+}
+
 th#rank, th#delta, th#karma, th#comments, th#submissions, th#ratio {
     width: 1rem;
     text-align: center;
 }
 
 td#rank, td#delta, td#karma, td#comments, td#submissions, td#ratio {
-    font-size: 1.2em;
+    font-size: 1rem;
     text-align: center;
     vertical-align: middle;
 }
 
 td#subreddit {
-    font-size: 1.1em;
+    font-size: 1rem;
     vertical-align: middle;
 }
 
 td#title, td#name {
-    font-size: 1.1em;
+    font-size: 1rem;
 }
 
 td#title span {
-    font-size: 0.8em;
+    font-size: 0.8rem;
 }
 
 /* Backgrounds */
