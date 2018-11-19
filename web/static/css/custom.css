@@ -370,6 +370,15 @@ td#title span {
     }
 }
 
+/* Highcharts customizations */
+
+.highcharts-title {
+    fill: #434343;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-style: oblique;
+}
+
 /* Search page */
 
 .btn-link:hover, .btn-link:focus {

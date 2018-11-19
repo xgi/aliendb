@@ -423,7 +423,7 @@ function cumulative_activity_front_chart(data) {
             zoomType: 'x'
         },
         title: {
-            text: "ACTIVITY OF TOP 100 THREADS ON /R/ALL"
+            text: "Activity of top 100 threads on /r/all"
         },
         credits: {
             enabled: false
