@@ -29,6 +29,12 @@ def home(request) -> HttpResponse:
 
     submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
 
+    cumulative_stats = {
+        'submissions': Submission.objects.all().count(),
+        'score': TotalScore.objects.latest('timestamp').score,
+        'comments': TotalNumComments.objects.latest('timestamp').num_comments
+    }
+
     # calculate rank deltas
     for submission in submissions:
         rank_delta = 0
@@ -50,6 +56,7 @@ def home(request) -> HttpResponse:
     response = render(request, 'home.html', {
         'page_category': 'posts',
         'submissions': submissions,
+        'cumulative_stats': cumulative_stats
     })
     cache.set("home_response", response, 600)
     return response

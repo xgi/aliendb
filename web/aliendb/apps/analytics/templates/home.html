@@ -6,6 +6,7 @@
 <meta property="og:description" content="AlienDB is an analytics platform for trending Reddit threads.">
 {% endblock %}
 {% block content %}
+{% load humanize %}
 <div class="header">
   <div class="container-fluid align-self-center">
     <h1>AlienDB</h1>
@@ -19,7 +20,8 @@
   <div class="row justify-content-sm-center">
     <div class="hidden-md-up">
       <div class="alert alert-warning header-alert" role="alert">
-        <b>Warning:</b> This website contains graphs and charts which are best viewed on a desktop or large-screen device.
+        <b>Warning:</b> This website contains graphs and charts which are best viewed on a
+        desktop or large-screen device.
       </div>
     </div>
     <div class="hidden-sm-down col-md-11 col-lg-10">
@@ -31,6 +33,28 @@
         <div class="rect5"></div>
       </div>
       <div id="cumulative_activity_front_chart"></div>
+    </div>
+    <div class="hidden-sm-down col-md-11 col-lg-10">
+      <div class="row justify-content-sm-center">
+        <div class="col-6 col-md-3">
+          <div class="card card-stat text-center">
+            <h4>{{ cumulative_stats.submissions|intcomma }}</h4>
+            <span>Total Posts</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card card-stat text-center">
+            <h4>{{ cumulative_stats.score|intcomma }}</h4>
+            <span>Total Karma</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card card-stat text-center">
+            <h4>{{ cumulative_stats.comments|intcomma }}</h4>
+            <span>Total Comments</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row justify-content-sm-center table-container-row">
       <div class="col-12 col-md-11 col-lg-10 table-container-col">
