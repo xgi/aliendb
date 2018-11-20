@@ -18,7 +18,7 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 app.conf.beat_schedule = {
     'update-submissions': {
         'task': 'aliendb.apps.analytics.tasks.get_top_submissions',
-        'schedule': 600.0,
+        'schedule': 1200.0,
         'args': ()
     },
 }

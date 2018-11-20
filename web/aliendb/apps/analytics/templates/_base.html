@@ -1,53 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{% block title %}{% endblock title %}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta property="description" content="An analytics platform for trending Reddit threads.">
-    <meta property="og:site_name" content="AlienDB">
-    <meta property="og:image" content="https://aliendb.info/img/favicon-192x192.png">
-    {% block metadata %}
-    {% endblock %}
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-    <link rel="stylesheet" href="/css/main.min.css" type="text/css">
-    <script src="/js/main.min.js"></script>
-  </head>
-  <body>
-    <nav class="navbar navbar-toggleable-sm navbar-inverse bg-custom fixed-top">
-      <div class="container-fluid">
-        <div class="row justify-content-sm-center">
-          <div class="col-12 col-md-11 col-lg-10">
-            <a class="navbar-brand hidden-md-up" href="/">AlienDB</a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <a class="navbar-brand hidden-xs-down" href="/">AlienDB</a>
-                <li class="nav-item {% if page_category == 'posts' %}active{% endif %}">
-                  <a class="nav-link" href="/">Posts</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link {% if page_category == 'subreddits' %}active{% endif %}" href="/subreddits">Subreddits</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link {% if page_category == 'about' %}active{% endif %}" href="/about">About</a>
-                </li>
-              </ul>
-              <form class="form-inline my-2 my-lg-0" action="/search">
-                <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-              </form>
-            </div>
+<head>
+  <title>{% block title %}{% endblock title %}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta property="description" content="An analytics platform for trending Reddit threads.">
+  <meta property="og:site_name" content="AlienDB">
+  <meta property="og:image" content="https://aliendb.info/img/favicon-192x192.png">
+  {% block metadata %}
+  {% endblock %}
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+  <link rel="stylesheet" href="/css/main.min.css" type="text/css">
+  <script src="/js/main.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-toggleable-sm navbar-inverse bg-inverse bg-custom fixed-top">
+    <div class="container-fluid">
+      <div class="row justify-content-sm-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <a class="navbar-brand hidden-md-up" href="/">AlienDB</a>
+          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <a class="navbar-brand hidden-xs-down" href="/">AlienDB</a>
+              <li class="nav-item {% if page_category == 'posts' %}active{% endif %}">
+                <a class="nav-link" href="/">Posts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if page_category == 'subreddits' %}active{% endif %}" href="/subreddits">Subreddits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if page_category == 'about' %}active{% endif %}" href="/about">About</a>
+              </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" action="/search">
+              <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search">
+              <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>
           </div>
         </div>
       </div>
-    </nav>
-    {% block content %}
-    {% endblock content %}
-  </body>
+    </div>
+  </nav>
+  {% block content %}
+  {% endblock content %}
+</body>
 </html>

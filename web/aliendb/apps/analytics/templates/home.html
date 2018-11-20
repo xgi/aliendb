@@ -18,13 +18,7 @@
 
 <div class="container-fluid">
   <div class="row justify-content-sm-center">
-    <div class="hidden-md-up">
-      <div class="alert alert-warning header-alert" role="alert">
-        <b>Warning:</b> This website contains graphs and charts which are best viewed on a
-        desktop or large-screen device.
-      </div>
-    </div>
-    <div class="hidden-sm-down col-md-11 col-lg-10">
+    <div class="col-12 col-md-11 col-lg-10">
       <div class="loader">
         <div class="rect1"></div>
         <div class="rect2"></div>
@@ -34,7 +28,7 @@
       </div>
       <div id="cumulative_activity_front_chart"></div>
     </div>
-    <div class="hidden-sm-down col-md-11 col-lg-10">
+    <div class="col-12 col-md-11 col-lg-10">
       <div class="row justify-content-sm-center">
         <div class="col-6 col-md-3">
           <div class="card card-stat text-center">
@@ -52,6 +46,12 @@
           <div class="card card-stat text-center">
             <h4>{{ cumulative_stats.comments|intcomma }}</h4>
             <span>Total Comments</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card card-stat text-center">
+            <h4>{{ cumulative_stats.subreddits|intcomma }}</h4>
+            <span>Total Subreddits</span>
           </div>
         </div>
       </div>

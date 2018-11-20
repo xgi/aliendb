@@ -28,3 +28,22 @@ def timestamp_to_ms(timestamp) -> float:
     epoch = datetime.datetime.utcfromtimestamp(0)
     seconds = int((timestamp - epoch).total_seconds())
     return seconds * 1000.0
+
+def remove_near_elements(arr, time_difference, time_idx) -> list:
+    """Remove list elements within a specified time difference.
+
+    Args:
+        arr: a list of arrays or tuples
+        time_difference: the minimum time difference between elements
+        time_idx: the index of each arr element with an integer time
+
+    Returns:
+        list: arr with certain elements removed, if necessary
+    """
+    new = []
+    time_to_beat = 0
+    for i in range(len(arr)):
+        if arr[i][time_idx] >= time_to_beat:
+            new.append(arr[i])
+            time_to_beat = arr[i][time_idx] + time_difference
+    return new

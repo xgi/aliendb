@@ -1,8 +1,21 @@
 Highcharts.setOptions({
     chart: {
+        spacing: [5, 5, 5, 5],
         style: {
             fontFamily: '"Lato","Helvetica Neue",Helvetica,Arial,sans-serif'
-        }
+        },
+        plotOptions: {
+            series: {
+                states: {
+                    hover: {
+                        lineWidthPlus: 0
+                    }
+                }
+            }
+        },
+        tooltip: {
+            shadow: false
+        },
     }
 });
 
@@ -49,8 +62,7 @@ function submission_polarity_chart(data) {
                 text: null
             }
         },
-        series: [
-            {
+        series: [{
                 name: 'This post',
                 data: data['polarity']['submission'],
                 dataLabels: {
@@ -105,8 +117,7 @@ function submission_subjectivity_chart(data) {
                 text: null
             }
         },
-        series: [
-            {
+        series: [{
                 name: 'This post',
                 data: data['subjectivity']['submission'],
                 dataLabels: {
@@ -154,8 +165,7 @@ function submission_activity_chart(data) {
             type: 'datetime',
             crosshair: true
         },
-        yAxis: [
-            {
+        yAxis: [{
                 title: {
                     text: 'Comments'
                 }
@@ -167,8 +177,7 @@ function submission_activity_chart(data) {
                 opposite: true
             }
         ],
-        series: [
-            {
+        series: [{
                 type: 'column',
                 name: 'Comments',
                 yAxis: 0,
@@ -180,9 +189,12 @@ function submission_activity_chart(data) {
                 name: 'Karma',
                 yAxis: 1,
                 data: data['activity']['scores'],
-                lineWidth: 4,
+                lineWidth: 6,
                 marker: {
-                    radius: 6
+                    symbol: 'circle',
+                    radius: 4,
+                    lineColor: 'rgba(255, 255, 255, 1)',
+                    lineWidth: 1
                 }
             }
         ],
@@ -224,8 +236,7 @@ function submission_upvote_ratio_chart(data) {
                 zIndex: 1
             }]
         },
-        series: [
-            {
+        series: [{
                 type: 'line',
                 name: 'Upvote ratio',
                 yAxis: 0,
@@ -239,7 +250,9 @@ function submission_upvote_ratio_chart(data) {
                 },
                 enableMouseTracking: false,
                 showInLegend: false,
-                data: [[data['upvote_ratio']['upvote_ratios'][0][0], data['upvote_ratio']['average_upvote_ratio']]]
+                data: [
+                    [data['upvote_ratio']['upvote_ratios'][0][0], data['upvote_ratio']['average_upvote_ratio']]
+                ]
             }
         ],
         colors: [
@@ -277,8 +290,7 @@ function submission_special_users_chart(data) {
         tooltip: {
             valueSuffix: ' comments'
         },
-        series: [
-            {
+        series: [{
                 name: "This post",
                 data: data['special_users']['submission']
             },
@@ -320,13 +332,11 @@ function submission_gilded_chart(data) {
         legend: {
             enabled: false
         },
-        series: [
-            {
-                name: 'Gold given',
-                data: data['gilded']['data'],
-                colorByPoint: true
-            }
-        ],
+        series: [{
+            name: 'Gold given',
+            data: data['gilded']['data'],
+            colorByPoint: true
+        }],
         colors: [
             'rgba(218, 165, 32, 0.65)',
             'rgba(160, 82, 45, 0.65)'
@@ -362,10 +372,10 @@ function subreddit_activity_chart(data) {
             shared: true
         },
         xAxis: {
-            type: 'datetime'
+            type: 'datetime',
+            crosshair: true
         },
-        yAxis: [
-            {
+        yAxis: [{
                 title: {
                     text: 'Δ Comments (per day)'
                 }
@@ -377,13 +387,7 @@ function subreddit_activity_chart(data) {
                 opposite: true
             }
         ],
-        plotOptions: {
-            series: {
-                lineWidth: 3
-            }
-        },
-        series: [
-            {
+        series: [{
                 type: 'column',
                 name: 'Δ Comments',
                 yAxis: 0,
@@ -393,7 +397,14 @@ function subreddit_activity_chart(data) {
                 type: 'line',
                 name: 'Δ Karma',
                 yAxis: 1,
-                data: data['activity']['score_differentials']
+                data: data['activity']['score_differentials'],
+                lineWidth: 6,
+                marker: {
+                    symbol: 'circle',
+                    radius: 4,
+                    lineColor: 'rgba(255, 255, 255, 1)',
+                    lineWidth: 1
+                }
             }
         ],
         colors: [
@@ -423,7 +434,7 @@ function cumulative_activity_front_chart(data) {
             zoomType: 'x'
         },
         title: {
-            text: "Activity of top 100 threads on /r/all"
+            text: "Activity of top 100 threadsb"
         },
         credits: {
             enabled: false
@@ -438,8 +449,7 @@ function cumulative_activity_front_chart(data) {
             type: 'datetime',
             crosshair: true
         },
-        yAxis: [
-            {
+        yAxis: [{
                 title: {
                     text: 'Comments'
                 }
@@ -451,28 +461,50 @@ function cumulative_activity_front_chart(data) {
                 opposite: true
             }
         ],
-        series: [
-            {
+        series: [{
                 type: 'column',
                 name: 'Comments',
                 yAxis: 0,
                 data: data['front']['comments'],
-                lineWidth: 4
+                pointPadding: 0.01
             },
             {
                 type: 'line',
                 name: 'Karma',
                 yAxis: 1,
                 data: data['front']['scores'],
-                lineWidth: 4,
+                lineWidth: 6,
                 marker: {
-                    radius: 6
+                    symbol: 'circle',
+                    radius: 4,
+                    lineColor: 'rgba(255, 255, 255, 1)',
+                    lineWidth: 1
                 }
             }
         ],
         colors: [
             'rgba(47, 79, 79, 1)',
             'rgba(255, 69, 0, 1)'
-        ]
+        ],
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    yAxis: [{
+                            title: {
+                                text: null
+                            }
+                        },
+                        {
+                            title: {
+                                text: null
+                            }
+                        }
+                    ],
+                }
+            }]
+        }
     });
 }

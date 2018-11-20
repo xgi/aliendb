@@ -32,7 +32,8 @@ def home(request) -> HttpResponse:
     cumulative_stats = {
         'submissions': Submission.objects.all().count(),
         'score': TotalScore.objects.latest('timestamp').score,
-        'comments': TotalNumComments.objects.latest('timestamp').num_comments
+        'comments': TotalNumComments.objects.latest('timestamp').num_comments,
+        'subreddits': Subreddit.objects.all().count()
     }
 
     # calculate rank deltas
@@ -58,7 +59,7 @@ def home(request) -> HttpResponse:
         'submissions': submissions,
         'cumulative_stats': cumulative_stats
     })
-    cache.set("home_response", response, 600)
+    cache.set("home_response", response, 1200)
     return response
 
 def subreddits(request) -> HttpResponse:
@@ -94,7 +95,7 @@ def subreddits(request) -> HttpResponse:
         'controversial_subreddits': controversial_subreddits
 
     })
-    cache.set("subreddits_response", response, 600)
+    cache.set("subreddits_response", response, 1200)
     return response
 
 def about(request) -> HttpResponse:
@@ -171,7 +172,7 @@ def submission(request, id) -> HttpResponse:
         'lifetime': lifetime,
         'rise_time': rise_time,
     })
-    cache.set("submission_response_%s" % id, response, 600)
+    cache.set("submission_response_%s" % id, response, 1200)
     return response
 
 def subreddit(request, subreddit) -> HttpResponse:
@@ -208,7 +209,7 @@ def subreddit(request, subreddit) -> HttpResponse:
         'subreddit': subreddit,
         'submissions': submissions,
     })
-    cache.set("subreddit_response_%s" % subreddit.name, response, 600)
+    cache.set("subreddit_response_%s" % subreddit.name, response, 1200)
     return response
 
 def search(request) -> HttpResponse:

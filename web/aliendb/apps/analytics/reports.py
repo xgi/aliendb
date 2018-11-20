@@ -114,8 +114,8 @@ def submission(request) -> dict:
         }
     }
 
-    # cache for 10 minutes
-    cache.set("submission_data_%s" % id, data, 600)
+    # cache for 20 minutes
+    cache.set("submission_data_%s" % id, data, 1200)
 
     return data
 
@@ -149,8 +149,8 @@ def subreddit(request) -> dict:
     if data is not None and settings.DEBUG is False:
         return data
 
-    today = datetime.date.today()
-    start_date = today - datetime.timedelta(weeks=4)
+    now = datetime.datetime.now()
+    start_date = now - datetime.timedelta(weeks=4)
 
     subreddit_scores = SubredditScore.objects.filter(timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
     subreddit_num_comments = SubredditNumComments.objects.filter(timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
@@ -160,14 +160,10 @@ def subreddit(request) -> dict:
     comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in subreddit_num_comments]
 
     # throw out tallies within the same day
-    score_tallies = []
-    comment_tallies = []
-    time_to_beat = 0
-    for i in range(len(score_tallies_raw)):
-        if score_tallies_raw[i][0] >= time_to_beat:
-            score_tallies.append(score_tallies_raw[i])
-            comment_tallies.append(comment_tallies_raw[i])
-            time_to_beat = score_tallies_raw[i][0] + 86400000
+    time_difference = 86400000 # 24 hours in ms
+
+    score_tallies = remove_near_elements(score_tallies_raw, time_difference, 0)
+    comment_tallies = remove_near_elements(comment_tallies_raw, time_difference, 0)
 
     # calculate differentials
     score_differentials = []
@@ -185,8 +181,8 @@ def subreddit(request) -> dict:
         }
     }
 
-    # cache for 10 minutes
-    cache.set("subreddit_data_%s" % id, data, 600)
+    # cache for 20 minutes
+    cache.set("subreddit_data_%s" % id, data, 1200)
 
     return data
 
@@ -220,17 +216,17 @@ def cumulative(request) -> dict:
         return data
 
     # get datetime object for earliest possible date based on range
-    today = datetime.date.today()
+    now = datetime.datetime.now()
     if timerange == 'day':
-        start_date = today - datetime.timedelta(days=1)
-    if timerange == 'week':
-        start_date = today - datetime.timedelta(weeks=1)
+        start_date = now - datetime.timedelta(hours=24)
+    elif timerange == 'week':
+        start_date = now - datetime.timedelta(weeks=1)
     elif timerange == 'fortnight':
-        start_date = today - datetime.timedelta(weeks=2)
+        start_date = now - datetime.timedelta(weeks=2)
     elif timerange == 'month':
-        start_date = today - datetime.timedelta(weeks=4)
+        start_date = now - datetime.timedelta(weeks=4)
     elif timerange == 'year':
-        start_date = today - datetime.timedelta(weeks=52)
+        start_date = now - datetime.timedelta(weeks=52)
 
     total_scores = TotalScore.objects.filter(timestamp__gt=start_date).order_by('timestamp')
     total_num_comments = TotalNumComments.objects.filter(timestamp__gt=start_date).order_by('timestamp')
@@ -238,16 +234,28 @@ def cumulative(request) -> dict:
     average_num_comments = AverageNumComments.objects.filter(timestamp__gt=start_date).order_by('timestamp')
 
     ## total
-    total_score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in total_scores]
-    total_comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in total_num_comments]
+    total_score_tallies_raw = [[timestamp_to_ms(s.timestamp), s.score] for s in total_scores]
+    total_comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in total_num_comments]
 
     ## average
-    average_score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in average_scores]
-    average_comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in average_num_comments]
+    average_score_tallies_raw = [[timestamp_to_ms(s.timestamp), s.score] for s in average_scores]
+    average_comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in average_num_comments]
 
     ## front
-    front_score_tallies = [[tally[0], tally[1] * 100] for tally in average_score_tallies]
-    front_comment_tallies = [[tally[0], tally[1] * 100] for tally in average_comment_tallies]
+    front_score_tallies_raw = [[tally[0], tally[1] * 100] for tally in average_score_tallies_raw]
+    front_comment_tallies_raw = [[tally[0], tally[1] * 100] for tally in average_comment_tallies_raw]
+
+    # throw out tallies within the same hour
+    time_difference = 3600000 # 1 hour in ms
+
+    total_score_tallies = remove_near_elements(total_score_tallies_raw, time_difference , 0)
+    total_comment_tallies = remove_near_elements(total_comment_tallies_raw, time_difference, 0)
+
+    average_score_tallies = remove_near_elements(average_score_tallies_raw, time_difference , 0)
+    average_comment_tallies = remove_near_elements(average_comment_tallies_raw, time_difference, 0)
+
+    front_score_tallies = remove_near_elements(front_score_tallies_raw, time_difference , 0)
+    front_comment_tallies = remove_near_elements(front_comment_tallies_raw, time_difference, 0)
 
     data = {
         'total': {
