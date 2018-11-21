@@ -199,7 +199,11 @@ def subreddit(request, subreddit) -> HttpResponse:
     if response is not None and settings.DEBUG is False:
         return response
 
-    submissions = Submission.objects.filter(subreddit=subreddit).order_by('-score')
+    submissions = Submission.objects.filter(subreddit=subreddit)
+    top_submissions = submissions.order_by('-score')[:50]
+    recent_submissions = submissions.order_by('-created_at')[:12]
+    agreeable_submissions = submissions.order_by('-upvote_ratio')[:5]
+    controversial_submissions = submissions.order_by('upvote_ratio')[:5]
 
     if len(submissions) == 0:
         raise Http404("Subreddit has no recorded submissions")
@@ -207,7 +211,10 @@ def subreddit(request, subreddit) -> HttpResponse:
     response = render(request, 'subreddit.html', {
         'page_category': 'subreddits',
         'subreddit': subreddit,
-        'submissions': submissions,
+        'top_submissions': top_submissions,
+        'recent_submissions': recent_submissions,
+        'agreeable_submissions': agreeable_submissions,
+        'controversial_submissions': controversial_submissions
     })
     cache.set("subreddit_response_%s" % subreddit.name, response, 1200)
     return response

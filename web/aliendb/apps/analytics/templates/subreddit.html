@@ -7,6 +7,7 @@
 {% endblock %}
 {% block content %}
 {% load humanize %}
+{% load stats_tags %}
 <div class="header">
   <div class="container-fluid align-self-center">
     <h1>/r/{{ subreddit.name }}</h1>
@@ -65,39 +66,128 @@
       </div>
     </div>
   </div>
+
   <div class="row justify-content-sm-center">
-    <div class="col-12 col-md-11 col-lg-10 table-container-col">
-      <div class="bs-component">
-        <table class="table table-striped table-hover table-bordered">
-          <thead class="bg-primary">
-            <tr>
-              <th class="table-caption" colspan="4">Top posts from /r/{{ subreddit.name }}</th>
-            </tr>
-          </thead>
-          <thead class="bg-primary">
-            <tr>
-              <th id="karma">Karma</th>
-              <th id="comments">Comments</th>
-              <th id="title">Title</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for submission in submissions|slice:":100" %}
-            <tr>
-              <td id="karma">{{ submission.score|intcomma }}</td>
-              <td id="comments">{{ submission.num_comments|intcomma }}</td>
-              <td id="title">
-                <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
-                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince}}
-                  ago</span>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <div class="col-12 col-md-6 col-xl-5 table-container-col">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="bg-primary">
+          <tr>
+            <th class="table-caption" colspan="4">Recent posts from /r/{{ subreddit.name }}</th>
+          </tr>
+        </thead>
+        <thead class="bg-primary">
+          <tr>
+            <th id="karma">Karma</th>
+            <th id="comments">Comments</th>
+            <th id="title">Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for submission in recent_submissions %}
+          <tr>
+            <td id="karma">{{ submission.score|intcomma }}</td>
+            <td id="comments">{{ submission.num_comments|intcomma }}</td>
+            <td id="title">
+              <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-12 col-md-6 col-lg-5">
+      <div class="row justify-content-sm-center">
+        <div class="col-12 table-container-col">
+          <table class="table table-striped table-hover table-bordered">
+            <thead class="bg-primary">
+              <tr>
+                <th class="bg-success table-caption" colspan="3">Agreeable posts from /r/{{ subreddit.name }}</th>
+              </tr>
+            </thead>
+            <thead class="bg-primary">
+              <tr>
+                <th id="ratio">Ratio</th>
+                <th id="karma">Karma</th>
+                <th id="title">Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for submission in agreeable_submissions %}
+              <tr>
+                <td id="ratio">{{ submission.upvote_ratio|percentage }}</td>
+                <td id="karma">{{ submission.score|intcomma }}</td>
+                <td id="title">
+                  <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-12 table-container-col">
+          <table class="table table-striped table-hover table-bordered">
+            <thead class="bg-danger bg-primary">
+              <tr>
+                <th class="table-caption" colspan="3">Controversial posts from /r/{{ subreddit.name }}</th>
+              </tr>
+            </thead>
+            <thead class="bg-primary">
+              <tr>
+                <th id="ratio">Ratio</th>
+                <th id="karma">Karma</th>
+                <th id="title">Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for submission in controversial_submissions %}
+              <tr>
+                <td id="ratio">{{ submission.upvote_ratio|percentage }}</td>
+                <td id="karma">{{ submission.score|intcomma }}</td>
+                <td id="title">
+                  <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="row justify-content-sm-center">
+    <div class="col-12 col-md-11 col-lg-10 table-container-col">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="bg-primary">
+          <tr>
+            <th class="table-caption" colspan="4">Top posts from /r/{{ subreddit.name }}</th>
+          </tr>
+        </thead>
+        <thead class="bg-primary">
+          <tr>
+            <th id="karma">Karma</th>
+            <th id="comments">Comments</th>
+            <th id="title">Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for submission in top_submissions %}
+          <tr>
+            <td id="karma">{{ submission.score|intcomma }}</td>
+            <td id="comments">{{ submission.num_comments|intcomma }}</td>
+            <td id="title">
+              <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+              <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince}}
+                ago</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div> <!-- container -->
-<script>subreddit_charts('{{ subreddit.name }}');</script>
+<script>
+  subreddit_charts('{{ subreddit.name }}');
+</script>
 {% endblock content %}
