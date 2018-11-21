@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from . import reports
 
+
 def home(request) -> HttpResponse:
     """View for the index/landing page.
 
@@ -31,8 +32,8 @@ def home(request) -> HttpResponse:
 
     cumulative_stats = {
         'submissions': Submission.objects.all().count(),
-        'score': TotalScore.objects.latest('timestamp').score,
-        'comments': TotalNumComments.objects.latest('timestamp').num_comments,
+        'score': TotalScore.objects.latest('timestamp').score if TotalScore.objects.count() > 0 else 0,
+        'comments': TotalNumComments.objects.latest('timestamp').num_comments if TotalNumComments.objects.count() > 0 else 0,
         'subreddits': Subreddit.objects.all().count()
     }
 
@@ -61,6 +62,7 @@ def home(request) -> HttpResponse:
     })
     cache.set("home_response", response, 1200)
     return response
+
 
 def subreddits(request) -> HttpResponse:
     """View for the subreddits listing page.
@@ -98,6 +100,7 @@ def subreddits(request) -> HttpResponse:
     cache.set("subreddits_response", response, 1200)
     return response
 
+
 def about(request) -> HttpResponse:
     """View for the about page.
 
@@ -110,6 +113,7 @@ def about(request) -> HttpResponse:
     return render(request, 'about.html', {
         'page_category': 'about'
     })
+
 
 def api(request) -> JsonResponse:
     """View for accessing the public API.
@@ -132,6 +136,7 @@ def api(request) -> JsonResponse:
         data = reports.cumulative(request)
 
     return JsonResponse(data)
+
 
 def submission(request, id) -> HttpResponse:
     """View for an individual submission's page.
@@ -157,10 +162,12 @@ def submission(request, id) -> HttpResponse:
     if response is not None and settings.DEBUG is False:
         return response
 
-    submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
+    submission_scores = SubmissionScore.objects.filter(
+        submission=submission).order_by('timestamp')
 
     # lifetime and rise time
-    lifetime_delta = submission_scores[len(submission_scores) - 1].timestamp - submission_scores[0].timestamp
+    lifetime_delta = submission_scores[len(
+        submission_scores) - 1].timestamp - submission_scores[0].timestamp
     lifetime = time.strftime('%H:%M:%S', time.gmtime(lifetime_delta.seconds))
 
     rise_time_delta = submission_scores[0].timestamp - submission.created_at
@@ -174,6 +181,7 @@ def submission(request, id) -> HttpResponse:
     })
     cache.set("submission_response_%s" % id, response, 1200)
     return response
+
 
 def subreddit(request, subreddit) -> HttpResponse:
     """View for an individual subreddit's page.
@@ -218,6 +226,7 @@ def subreddit(request, subreddit) -> HttpResponse:
     })
     cache.set("subreddit_response_%s" % subreddit.name, response, 1200)
     return response
+
 
 def search(request) -> HttpResponse:
     """View for the search page.
@@ -287,7 +296,8 @@ def search(request) -> HttpResponse:
                 subreddit_objs = ['']
                 for from_subreddit in from_subreddits.split(','):
                     try:
-                        subreddit_objs.append(Subreddit.objects.get(name__iexact=from_subreddit))
+                        subreddit_objs.append(Subreddit.objects.get(
+                            name__iexact=from_subreddit))
                     except Subreddit.DoesNotExist:
                         continue
 

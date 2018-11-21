@@ -56,39 +56,41 @@
         </div>
       </div>
     </div>
-    <div class="row justify-content-sm-center table-container-row">
-      <div class="col-12 col-md-11 col-lg-10 table-container-col">
-        <div class="table-responsive">
-          <table class="table table-striped table-hover table-bordered">
-            <thead class="bg-primary">
-              <tr>
-                <th class="table-caption" colspan="4">Current top 100 on /r/all</th>
-              </tr>
-            </thead>
-            <thead class="bg-primary">
-              <tr>
-                <th id="rank">#</th>
-                <th id="delta">Δ</th>
-                <th id="title">Title</th>
-                <th id="subreddit" class="d-none d-md-table-cell">Subreddit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for submission in submissions|slice:":100" %}
-              <tr>
-                <td id="rank">{{ submission.rank }}</td>
-                <td id="delta"><span class="{{ submission.delta_color }}">{{ submission.delta_string }}</span></td>
-                <td id="title">
-                  <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
-                  <span title="{{ submission.created_at|date:'r' }} (UTC)">
-                    submitted {{ submission.created_at|timesince }} ago</span>
-                </td>
-                <td id="subreddit" class="d-none d-md-table-cell">
-                  <a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    <div class="col-12">
+      <div class="row justify-content-sm-center table-container-row">
+        <div class="col-12 col-md-11 col-lg-10 table-container-col">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+              <thead class="bg-primary">
+                <tr>
+                  <th class="table-caption" colspan="4">Current top 100 on /r/all</th>
+                </tr>
+              </thead>
+              <thead class="bg-primary">
+                <tr>
+                  <th id="rank">#</th>
+                  <th id="delta">Δ</th>
+                  <th id="title">Title</th>
+                  <th id="subreddit" class="d-none d-md-table-cell">Subreddit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for submission in submissions|slice:":100" %}
+                <tr>
+                  <td id="rank">{{ submission.rank }}</td>
+                  <td id="delta"><span class="{{ submission.delta_color }}">{{ submission.delta_string }}</span></td>
+                  <td id="title">
+                    <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+                    <span title="{{ submission.created_at|date:'r' }} (UTC)">
+                      submitted {{ submission.created_at|timesince }} ago</span>
+                  </td>
+                  <td id="subreddit" class="d-none d-md-table-cell">
+                    <a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
