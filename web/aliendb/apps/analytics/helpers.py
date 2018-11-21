@@ -1,5 +1,6 @@
 import datetime
 
+
 def update_average(field, value, tracked) -> float:
     """Updates a previously calculated average with a new value.
 
@@ -12,6 +13,7 @@ def update_average(field, value, tracked) -> float:
         float: the updated average
     """
     return (value + field * tracked) / (1 + tracked)
+
 
 def timestamp_to_ms(timestamp) -> float:
     """Converts a Django DateTimeField to milliseconds since the Unix epoch.
@@ -28,6 +30,7 @@ def timestamp_to_ms(timestamp) -> float:
     epoch = datetime.datetime.utcfromtimestamp(0)
     seconds = int((timestamp - epoch).total_seconds())
     return seconds * 1000.0
+
 
 def remove_near_elements(arr, time_difference, time_idx) -> list:
     """Remove list elements within a specified time difference.

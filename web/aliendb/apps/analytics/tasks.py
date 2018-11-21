@@ -18,6 +18,7 @@ reddit = praw.Reddit(client_id=os.environ['PRAW_CLIENT_ID'],
                      password=os.environ['PRAW_REDDIT_PASSWORD'],
                      user_agent=os.environ['PRAW_USER_AGENT'])
 
+
 def create_submission_obj(submission, rank) -> Submission:
     """Creates a models.Submission object from a Praw submission object.
 
@@ -93,6 +94,7 @@ def create_submission_obj(submission, rank) -> Submission:
 
     return submission_obj
 
+
 def update_submission_obj(submission, rank) -> Submission:
     """Updates an existing models.Submission object from a Praw submission object.
 
@@ -139,6 +141,7 @@ def update_submission_obj(submission, rank) -> Submission:
         create_comment_obj(comment, submission_obj)
 
     return submission_obj
+
 
 def create_comment_obj(comment, submission_obj):
     """Creates a models.Comment object from a Praw comment object.
@@ -218,6 +221,7 @@ def create_comment_obj(comment, submission_obj):
         comment_obj.gilded = comment.gilded
         comment_obj.save()
 
+
 def update_subreddit_obj(submission_obj) -> Subreddit:
     """Updates an existing models.Subreddit object with a submission's stats.
 
@@ -276,6 +280,7 @@ def update_subreddit_obj(submission_obj) -> Subreddit:
 
     return subreddit
 
+
 def create_submission_tracker_objs(submission_obj, submission):
     """Creates tracker objects for a given submission.
 
@@ -300,6 +305,7 @@ def create_submission_tracker_objs(submission_obj, submission):
     submission_num_comments.save()
     submission_upvote_ratio.save()
 
+
 def create_cumulative_tracker_objs(submission_obj):
     """Creates cumulative tracker objects from a given submission.
 
@@ -314,7 +320,8 @@ def create_cumulative_tracker_objs(submission_obj):
     """
     try:
         latest_score = TotalScore.objects.latest('timestamp').score
-        latest_num_comments = TotalNumComments.objects.latest('timestamp').num_comments
+        latest_num_comments = TotalNumComments.objects.latest(
+            'timestamp').num_comments
     except TotalScore.DoesNotExist:
         latest_score = 0
         latest_num_comments = 0
@@ -326,6 +333,7 @@ def create_cumulative_tracker_objs(submission_obj):
 
     total_score.save()
     total_num_comments.save()
+
 
 def create_subreddit_tracker_objs(subreddit):
     """Creates tracker objects for a given subreddit.
@@ -345,6 +353,7 @@ def create_subreddit_tracker_objs(subreddit):
 
     subreddit_score.save()
     subreddit_num_comments.save()
+
 
 @app.task
 def get_top_submissions():
@@ -376,7 +385,7 @@ def get_top_submissions():
         # track running variables
         frontpage_score += submission.score
         frontpage_num_comments += submission.num_comments
-        
+
         try:
             # check if this submission already exists in the db
             if Submission.objects.filter(id=submission.id):
@@ -409,7 +418,8 @@ def get_top_submissions():
     # create new frontpage tracker objects
     average_score = AverageScore(score=frontpage_score/100)
     average_score.save()
-    average_num_comments = AverageNumComments(num_comments=frontpage_num_comments/100)
+    average_num_comments = AverageNumComments(
+        num_comments=frontpage_num_comments/100)
     average_num_comments.save()
 
     # save all submission db objects

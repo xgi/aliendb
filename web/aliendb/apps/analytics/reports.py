@@ -5,6 +5,7 @@ from django.http import Http404
 from .helpers import *
 from .models import *
 
+
 def submission(request) -> dict:
     """Retrieves data needed to generate graphs for a submission's page.
 
@@ -37,18 +38,24 @@ def submission(request) -> dict:
 
     subreddit = submission.subreddit
     comments = Comment.objects.filter(submission=submission)
-    submission_scores = SubmissionScore.objects.filter(submission=submission).order_by('timestamp')
-    submission_num_comments = SubmissionNumComments.objects.filter(submission=submission).order_by('timestamp')
-    submission_upvote_ratios = SubmissionUpvoteRatio.objects.filter(submission=submission).order_by('timestamp')
+    submission_scores = SubmissionScore.objects.filter(
+        submission=submission).order_by('timestamp')
+    submission_num_comments = SubmissionNumComments.objects.filter(
+        submission=submission).order_by('timestamp')
+    submission_upvote_ratios = SubmissionUpvoteRatio.objects.filter(
+        submission=submission).order_by('timestamp')
 
-    ## activity
-    score_tallies = [[timestamp_to_ms(s.timestamp), s.score] for s in submission_scores]
-    comment_tallies = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in submission_num_comments]
+    # activity
+    score_tallies = [[timestamp_to_ms(s.timestamp), s.score]
+                     for s in submission_scores]
+    comment_tallies = [
+        [timestamp_to_ms(c.timestamp), c.num_comments] for c in submission_num_comments]
 
-    ## upvote_ratio
-    upvote_ratios = [[timestamp_to_ms(s.timestamp), s.upvote_ratio] for s in submission_upvote_ratios]
+    # upvote_ratio
+    upvote_ratios = [[timestamp_to_ms(s.timestamp), s.upvote_ratio]
+                     for s in submission_upvote_ratios]
 
-    ## special_users
+    # special_users
     special_users_submission = [
         [c.is_op for c in comments].count(True),
         [c.is_mod for c in comments].count(True),
@@ -62,10 +69,10 @@ def submission(request) -> dict:
         float("{0:.2f}".format(subreddit.average_is_special)),
     ]
 
-    ## gilded
+    # gilded
     gilded_submission = sum(c.gilded for c in comments)
 
-    ## polarity
+    # polarity
     polarity_submission = [
         float("{0:.4f}".format(submission.polarity)),
         float("{0:.4f}".format(sum(c.polarity for c in comments) / len(comments)))
@@ -75,10 +82,11 @@ def submission(request) -> dict:
         float("{0:.4f}".format(subreddit.average_comments_polarity))
     ]
 
-    ## subjectivity
+    # subjectivity
     subjectivity_submission = [
         float("{0:.4f}".format(submission.subjectivity)),
-        float("{0:.4f}".format(sum(c.subjectivity for c in comments) / len(comments)))
+        float("{0:.4f}".format(
+            sum(c.subjectivity for c in comments) / len(comments)))
     ]
     subjectivity_subreddit = [
         float("{0:.4f}".format(subreddit.average_submission_subjectivity)),
@@ -119,6 +127,7 @@ def submission(request) -> dict:
 
     return data
 
+
 def subreddit(request) -> dict:
     """Retrieves data needed to generate graphs for a subreddit's page.
 
@@ -152,25 +161,32 @@ def subreddit(request) -> dict:
     now = datetime.datetime.now()
     start_date = now - datetime.timedelta(weeks=4)
 
-    subreddit_scores = SubredditScore.objects.filter(timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
-    subreddit_num_comments = SubredditNumComments.objects.filter(timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
+    subreddit_scores = SubredditScore.objects.filter(
+        timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
+    subreddit_num_comments = SubredditNumComments.objects.filter(
+        timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
 
-    ## activity
-    score_tallies_raw = [[timestamp_to_ms(s.timestamp), s.score] for s in subreddit_scores]
-    comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in subreddit_num_comments]
+    # activity
+    score_tallies_raw = [
+        [timestamp_to_ms(s.timestamp), s.score] for s in subreddit_scores]
+    comment_tallies_raw = [
+        [timestamp_to_ms(c.timestamp), c.num_comments] for c in subreddit_num_comments]
 
     # throw out tallies within the same day
-    time_difference = 86400000 # 24 hours in ms
+    time_difference = 86400000  # 24 hours in ms
 
     score_tallies = remove_near_elements(score_tallies_raw, time_difference, 0)
-    comment_tallies = remove_near_elements(comment_tallies_raw, time_difference, 0)
+    comment_tallies = remove_near_elements(
+        comment_tallies_raw, time_difference, 0)
 
     # calculate differentials
     score_differentials = []
     comment_differentials = []
     for i in range(1, len(score_tallies)):
-        score_differentials.append([score_tallies[i][0], score_tallies[i][1] - score_tallies[i-1][1]])
-        comment_differentials.append([comment_tallies[i][0], comment_tallies[i][1] - comment_tallies[i-1][1]])
+        score_differentials.append(
+            [score_tallies[i][0], score_tallies[i][1] - score_tallies[i-1][1]])
+        comment_differentials.append(
+            [comment_tallies[i][0], comment_tallies[i][1] - comment_tallies[i-1][1]])
 
     data = {
         'activity': {
@@ -185,6 +201,7 @@ def subreddit(request) -> dict:
     cache.set("subreddit_data_%s" % id, data, 1200)
 
     return data
+
 
 def cumulative(request) -> dict:
     """Retrieves data needed to generate graphs for the main page.
@@ -228,34 +245,50 @@ def cumulative(request) -> dict:
     elif timerange == 'year':
         start_date = now - datetime.timedelta(weeks=52)
 
-    total_scores = TotalScore.objects.filter(timestamp__gt=start_date).order_by('timestamp')
-    total_num_comments = TotalNumComments.objects.filter(timestamp__gt=start_date).order_by('timestamp')
-    average_scores = AverageScore.objects.filter(timestamp__gt=start_date).order_by('timestamp')
-    average_num_comments = AverageNumComments.objects.filter(timestamp__gt=start_date).order_by('timestamp')
+    total_scores = TotalScore.objects.filter(
+        timestamp__gt=start_date).order_by('timestamp')
+    total_num_comments = TotalNumComments.objects.filter(
+        timestamp__gt=start_date).order_by('timestamp')
+    average_scores = AverageScore.objects.filter(
+        timestamp__gt=start_date).order_by('timestamp')
+    average_num_comments = AverageNumComments.objects.filter(
+        timestamp__gt=start_date).order_by('timestamp')
 
-    ## total
-    total_score_tallies_raw = [[timestamp_to_ms(s.timestamp), s.score] for s in total_scores]
-    total_comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in total_num_comments]
+    # total
+    total_score_tallies_raw = [
+        [timestamp_to_ms(s.timestamp), s.score] for s in total_scores]
+    total_comment_tallies_raw = [
+        [timestamp_to_ms(c.timestamp), c.num_comments] for c in total_num_comments]
 
-    ## average
-    average_score_tallies_raw = [[timestamp_to_ms(s.timestamp), s.score] for s in average_scores]
-    average_comment_tallies_raw = [[timestamp_to_ms(c.timestamp), c.num_comments] for c in average_num_comments]
+    # average
+    average_score_tallies_raw = [
+        [timestamp_to_ms(s.timestamp), s.score] for s in average_scores]
+    average_comment_tallies_raw = [
+        [timestamp_to_ms(c.timestamp), c.num_comments] for c in average_num_comments]
 
-    ## front
-    front_score_tallies_raw = [[tally[0], tally[1] * 100] for tally in average_score_tallies_raw]
-    front_comment_tallies_raw = [[tally[0], tally[1] * 100] for tally in average_comment_tallies_raw]
+    # front
+    front_score_tallies_raw = [[tally[0], tally[1] * 100]
+                               for tally in average_score_tallies_raw]
+    front_comment_tallies_raw = [[tally[0], tally[1] * 100]
+                                 for tally in average_comment_tallies_raw]
 
     # throw out tallies within the same hour
-    time_difference = 3600000 # 1 hour in ms
+    time_difference = 3600000  # 1 hour in ms
 
-    total_score_tallies = remove_near_elements(total_score_tallies_raw, time_difference , 0)
-    total_comment_tallies = remove_near_elements(total_comment_tallies_raw, time_difference, 0)
+    total_score_tallies = remove_near_elements(
+        total_score_tallies_raw, time_difference, 0)
+    total_comment_tallies = remove_near_elements(
+        total_comment_tallies_raw, time_difference, 0)
 
-    average_score_tallies = remove_near_elements(average_score_tallies_raw, time_difference , 0)
-    average_comment_tallies = remove_near_elements(average_comment_tallies_raw, time_difference, 0)
+    average_score_tallies = remove_near_elements(
+        average_score_tallies_raw, time_difference, 0)
+    average_comment_tallies = remove_near_elements(
+        average_comment_tallies_raw, time_difference, 0)
 
-    front_score_tallies = remove_near_elements(front_score_tallies_raw, time_difference , 0)
-    front_comment_tallies = remove_near_elements(front_comment_tallies_raw, time_difference, 0)
+    front_score_tallies = remove_near_elements(
+        front_score_tallies_raw, time_difference, 0)
+    front_comment_tallies = remove_near_elements(
+        front_comment_tallies_raw, time_difference, 0)
 
     data = {
         'total': {

@@ -1,20 +1,25 @@
 from django.db import models
 
+
 class TotalScore(models.Model):
     score = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
 
 class TotalNumComments(models.Model):
     num_comments = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+
 class AverageScore(models.Model):
     score = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+
 class AverageNumComments(models.Model):
     num_comments = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
 
 class Subreddit(models.Model):
     name = models.CharField(primary_key=True, unique=True, max_length=21)
@@ -38,7 +43,7 @@ class Subreddit(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# models with many-to-one relationship with Subreddit
+
 class Submission(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=7)
     subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
@@ -62,17 +67,19 @@ class Submission(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class SubredditScore(models.Model):
     subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     score = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
 
 class SubredditNumComments(models.Model):
     subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
     num_comments = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-# models with many-to-one relationship with Submission
+
 class Comment(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=7)
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
@@ -93,15 +100,18 @@ class Comment(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class SubmissionScore(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     score = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+
 class SubmissionNumComments(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     num_comments = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
 
 class SubmissionUpvoteRatio(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
