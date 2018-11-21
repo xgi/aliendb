@@ -251,7 +251,7 @@ def search(request) -> HttpResponse:
     else:
         if len(query) < 300:
             # get all matching submissions
-            submissions = Submission.objects.filter(title__icontains=query)
+            submissions = Submission.objects.filter(title__search=query)
 
             # order submissions
             # order_by == 'relevance' is just the default order
