@@ -434,7 +434,7 @@ function cumulative_activity_front_chart(data) {
             zoomType: 'x'
         },
         title: {
-            text: "Activity of top 100 threadsb"
+            text: "Activity of top 100 threads"
         },
         credits: {
             enabled: false

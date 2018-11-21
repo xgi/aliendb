@@ -19,15 +19,15 @@
       <div class="card">
         <div class="card-block">
           <h3 class="card-title">Search</h3>
-          <div class="col-12 col-md-8 col-lg-5">
+          <div class="col-12 col-md-8 col-lg-6">
             <form>
               <!-- regular settings -->
               <div class="form-group">
                 <input class="form-control" type="text" name="q" value="{{ query }}" placeholder="Search">
               </div>
               <div class="form-group row">
-                <label class="col-2 col-form-label">Sort by</label>
-                <div class="col-10">
+                <label class="col-3 col-form-label">Sort by</label>
+                <div class="col-9">
                   <select class="form-control" name="order_by">
                     <option value="relevance" {% if order_by == "relevance" %}selected{% endif %}>Relevance</option>
                     <option value="karma" {% if order_by == "karma" %}selected{% endif %}>Karma</option>
@@ -36,8 +36,8 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label class="col-2 col-form-label">Show from</label>
-                <div class="col-10">
+                <label class="col-3 col-form-label">Show from</label>
+                <div class="col-9">
                   <select class="form-control" name="time">
                     <option value="all" {% if time == "all" %}selected{% endif %}>All time</option>
                     <option value="today" {% if time == "today" %}selected{% endif %}>Today</option>
@@ -61,8 +61,8 @@
               <div class="collapse show" id="advanced-settings">
               {% endif %}
                 <div class="form-group row">
-                  <label class="col-3 col-sm-2 col-form-label">Subreddit filter</label>
-                  <div class="col-9 col-sm-10">
+                  <label class="col-4 col-sm-3 col-form-label">Subreddit filter</label>
+                  <div class="col-8 col-sm-9">
                     <input class="form-control" type="text" name="from_subreddits" value="{{ from_subreddits }}" placeholder="Subreddits">
                     <small class="form-text text-muted">Enter names of subreddits, separated by commas.</small>
                   </div>
@@ -105,16 +105,16 @@
     <div class="col-12 col-md-11 col-lg-10">
       <div class="bs-component">
         <table class="table table-striped table-hover table-bordered">
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th class="table-caption" colspan="4">Search results</th>
             </tr>
           </thead>
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th id="karma">Karma</th>
               <th id="title">Title</th>
-              <th id="subreddit" class="hidden-sm-down">Subreddit</th>
+              <th id="subreddit" class="d-none d-md-block">Subreddit</th>
             </tr>
           </thead>
           <tbody>
@@ -125,7 +125,7 @@
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
                 <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
               </td>
-              <td id="subreddit" class="hidden-sm-down"><a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
+              <td id="subreddit" class="d-none d-md-block"><a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
             </tr>
             {% endfor %}
           </tbody>

@@ -19,16 +19,16 @@
     <div class="col-12 col-md-11 col-lg-6 col-xl-5 table-container-col">
       <div class="bs-component">
         <table class="table table-striped table-hover table-bordered">
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th class="table-caption" colspan="4">Most popular subreddits</th>
             </tr>
           </thead>
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th id="submissions">Posts</th>
               <th id="karma">Karma</th>
-              <th id="comments" class="hidden-sm-down">Comments</td>
+              <th id="comments" class="d-none d-md-table-cell">Comments</td>
               <th id="name">Name</th>
             </tr>
           </thead>
@@ -37,7 +37,7 @@
             <tr>
               <td id="submissions">{{ subreddit.tracked_submissions|intcomma }}</td>
               <td id="karma">{{ subreddit.score|intcomma }}</td>
-              <td id="comments" class="hidden-sm-down">{{ subreddit.num_comments|intcomma }}</td>
+              <td id="comments" class="d-none d-md-table-cell">{{ subreddit.num_comments|intcomma }}</td>
               <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
             </tr>
             {% endfor %}
@@ -45,15 +45,15 @@
         </table>
       </div>
     </div>
-    <div class="hidden-md-down col-lg-5 col-xl-3">
+    <div class="d-none d-lg-block col-lg-5 col-xl-3">
       <div class="bs-component">
         <table class="table table-striped table-hover table-bordered">
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th class="bg-success table-caption" colspan="3">Agreeable subreddits</th>
             </tr>
           </thead>
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th id="rank">Rank</th>
               <th id="name">Name</th>
@@ -73,12 +73,12 @@
       </div>
       <div class="bs-component">
         <table class="table table-striped table-hover table-bordered">
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th class="bg-danger table-caption" colspan="3">Controversial subreddits</th>
             </tr>
           </thead>
-          <thead class="thead-inverse">
+          <thead class="bg-primary">
             <tr>
               <th id="rank">Rank</th>
               <th id="name">Name</th>

@@ -9,7 +9,7 @@
 <div class="header">
   <div class="container-fluid align-self-center">
     <div class="row justify-content-sm-center">
-      <div class="hidden-sm-down col-md-2 col-lg-2">
+      <div class="d-none d-md-block col-md-2 col-lg-2">
         <div class="row justify-content-sm-center">
           {% if submission.rank == -1 %}
           <h1>#???</h1>
@@ -21,7 +21,7 @@
           <span>Peak: {{ submission.rank_peak }}</span>
         </div>
       </div>
-      <div class="hidden-md-up col-12">
+      <div class="d-sm-none col-12">
         <div class="row justify-content-center">
           <div class="col-3">
             {% if submission.rank == -1 %}
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="hidden-sm-down col-12 col-md-10 col-lg-8 col-xl-7">
+      <div class="d-none d-md-block col-12 col-md-10 col-lg-8 col-xl-7">
         <h4>{{ submission.title }}</h4>
         <p class="card-text">Submitted to
           <a href="/subreddit/{{ submission.subreddit.name }}">/r/{{ submission.subreddit.name }}</a>
@@ -51,19 +51,23 @@
 </div>
 <div class="subheader">
   <div class="container-fluid align-self-center">
-    <div class="subheader-tabs">
+    <div class="subheader-tabs nav nav-tabs" role="tablist">
       <div class="row justify-content-center">
-        <div class="col-6 col-md-3 col-lg-2">
-          <a class="btn btn-primary tab-item active" href="#overview" data-toggle="tab">Overview</a>
-        </div>
-        <div class="col-6 col-md-3 col-lg-2">
-          <a class="btn btn-secondary tab-item" href="#details" data-toggle="tab">Details</a>
-        </div>
-        <div class="col-6 col-md-3 col-lg-2">
-          <a class="btn btn-secondary tab-item" href="#sentiment" data-toggle="tab">Sentiment</a>
-        </div>
-        <div class="col-6 col-md-3 col-lg-2">
-          <a class="btn btn-secondary tab-item" href="#comments" data-toggle="tab">Comments</a>
+        <div class="col-12 col-lg-10 col-xl-8">
+          <div class="row justify-content-center">
+            <div class="col-6 col-md-3 col-lg-2">
+              <a class="btn btn-success nav-link active" id="overview-tab" href="#overview" data-toggle="tab" role="tab">Overview</a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+              <a class="btn btn-secondary nav-link" id="details-tab" href="#details" data-toggle="tab" role="tab">Details</a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+              <a class="btn btn-secondary nav-link" id="sentiment-tab" href="#sentiment" data-toggle="tab" role="tab">Sentiment</a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+              <a class="btn btn-secondary nav-link" id="comments-tab" href="#comments" data-toggle="tab" role="tab">Comments</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -91,13 +95,13 @@
                 <div class="col-6 col-lg-12">
                   <div class="card card-stat">
                     <p>Time spent in the top 100:</p>
-                    <h1>{{ lifetime }}</h1>
+                    <h3>{{ lifetime }}</h3>
                   </div>
                 </div>
                 <div class="col-6 col-lg-12">
                   <div class="card card-stat">
                     <p>Time before reaching top 100:</p>
-                    <h1>{{ rise_time }}</h1>
+                    <h3>{{ rise_time }}</h3>
                   </div>
                 </div>
               </div>
@@ -221,13 +225,23 @@
   submission_charts('{{ submission.id }}');
 
   // properly change active tab
-  $('.subheader-tabs').on('show.bs.tab', function (e) {
-    $('.subheader-tabs .active').addClass('btn-secondary')
-    $('.subheader-tabs .active').removeClass('btn-primary active');
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    console.log("here!");
+    $(e.target).addClass('btn-success');
+    $(e.target).removeClass('btn-secondary');
+    $(e.relatedTarget).addClass('btn-secondary');
+    $(e.relatedTarget).removeClass('btn-success');
+    $(e.relatedTarget).removeClass('show');
+    $(e.relatedTarget).removeClass('active');
   });
-  $('.subheader-tabs').on('shown.bs.tab', function (e) {
-    $('.subheader-tabs .active').addClass('btn-primary')
-    $('.subheader-tabs .active').removeClass('btn-secondary');
-  });
+
+  // $('.subheader-tabs').on('show.bs.tab', function (e) {
+  //   $('.subheader-tabs .active').addClass('btn-secondary')
+  //   $('.subheader-tabs .active').removeClass('btn-primary active');
+  // });
+  // $('.subheader-tabs').on('shown.bs.tab', function (e) {
+  //   $('.subheader-tabs .active').addClass('btn-primary')
+  //   $('.subheader-tabs .active').removeClass('btn-secondary');
+  // });
 </script>
 {% endblock content %}
