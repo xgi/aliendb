@@ -347,6 +347,8 @@ function submission_gilded_chart(data) {
 function subreddit_charts(id) {
     $.getJSON('/api?name=subreddit&id=' + id, function (data) {
         subreddit_activity_chart(data);
+        subreddit_polarity_chart(data);
+        subreddit_subjectivity_chart(data);
     }).always(function () {
         // hide loaders
         $('.loader').each(function () {
@@ -410,6 +412,116 @@ function subreddit_activity_chart(data) {
         colors: [
             'rgba(47, 79, 79, 1)',
             'rgba(255, 69, 0, 1)'
+        ]
+    });
+}
+
+function subreddit_polarity_chart(data) {
+    Highcharts.chart('subreddit_polarity_chart', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: "Polarity of this subreddit"
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['Title', 'Comments'],
+        },
+        yAxis: {
+            tickPositioner: function () {
+                var maxDeviation = Math.round((Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)) + .05) * 10) / 10;
+                var halfMaxDeviation = maxDeviation / 2;
+
+                return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+            },
+            title: {
+                text: null
+            }
+        },
+        series: [{
+                name: 'This subreddit',
+                data: data['polarity']['subreddit'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
+            },
+            {
+                name: 'Overall avg.',
+                data: data['polarity']['overall'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
+            }
+        ]
+    });
+}
+
+function subreddit_subjectivity_chart(data) {
+    Highcharts.chart('subreddit_subjectivity_chart', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: "Subjectivity of this subreddit"
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['Title', 'Comments'],
+        },
+        yAxis: {
+            tickPositioner: function () {
+                var maxDeviation = Math.round((Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)) + .05) * 10) / 10;
+                var halfMaxDeviation = maxDeviation / 2;
+
+                return [0, halfMaxDeviation, maxDeviation];
+            },
+            title: {
+                text: null
+            }
+        },
+        series: [{
+                name: 'This subreddit',
+                data: data['subjectivity']['subreddit'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
+            },
+            {
+                name: 'Overall avg.',
+                data: data['subjectivity']['overall'],
+                dataLabels: {
+                    enabled: true,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.4f}',
+                    style: {
+                        fontSize: '13px'
+                    }
+                }
+            }
         ]
     });
 }

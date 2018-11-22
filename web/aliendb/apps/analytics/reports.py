@@ -188,12 +188,43 @@ def subreddit(request) -> dict:
         comment_differentials.append(
             [comment_tallies[i][0], comment_tallies[i][1] - comment_tallies[i-1][1]])
 
+    subreddits = Subreddit.objects.all()
+    num_subreddits = Subreddit.objects.count()
+
+    # polarity
+    polarity_subreddit = [
+        float("{0:.4f}".format(subreddit.average_submission_polarity)),
+        float("{0:.4f}".format(subreddit.average_comments_polarity))
+    ]
+    polarity_overall = [
+        float("{0:.4f}".format(sum(s.average_submission_polarity for s in subreddits) / num_subreddits)),
+        float("{0:.4f}".format(sum(s.average_comments_polarity for s in subreddits) / num_subreddits))
+    ]
+
+    # subjectivity
+    subjectivity_subreddit = [
+        float("{0:.4f}".format(subreddit.average_submission_subjectivity)),
+        float("{0:.4f}".format(subreddit.average_comments_subjectivity))
+    ]
+    subjectivity_overall = [
+        float("{0:.4f}".format(sum(s.average_submission_subjectivity for s in subreddits) / num_subreddits)),
+        float("{0:.4f}".format(sum(s.average_comments_subjectivity for s in subreddits) / num_subreddits))
+    ]
+
     data = {
         'activity': {
             'scores': score_tallies,
             'comments': comment_tallies,
             'score_differentials': score_differentials,
             'comment_differentials': comment_differentials
+        },
+        'polarity': {
+            'subreddit': polarity_subreddit,
+            'overall': polarity_overall
+        },
+        'subjectivity': {
+            'subreddit': subjectivity_subreddit,
+            'overall': subjectivity_overall
         }
     }
 
