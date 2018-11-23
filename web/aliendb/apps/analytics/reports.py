@@ -197,8 +197,10 @@ def subreddit(request) -> dict:
         float("{0:.4f}".format(subreddit.average_comments_polarity))
     ]
     polarity_overall = [
-        float("{0:.4f}".format(sum(s.average_submission_polarity for s in subreddits) / num_subreddits)),
-        float("{0:.4f}".format(sum(s.average_comments_polarity for s in subreddits) / num_subreddits))
+        float("{0:.4f}".format(
+            sum(s.average_submission_polarity for s in subreddits) / num_subreddits)),
+        float("{0:.4f}".format(
+            sum(s.average_comments_polarity for s in subreddits) / num_subreddits))
     ]
 
     # subjectivity
@@ -207,8 +209,10 @@ def subreddit(request) -> dict:
         float("{0:.4f}".format(subreddit.average_comments_subjectivity))
     ]
     subjectivity_overall = [
-        float("{0:.4f}".format(sum(s.average_submission_subjectivity for s in subreddits) / num_subreddits)),
-        float("{0:.4f}".format(sum(s.average_comments_subjectivity for s in subreddits) / num_subreddits))
+        float("{0:.4f}".format(
+            sum(s.average_submission_subjectivity for s in subreddits) / num_subreddits)),
+        float("{0:.4f}".format(
+            sum(s.average_comments_subjectivity for s in subreddits) / num_subreddits))
     ]
 
     data = {

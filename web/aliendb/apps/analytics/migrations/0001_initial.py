@@ -17,7 +17,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.CharField(max_length=7, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(max_length=7,
+                                        primary_key=True, serialize=False, unique=True)),
                 ('score', models.IntegerField()),
                 ('is_root', models.BooleanField()),
                 ('is_op', models.NullBooleanField()),
@@ -37,7 +38,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Submission',
             fields=[
-                ('id', models.CharField(max_length=7, primary_key=True, serialize=False, unique=True)),
+                ('id', models.CharField(max_length=7,
+                                        primary_key=True, serialize=False, unique=True)),
                 ('title', models.CharField(max_length=300)),
                 ('author', models.CharField(max_length=20)),
                 ('rank', models.IntegerField()),
@@ -61,34 +63,41 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SubmissionNumComments',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('num_comments', models.IntegerField()),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission')),
+                ('submission', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission')),
             ],
         ),
         migrations.CreateModel(
             name='SubmissionScore',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('score', models.IntegerField()),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission')),
+                ('submission', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission')),
             ],
         ),
         migrations.CreateModel(
             name='SubmissionUpvoteRatio',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('upvote_ratio', models.FloatField()),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission')),
+                ('submission', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission')),
             ],
         ),
         migrations.CreateModel(
             name='Subreddit',
             fields=[
-                ('name', models.CharField(max_length=21, primary_key=True, serialize=False, unique=True)),
+                ('name', models.CharField(max_length=21,
+                                          primary_key=True, serialize=False, unique=True)),
                 ('title', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=500)),
                 ('score', models.IntegerField(default=0)),
@@ -112,11 +121,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='submission',
             name='subreddit',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='analytics.Subreddit'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='analytics.Subreddit'),
         ),
         migrations.AddField(
             model_name='comment',
             name='submission',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='analytics.Submission'),
         ),
     ]
