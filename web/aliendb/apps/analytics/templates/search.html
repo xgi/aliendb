@@ -29,9 +29,9 @@
                 <label class="col-3 col-form-label">Sort by</label>
                 <div class="col-9">
                   <select class="form-control" name="order_by">
-                    <option value="relevance" {% if order_by == "relevance" %}selected{% endif %}>Relevance</option>
-                    <option value="karma" {% if order_by == "karma" %}selected{% endif %}>Karma</option>
-                    <option value="comments" {% if order_by == "comments" %}selected{% endif %}>Number of comments</option>
+                    <option value="relevance" {% if order_by=="relevance" %}selected{% endif %}>Relevance</option>
+                    <option value="karma" {% if order_by=="karma" %}selected{% endif %}>Karma</option>
+                    <option value="comments" {% if order_by=="comments" %}selected{% endif %}>Number of comments</option>
                   </select>
                 </div>
               </div>
@@ -39,11 +39,11 @@
                 <label class="col-3 col-form-label">Show from</label>
                 <div class="col-9">
                   <select class="form-control" name="time">
-                    <option value="all" {% if time == "all" %}selected{% endif %}>All time</option>
-                    <option value="today" {% if time == "today" %}selected{% endif %}>Today</option>
-                    <option value="week" {% if time == "week" %}selected{% endif %}>This week</option>
-                    <option value="month" {% if time == "month" %}selected{% endif %}>This month</option>
-                    <option value="year" {% if time == "year" %}selected{% endif %}>This year</option>
+                    <option value="all" {% if time=="all" %}selected{% endif %}>All time</option>
+                    <option value="today" {% if time=="today" %}selected{% endif %}>Today</option>
+                    <option value="week" {% if time=="week" %}selected{% endif %}>This week</option>
+                    <option value="month" {% if time=="month" %}selected{% endif %}>This month</option>
+                    <option value="year" {% if time=="year" %}selected{% endif %}>This year</option>
                   </select>
                 </div>
               </div>
@@ -57,19 +57,19 @@
               <!-- advanced section open by default if settings were changed -->
               {% if from_subreddits is None or from_subreddits == '' %}
               <div class="collapse" id="advanced-settings">
-              {% else %}
-              <div class="collapse show" id="advanced-settings">
-              {% endif %}
-                <div class="form-group row">
-                  <label class="col-4 col-sm-3 col-form-label">Subreddit filter</label>
-                  <div class="col-8 col-sm-9">
-                    <input class="form-control" type="text" name="from_subreddits" value="{{ from_subreddits }}" placeholder="Subreddits">
-                    <small class="form-text text-muted">Enter names of subreddits, separated by commas.</small>
+                {% else %}
+                <div class="collapse show" id="advanced-settings">
+                  {% endif %}
+                  <div class="form-group row">
+                    <label class="col-4 col-sm-3 col-form-label">Subreddit filter</label>
+                    <div class="col-8 col-sm-9">
+                      <input class="form-control" type="text" name="from_subreddits" value="{{ from_subreddits }}"
+                        placeholder="Subreddits">
+                      <small class="form-text text-muted">Enter names of subreddits, separated by commas.</small>
+                    </div>
                   </div>
-                </div><br />
-              </div>
-
-              <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
             </form>
           </div>
         </div>
@@ -89,11 +89,11 @@
       <div class="card">
         <div class="card-block">
           <div class="row">
-              {% for relevant_subreddit in relevant_subreddits %}
-              <div class="col-6 col-md-3">
-                <p class="text-center"><a href="/subreddit/{{ relevant_subreddit }}">r/{{ relevant_subreddit }}</a></p>
-              </div>
-              {% endfor %}
+            {% for relevant_subreddit in relevant_subreddits %}
+            <div class="col-6 col-md-3">
+              <p class="text-center"><a href="/subreddit/{{ relevant_subreddit }}">r/{{ relevant_subreddit }}</a></p>
+            </div>
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -123,9 +123,11 @@
               <td id="karma">{{ submission.score|intcomma }}</th>
               <td id="title">
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
-                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince }} ago</span>
+                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince
+                  }} ago</span>
               </td>
-              <td id="subreddit" class="d-none d-md-table-cell"><a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
+              <td id="subreddit" class="d-none d-md-table-cell"><a href="/subreddit/{{ submission.subreddit.name }}">r/{{
+                  submission.subreddit.name }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
