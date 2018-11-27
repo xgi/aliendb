@@ -2,12 +2,12 @@ from django.db import models
 
 
 class TotalScore(models.Model):
-    score = models.IntegerField()
+    score = models.BigIntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class TotalNumComments(models.Model):
-    num_comments = models.IntegerField()
+    num_comments = models.BigIntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
