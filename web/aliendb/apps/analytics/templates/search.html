@@ -29,9 +29,9 @@
                 <label class="col-3 col-form-label">Sort by</label>
                 <div class="col-9">
                   <select class="form-control" name="order_by">
-                    <option value="relevance" {% if order_by=="relevance" %}selected{% endif %}>Relevance</option>
-                    <option value="karma" {% if order_by=="karma" %}selected{% endif %}>Karma</option>
-                    <option value="comments" {% if order_by=="comments" %}selected{% endif %}>Number of comments</option>
+                    <option value="relevance" {% if order_by == "relevance" %}selected{% endif %}>Relevance</option>
+                    <option value="karma" {% if order_by == "karma" %}selected{% endif %}>Karma</option>
+                    <option value="comments" {% if order_by == "comments" %}selected{% endif %}>Number of comments</option>
                   </select>
                 </div>
               </div>
@@ -39,11 +39,11 @@
                 <label class="col-3 col-form-label">Show from</label>
                 <div class="col-9">
                   <select class="form-control" name="time">
-                    <option value="all" {% if time=="all" %}selected{% endif %}>All time</option>
-                    <option value="today" {% if time=="today" %}selected{% endif %}>Today</option>
-                    <option value="week" {% if time=="week" %}selected{% endif %}>This week</option>
-                    <option value="month" {% if time=="month" %}selected{% endif %}>This month</option>
-                    <option value="year" {% if time=="year" %}selected{% endif %}>This year</option>
+                    <option value="all" {% if time == "all" %}selected{% endif %}>All time</option>
+                    <option value="today" {% if time == "today" %}selected{% endif %}>Today</option>
+                    <option value="week" {% if time == "week" %}selected{% endif %}>This week</option>
+                    <option value="month" {% if time == "month" %}selected{% endif %}>This month</option>
+                    <option value="year" {% if time == "year" %}selected{% endif %}>This year</option>
                   </select>
                 </div>
               </div>
