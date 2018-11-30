@@ -123,11 +123,11 @@
               <td id="karma">{{ submission.score|intcomma }}</th>
               <td id="title">
                 <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
-                <span title="{{ submission.created_at|date:'r' }} (UTC)">submitted {{ submission.created_at|timesince
-                  }} ago</span>
+                <span title="{{ submission.created_at|date:'r' }} (UTC)">
+                  submitted {{ submission.created_at|timesince }} ago</span>
               </td>
-              <td id="subreddit" class="d-none d-md-table-cell"><a href="/subreddit/{{ submission.subreddit.name }}">r/{{
-                  submission.subreddit.name }}</a></td>
+              <td id="subreddit" class="d-none d-md-table-cell">
+                <a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
