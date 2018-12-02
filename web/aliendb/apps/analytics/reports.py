@@ -158,13 +158,10 @@ def subreddit(request) -> dict:
     if data is not None and settings.DEBUG is False:
         return data
 
-    now = datetime.datetime.now()
-    start_date = now - datetime.timedelta(weeks=4)
-
     subreddit_scores = SubredditScore.objects.filter(
-        timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
+        subreddit=subreddit).order_by('timestamp')
     subreddit_num_comments = SubredditNumComments.objects.filter(
-        timestamp__gt=start_date, subreddit=subreddit).order_by('timestamp')
+        subreddit=subreddit).order_by('timestamp')
 
     # activity
     score_tallies_raw = [
@@ -217,10 +214,10 @@ def subreddit(request) -> dict:
 
     data = {
         'activity': {
-            'scores': score_tallies,
-            'comments': comment_tallies,
-            'score_differentials': score_differentials,
-            'comment_differentials': comment_differentials
+            # 'scores': score_tallies,
+            # 'comments': comment_tallies,
+            'score_differentials': score_differentials[-12:],
+            'comment_differentials': comment_differentials[-12:]
         },
         'polarity': {
             'subreddit': polarity_subreddit,
