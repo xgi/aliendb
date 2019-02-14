@@ -212,7 +212,7 @@ td#title span {
     color: #ccc;
 }
 
-.bg-success, .bg-danger {
+.bg-success, .bg-danger, .bg-info {
     color: #333;
 }
 

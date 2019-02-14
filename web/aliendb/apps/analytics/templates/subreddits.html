@@ -96,6 +96,31 @@
           </tbody>
         </table>
       </div>
+      <div class="bs-component">
+        <table class="table table-striped table-hover table-bordered">
+          <thead class="bg-primary">
+            <tr>
+              <th class="bg-info table-caption" colspan="3">Recent subreddits</th>
+            </tr>
+          </thead>
+          <thead class="bg-primary">
+            <tr>
+              <th id="rank">Rank</th>
+              <th id="name">Name</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for subreddit in recent_subreddits %}
+            <tr>
+              <td id="rank">{{ forloop.counter }}</td>
+              <td id="name"><a href="/subreddit/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+              <td>{{ subreddit.created_at|date:"N j" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div> <!-- container -->

@@ -89,13 +89,15 @@ def subreddits(request) -> HttpResponse:
     controversial_subreddits = Subreddit.objects \
         .exclude(tracked_submissions__lt=30) \
         .order_by('average_upvote_ratio')[:5]
+    recent_subreddits = Subreddit.objects \
+        .order_by('-created_at')[:10]
 
     response = render(request, 'subreddits.html', {
         'page_category': 'subreddits',
         'subreddits': subreddits,
         'agreeable_subreddits': agreeable_subreddits,
-        'controversial_subreddits': controversial_subreddits
-
+        'controversial_subreddits': controversial_subreddits,
+        'recent_subreddits': recent_subreddits
     })
     cache.set("subreddits_response", response, 1200)
     return response
