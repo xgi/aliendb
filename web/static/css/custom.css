@@ -165,9 +165,8 @@ a:hover {
 
 /* Table */
 
-.table-container-row {
-    margin-left: 0;
-    margin-right: 0;
+.table-container-col {
+    padding: 0;
 }
 
 .table-caption {
