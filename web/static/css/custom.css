@@ -165,8 +165,10 @@ a:hover {
 
 /* Table */
 
-.table-container-col {
-    padding: 0;
+@media (max-width: 768px) {
+    .table-container-col {
+        padding: 0;
+    }
 }
 
 .table-caption {
