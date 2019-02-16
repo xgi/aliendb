@@ -33,6 +33,7 @@ h5 {
 
 a {
     color: #41553D;
+    border-bottom: 1px darkgray dotted;
 }
 
 a:hover {
@@ -57,6 +58,10 @@ a:hover {
 .navbar {
     min-height: 60px;
     padding: 0;
+}
+
+.navbar a {
+    border: none;
 }
 
 .navbar>.container {
@@ -112,6 +117,7 @@ a:hover {
 
 .header a {
     color: #2196F3;
+    border: none;
 }
 
 .header a:hover {
@@ -147,6 +153,7 @@ a:hover {
 
 .lead a {
     color: #2196F3;
+    border: none;
 }
 
 .lead a:hover {
