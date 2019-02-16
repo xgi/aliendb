@@ -70,7 +70,21 @@ def submission(request) -> dict:
     ]
 
     # gilded
-    gilded_submission = sum(c.gilded for c in comments)
+    gilded_submission = [
+        submission.gilded_silver,
+        submission.gilded_gold,
+        submission.gilded_platinum
+    ]
+    gilded_comments = [
+        sum(c.gilded_silver for c in comments),
+        sum(c.gilded_gold for c in comments),
+        sum(c.gilded_platinum for c in comments),
+    ]
+    gilded_subreddit = [
+        float("{0:.2f}".format(subreddit.average_gilded_silver)),
+        float("{0:.2f}".format(subreddit.average_gilded_gold)),
+        float("{0:.2f}".format(subreddit.average_gilded_platinum))
+    ]
 
     # polarity
     polarity_submission = [
@@ -107,10 +121,9 @@ def submission(request) -> dict:
             'subreddit': special_users_subreddit
         },
         'gilded': {
-            'data': [
-                gilded_submission,
-                float("{0:.2f}".format(subreddit.average_gilded))
-            ]
+            'submission': gilded_submission,
+            'comments': gilded_comments,
+            'subreddit': gilded_subreddit
         },
         'polarity': {
             'submission': polarity_submission,

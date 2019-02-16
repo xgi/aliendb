@@ -63,31 +63,31 @@ function submission_polarity_chart(data) {
             }
         },
         series: [{
-                name: 'This post',
-                data: data['polarity']['submission'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
-                }
-            },
-            {
-                name: 'Subreddit avg.',
-                data: data['polarity']['subreddit'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
+            name: 'This post',
+            data: data['polarity']['submission'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
                 }
             }
+        },
+        {
+            name: 'Subreddit avg.',
+            data: data['polarity']['subreddit'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
+                }
+            }
+        }
         ]
     });
 }
@@ -118,31 +118,31 @@ function submission_subjectivity_chart(data) {
             }
         },
         series: [{
-                name: 'This post',
-                data: data['subjectivity']['submission'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
-                }
-            },
-            {
-                name: 'Subreddit avg.',
-                data: data['subjectivity']['subreddit'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
+            name: 'This post',
+            data: data['subjectivity']['submission'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
                 }
             }
+        },
+        {
+            name: 'Subreddit avg.',
+            data: data['subjectivity']['subreddit'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
+                }
+            }
+        }
         ]
     });
 }
@@ -166,37 +166,37 @@ function submission_activity_chart(data) {
             crosshair: true
         },
         yAxis: [{
-                title: {
-                    text: 'Comments'
-                }
-            },
-            {
-                title: {
-                    text: 'Karma'
-                },
-                opposite: true
+            title: {
+                text: 'Comments'
             }
+        },
+        {
+            title: {
+                text: 'Karma'
+            },
+            opposite: true
+        }
         ],
         series: [{
-                type: 'column',
-                name: 'Comments',
-                yAxis: 0,
-                data: data['activity']['comments'],
-                lineWidth: 4
-            },
-            {
-                type: 'spline',
-                name: 'Karma',
-                yAxis: 1,
-                data: data['activity']['scores'],
-                lineWidth: 6,
-                marker: {
-                    symbol: 'circle',
-                    radius: 4,
-                    lineColor: 'rgba(255, 255, 255, 1)',
-                    lineWidth: 1
-                }
+            type: 'column',
+            name: 'Comments',
+            yAxis: 0,
+            data: data['activity']['comments'],
+            lineWidth: 4
+        },
+        {
+            type: 'spline',
+            name: 'Karma',
+            yAxis: 1,
+            data: data['activity']['scores'],
+            lineWidth: 6,
+            marker: {
+                symbol: 'circle',
+                radius: 4,
+                lineColor: 'rgba(255, 255, 255, 1)',
+                lineWidth: 1
             }
+        }
         ],
         colors: [
             'rgba(47, 79, 79, 1)',
@@ -237,23 +237,23 @@ function submission_upvote_ratio_chart(data) {
             }]
         },
         series: [{
-                type: 'line',
-                name: 'Upvote ratio',
-                yAxis: 0,
-                data: data['upvote_ratio']['upvote_ratios']
+            type: 'line',
+            name: 'Upvote ratio',
+            yAxis: 0,
+            data: data['upvote_ratio']['upvote_ratios']
+        },
+        {
+            // dummy series to force graph to include subreddit avg
+            type: 'scatter',
+            marker: {
+                enabled: false
             },
-            {
-                // dummy series to force graph to include subreddit avg
-                type: 'scatter',
-                marker: {
-                    enabled: false
-                },
-                enableMouseTracking: false,
-                showInLegend: false,
-                data: [
-                    [data['upvote_ratio']['upvote_ratios'][0][0], data['upvote_ratio']['average_upvote_ratio']]
-                ]
-            }
+            enableMouseTracking: false,
+            showInLegend: false,
+            data: [
+                [data['upvote_ratio']['upvote_ratios'][0][0], data['upvote_ratio']['average_upvote_ratio']]
+            ]
+        }
         ],
         colors: [
             'rgba(255, 69, 0, 1)'
@@ -291,13 +291,13 @@ function submission_special_users_chart(data) {
             valueSuffix: ' comments'
         },
         series: [{
-                name: "This post",
-                data: data['special_users']['submission']
-            },
-            {
-                name: "Subreddit avg.",
-                data: data['special_users']['subreddit']
-            }
+            name: "This post",
+            data: data['special_users']['submission']
+        },
+        {
+            name: "Subreddit avg.",
+            data: data['special_users']['subreddit']
+        }
         ],
         colors: [
             'rgba(255, 99, 132, 0.65)',
@@ -312,13 +312,13 @@ function submission_gilded_chart(data) {
             type: 'bar'
         },
         title: {
-            text: "Gold given"
+            text: "Coins given"
         },
         credits: {
             enabled: false
         },
         xAxis: {
-            categories: ['This post', 'Subreddit avg.'],
+            categories: ['Silver', 'Gold', 'Platinum'],
         },
         yAxis: {
             min: 0,
@@ -326,20 +326,23 @@ function submission_gilded_chart(data) {
                 text: null
             }
         },
-        tooltip: {
-            valueSuffix: ' gold'
-        },
-        legend: {
-            enabled: false
-        },
         series: [{
-            name: 'Gold given',
-            data: data['gilded']['data'],
-            colorByPoint: true
-        }],
+            name: "Submission",
+            data: data['gilded']['submission'],
+        },
+        {
+            name: "Comments",
+            data: data['gilded']['comments']
+        },
+        {
+            name: "Subreddit avg.",
+            data: data['gilded']['subreddit']
+        }
+        ],
         colors: [
             'rgba(218, 165, 32, 0.65)',
-            'rgba(160, 82, 45, 0.65)'
+            'rgba(160, 82, 45, 0.65)',
+            'rgba(160, 45, 65, 0.65)'
         ]
     });
 }
@@ -378,36 +381,36 @@ function subreddit_activity_chart(data) {
             crosshair: true
         },
         yAxis: [{
-                title: {
-                    text: 'Δ Comments (per day)'
-                }
-            },
-            {
-                title: {
-                    text: 'Δ Karma (per day)'
-                },
-                opposite: true
+            title: {
+                text: 'Δ Comments (per day)'
             }
+        },
+        {
+            title: {
+                text: 'Δ Karma (per day)'
+            },
+            opposite: true
+        }
         ],
         series: [{
-                type: 'column',
-                name: 'Δ Comments',
-                yAxis: 0,
-                data: data['activity']['comment_differentials']
-            },
-            {
-                type: 'line',
-                name: 'Δ Karma',
-                yAxis: 1,
-                data: data['activity']['score_differentials'],
-                lineWidth: 6,
-                marker: {
-                    symbol: 'circle',
-                    radius: 4,
-                    lineColor: 'rgba(255, 255, 255, 1)',
-                    lineWidth: 1
-                }
+            type: 'column',
+            name: 'Δ Comments',
+            yAxis: 0,
+            data: data['activity']['comment_differentials']
+        },
+        {
+            type: 'line',
+            name: 'Δ Karma',
+            yAxis: 1,
+            data: data['activity']['score_differentials'],
+            lineWidth: 6,
+            marker: {
+                symbol: 'circle',
+                radius: 4,
+                lineColor: 'rgba(255, 255, 255, 1)',
+                lineWidth: 1
             }
+        }
         ],
         colors: [
             'rgba(47, 79, 79, 1)',
@@ -442,31 +445,31 @@ function subreddit_polarity_chart(data) {
             }
         },
         series: [{
-                name: 'This subreddit',
-                data: data['polarity']['subreddit'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
-                }
-            },
-            {
-                name: 'Overall avg.',
-                data: data['polarity']['overall'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
+            name: 'This subreddit',
+            data: data['polarity']['subreddit'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
                 }
             }
+        },
+        {
+            name: 'Overall avg.',
+            data: data['polarity']['overall'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
+                }
+            }
+        }
         ]
     });
 }
@@ -497,31 +500,31 @@ function subreddit_subjectivity_chart(data) {
             }
         },
         series: [{
-                name: 'This subreddit',
-                data: data['subjectivity']['subreddit'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
-                }
-            },
-            {
-                name: 'Overall avg.',
-                data: data['subjectivity']['overall'],
-                dataLabels: {
-                    enabled: true,
-                    color: '#FFFFFF',
-                    align: 'right',
-                    format: '{point.y:.4f}',
-                    style: {
-                        fontSize: '13px'
-                    }
+            name: 'This subreddit',
+            data: data['subjectivity']['subreddit'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
                 }
             }
+        },
+        {
+            name: 'Overall avg.',
+            data: data['subjectivity']['overall'],
+            dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.4f}',
+                style: {
+                    fontSize: '13px'
+                }
+            }
+        }
         ]
     });
 }
@@ -562,37 +565,37 @@ function cumulative_activity_front_chart(data) {
             crosshair: true
         },
         yAxis: [{
-                title: {
-                    text: 'Comments'
-                }
-            },
-            {
-                title: {
-                    text: 'Karma'
-                },
-                opposite: true
+            title: {
+                text: 'Comments'
             }
+        },
+        {
+            title: {
+                text: 'Karma'
+            },
+            opposite: true
+        }
         ],
         series: [{
-                type: 'column',
-                name: 'Comments',
-                yAxis: 0,
-                data: data['front']['comments'],
-                pointPadding: 0.01
-            },
-            {
-                type: 'line',
-                name: 'Karma',
-                yAxis: 1,
-                data: data['front']['scores'],
-                lineWidth: 6,
-                marker: {
-                    symbol: 'circle',
-                    radius: 4,
-                    lineColor: 'rgba(255, 255, 255, 1)',
-                    lineWidth: 1
-                }
+            type: 'column',
+            name: 'Comments',
+            yAxis: 0,
+            data: data['front']['comments'],
+            pointPadding: 0.01
+        },
+        {
+            type: 'line',
+            name: 'Karma',
+            yAxis: 1,
+            data: data['front']['scores'],
+            lineWidth: 6,
+            marker: {
+                symbol: 'circle',
+                radius: 4,
+                lineColor: 'rgba(255, 255, 255, 1)',
+                lineWidth: 1
             }
+        }
         ],
         colors: [
             'rgba(47, 79, 79, 1)',
@@ -605,15 +608,15 @@ function cumulative_activity_front_chart(data) {
                 },
                 chartOptions: {
                     yAxis: [{
-                            title: {
-                                text: null
-                            }
-                        },
-                        {
-                            title: {
-                                text: null
-                            }
+                        title: {
+                            text: null
                         }
+                    },
+                    {
+                        title: {
+                            text: null
+                        }
+                    }
                     ],
                 }
             }]
