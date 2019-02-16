@@ -34,19 +34,19 @@
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{{ subreddit.tracked_submissions|intcomma }}</h4>
+                <h4>{{ subreddit.tracked_submissions|short_quantity }}</h4>
                 <span>Posts</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{{ subreddit.score|intcomma }}</h4>
+                <h4>{{ subreddit.score|short_quantity }}</h4>
                 <span>Karma</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{{ subreddit.num_comments|intcomma }}</h4>
+                <h4>{{ subreddit.num_comments|short_quantity }}</h4>
                 <span>Comments</span>
               </div>
             </div>
