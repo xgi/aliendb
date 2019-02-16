@@ -20,7 +20,7 @@
         <p>AlienDB is an analytics platform for Reddit. It tracks and stores
           historical data for the top threads on Reddit in order to provide
           karma trends, comment stats, and subreddit profiles. This website
-          is <b>not</b> affiliated with Reddit, and can only access data which
+          is not affiliated with Reddit, and can only access data which
           is publicly available.
         </p>
         <h4>Method</h4>
@@ -28,8 +28,9 @@
           <a href="https://reddit.com/r/all">/r/all</a> and periodically records
           information including each submission's rank, its number of comments,
           and its current karma. Each comment is processed to record cumulative
-          gold given and special user presence. Comment text is <b>not</b>
-          stored. Additionally, submissions are analyzed using the
+          coins given (silver/gold/platinum) and special user presence.
+          Text readability is measured based on word count and complexity.
+          Comment text is not stored. Additionally, submissions are analyzed using the
           <a href="http://nltk.org">Natural Language Toolkit</a> (NLTK) and
           <a href="https://textblob.readthedocs.io">TextBlob</a> for recording
           the polarity and subjectivity of submission titles and comments.

@@ -33,6 +33,9 @@ def create_dummy_models():
         over_18=False,
         spoiler=True,
         locked=False,
+        gilded_silver=1,
+        gilded_gold=2,
+        gilded_platinum=3,
         created_at=datetime.datetime(2017, 10, 11, 12, 13, 14))
     comment = Comment.objects.create(
         id="000002",
@@ -43,7 +46,9 @@ def create_dummy_models():
         is_mod=False,
         is_admin=False,
         is_special=False,
-        gilded=2,
+        gilded_silver=4,
+        gilded_gold=5,
+        gilded_platinum=6,
         characters=50,
         words=10,
         sentences=2,
