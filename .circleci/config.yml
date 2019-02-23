@@ -1,0 +1,38 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@1.0.2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7-stretch
+
+    working_directory: ~/aliendb
+
+    steps:
+      - checkout
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install codecov
+
+      - run:
+          name: setup environment
+          command: |
+            docker-compose build
+            docker-compose up -d
+
+      - run:
+          name: run tests
+          command: |
+            docker exec -it aliendb_web_1 coverage run --source='.' manage.py test aliendb.apps.analytics.tests --noinput
+            docker exec -it aliendb_web_1 cat .coverage > .coverage
+            sed -i -e "s@/usr/src/app@$(pwd)/web@g" .coverage
+
+      - codecov/upload:
+          conf: codecov.yml
+          file: .coverage
