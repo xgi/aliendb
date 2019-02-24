@@ -1,6 +1,6 @@
 ![AlienDB Header](./res/aliendb_header.png)
 
-[![Build Status](https://travis-ci.org/xgi/aliendb.svg?branch=master)](https://travis-ci.org/xgi/aliendb) [![codecov](https://codecov.io/gh/xgi/aliendb/branch/master/graph/badge.svg)](https://codecov.io/gh/xgi/aliendb)
+[![CircleCI](https://circleci.com/gh/xgi/aliendb/tree/master.svg?style=svg)](https://circleci.com/gh/xgi/aliendb/tree/master) [![codecov](https://codecov.io/gh/xgi/aliendb/branch/master/graph/badge.svg)](https://codecov.io/gh/xgi/aliendb)
 
 # About
 
