@@ -1,6 +1,6 @@
 ![AlienDB Header](./res/aliendb_header.png)
 
-[![CircleCI](https://circleci.com/gh/xgi/aliendb/tree/master.svg?style=svg)](https://circleci.com/gh/xgi/aliendb/tree/master) [![codecov](https://codecov.io/gh/xgi/aliendb/branch/master/graph/badge.svg)](https://codecov.io/gh/xgi/aliendb)
+[![CircleCI](https://circleci.com/gh/xgi/aliendb/tree/master.svg?style=svg)](https://circleci.com/gh/xgi/aliendb/tree/master) [![Codacy Grade](https://api.codacy.com/project/badge/Grade/3585825fd92a40e4a7fc12ae850fff74)](https://www.codacy.com/app/xgi/aliendb) [![Codacy Coverage](https://api.codacy.com/project/badge/Coverage/3585825fd92a40e4a7fc12ae850fff74)](https://www.codacy.com/app/xgi/aliendb)
 
 # About
 
