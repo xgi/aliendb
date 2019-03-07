@@ -51,6 +51,15 @@ def submission(request) -> dict:
     comment_tallies = [
         [timestamp_to_ms(c.timestamp), c.num_comments] for c in submission_num_comments]
 
+    # calculate differentials
+    score_differentials = []
+    comment_differentials = []
+    for i in range(1, len(score_tallies)):
+        score_differentials.append(
+            [score_tallies[i][0], score_tallies[i][1] - score_tallies[i-1][1]])
+        comment_differentials.append(
+            [comment_tallies[i][0], comment_tallies[i][1] - comment_tallies[i-1][1]])
+
     # upvote_ratio
     upvote_ratios = [[timestamp_to_ms(s.timestamp), s.upvote_ratio]
                      for s in submission_upvote_ratios]
@@ -110,7 +119,9 @@ def submission(request) -> dict:
     data = {
         'activity': {
             'scores': score_tallies,
-            'comments': comment_tallies
+            'comments': comment_tallies,
+            'score_differentials': score_differentials,
+            'comment_differentials': comment_differentials
         },
         'upvote_ratio': {
             'upvote_ratios': upvote_ratios,
@@ -227,8 +238,6 @@ def subreddit(request) -> dict:
 
     data = {
         'activity': {
-            # 'scores': score_tallies,
-            # 'comments': comment_tallies,
             'score_differentials': score_differentials[-12:],
             'comment_differentials': comment_differentials[-12:]
         },

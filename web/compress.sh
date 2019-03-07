@@ -12,8 +12,8 @@ cat bootstrap.css \
   | python -m rcssmin > main.min.css
 
 cd $ROOT/static/js
-cat highcharts.js \
-  jquery.min.js \
+cat jquery.min.js \
+  highstock.js \
   moment.min.js \
   tether.min.js \
   bootstrap.min.js \

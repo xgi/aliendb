@@ -148,60 +148,83 @@ function submission_subjectivity_chart(data) {
 }
 
 function submission_activity_chart(data) {
-    Highcharts.chart('submission_activity_chart', {
+    Highcharts.stockChart('submission_activity_chart', {
         chart: {
             zoomType: 'x'
         },
         title: {
-            text: null
+            text: "Activity of this post"
         },
         credits: {
             enabled: false
         },
+        rangeSelector: {
+            enabled: false
+        },
+        navigator: {
+            enabled: false
+        },
+        scrollbar: {
+            enabled: false
+        },
+        yAxis: [
+            {
+                title: {
+                    text: 'Comments'
+                },
+                height: '60%',
+                opposite: false
+            },
+            {
+                title: {
+                    text: 'Karma'
+                },
+                height: '60%',
+            },
+            {
+                title: {
+                    text: 'Δ Karma'
+                },
+                top: '65%',
+                height: '35%',
+            }
+        ],
         tooltip: {
+            split: false,
             shared: true
         },
-        xAxis: {
-            type: 'datetime',
-            crosshair: true
-        },
-        yAxis: [{
-            title: {
-                text: 'Comments'
-            }
-        },
-        {
-            title: {
-                text: 'Karma'
+        series: [
+            {
+                type: 'column',
+                name: 'Comments',
+                data: data['activity']['comments'],
+                yAxis: 0,
             },
-            opposite: true
-        }
-        ],
-        series: [{
-            type: 'column',
-            name: 'Comments',
-            yAxis: 0,
-            data: data['activity']['comments'],
-            lineWidth: 4
-        },
-        {
-            type: 'spline',
-            name: 'Karma',
-            yAxis: 1,
-            data: data['activity']['scores'],
-            lineWidth: 6,
-            marker: {
-                symbol: 'circle',
-                radius: 4,
-                lineColor: 'rgba(255, 255, 255, 1)',
-                lineWidth: 1
+            {
+                type: 'spline',
+                name: 'Karma',
+                data: data['activity']['scores'],
+                yAxis: 1,
+                lineWidth: 6,
+                marker: {
+                    symbol: 'circle',
+                    radius: 4,
+                    lineColor: 'rgba(255, 255, 255, 1)',
+                    lineWidth: 1
+                }
+            },
+            {
+                type: 'column',
+                name: 'Δ Karma',
+                data: data['activity']['score_differentials'],
+                yAxis: 2,
             }
-        }
         ],
         colors: [
-            'rgba(47, 79, 79, 1)',
-            'rgba(255, 69, 0, 1)'
-        ]
+            'rgba(47, 79, 79, 0.80)',
+            'rgba(255, 69, 0, 0.90)',
+            'rgba(255, 69, 0, 0.70)'
+        ],
     });
 }
 
