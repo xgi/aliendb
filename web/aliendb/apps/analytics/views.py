@@ -249,7 +249,7 @@ def search(request) -> HttpResponse:
     """
     query = request.GET.get('q', '')
     order_by = request.GET.get('order_by', '')
-    time = request.GET.get('time', '')
+    time = request.GET.get('time', 'month')
     from_subreddits = request.GET.get('from_subreddits', '')
 
     # if no query was given
