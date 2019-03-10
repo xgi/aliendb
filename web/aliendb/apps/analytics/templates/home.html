@@ -61,6 +61,60 @@
     </div>
     <div class="col-12">
       <div class="row justify-content-sm-center">
+        <div class="col-12 col-md-11 col-lg-6 table-container-col">
+          <div class="bs-component">
+            <table class="table table-striped table-hover table-bordered">
+              <thead class="bg-primary">
+                <tr>
+                  <th class="bg-info table-caption" colspan="4">Top posts of the week</th>
+                </tr>
+              </thead>
+              <thead class="bg-primary">
+                <tr>
+                  <th id="rank">Rank</th>
+                  <th id="score">Score</th>
+                  <th id="title">Title</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% for submission in top_submissions %}
+                <tr>
+                  <td id="rank">{{ forloop.counter }}</td>
+                  <td id="score">{{ submission.score|short_quantity }}</td>
+                  <td id="title">
+                    <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="d-none d-lg-block col-lg-4 table-container-col">
+          <div class="bs-component">
+            <table class="table table-striped table-hover table-bordered">
+              <thead class="bg-primary">
+                <tr>
+                  <th class="bg-success table-caption" colspan="4">Active subreddits</th>
+                </tr>
+              </thead>
+              <thead class="bg-primary">
+                <tr>
+                  <th id="submissions">Posts</th>
+                  <th id="name">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for subreddit in active_subreddits %}
+                <tr>
+                  <td id="submissions">{{ forloop.counter }}</td>
+                  <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
         <div class="col-12 col-md-11 col-lg-10 table-container-col">
           <div class="bs-component">
             <table class="table table-striped table-hover table-bordered">
@@ -78,7 +132,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for submission in submissions|slice:":100" %}
+                {% for submission in cur_submissions|slice:":100" %}
                 <tr>
                   <td id="rank">{{ submission.rank }}</td>
                   <td id="delta"><span class="{{ submission.delta_color }}">{{ submission.delta_string }}</span></td>

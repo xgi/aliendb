@@ -28,7 +28,15 @@ def home(request) -> HttpResponse:
     if response is not None and settings.DEBUG is False:
         return response
 
-    submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
+    cur_submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
+
+    sr_scores = SubredditScore.objects.all().order_by('-timestamp')[:100]
+    active_subreddits = [sr_score.subreddit for sr_score in sr_scores]
+    active_subreddits = list(set(active_subreddits))[:6]
+
+    top_submissions = Submission.objects.filter(
+        created_at__gte=datetime.utcnow() - timedelta(weeks=1)
+    ).order_by('-score')[:5]
 
     cumulative_stats = {
         'submissions': Submission.objects.all().count(),
@@ -38,7 +46,7 @@ def home(request) -> HttpResponse:
     }
 
     # calculate rank deltas
-    for submission in submissions:
+    for submission in cur_submissions:
         rank_delta = 0
         if submission.rank_previous != -1 and submission.rank != -1:
             rank_delta = submission.rank_previous - submission.rank
@@ -57,7 +65,9 @@ def home(request) -> HttpResponse:
 
     response = render(request, 'home.html', {
         'page_category': 'posts',
-        'submissions': submissions,
+        'cur_submissions': cur_submissions,
+        'active_subreddits': active_subreddits,
+        'top_submissions': top_submissions,
         'cumulative_stats': cumulative_stats
     })
     cache.set("home_response", response, 1200)
