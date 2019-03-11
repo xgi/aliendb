@@ -100,14 +100,14 @@
               </thead>
               <thead class="bg-primary">
                 <tr>
-                  <th id="submissions">Posts</th>
+                  <th id="rank">Rank</th>
                   <th id="name">Name</th>
                 </tr>
               </thead>
               <tbody>
                 {% for subreddit in active_subreddits %}
                 <tr>
-                  <td id="submissions">{{ forloop.counter }}</td>
+                  <td id="rank">{{ forloop.counter }}</td>
                   <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
                 </tr>
                 {% endfor %}
