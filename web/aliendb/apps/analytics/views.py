@@ -32,16 +32,18 @@ def home(request) -> HttpResponse:
 
     sr_scores = SubredditScore.objects.all().order_by('-timestamp')[:100]
     active_subreddits = [sr_score.subreddit for sr_score in sr_scores]
-    active_subreddits = list(set(active_subreddits))[:6]
+    active_subreddits = list(set(active_subreddits))[:10]
 
     top_submissions = Submission.objects.filter(
         created_at__gte=datetime.utcnow() - timedelta(weeks=1)
-    ).order_by('-score')[:5]
+    ).order_by('-score')[:8]
 
     cumulative_stats = {
         'submissions': Submission.objects.all().count(),
-        'score': TotalScore.objects.latest('timestamp').score if TotalScore.objects.count() > 0 else 0,
-        'comments': TotalNumComments.objects.latest('timestamp').num_comments if TotalNumComments.objects.count() > 0 else 0,
+        'score': TotalScore.objects.latest('timestamp').score
+        if TotalScore.objects.count() > 0 else 0,
+        'comments': TotalNumComments.objects.latest('timestamp').num_comments
+        if TotalNumComments.objects.count() > 0 else 0,
         'subreddits': Subreddit.objects.all().count()
     }
 
