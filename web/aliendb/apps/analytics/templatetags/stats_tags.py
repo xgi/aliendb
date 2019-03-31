@@ -19,6 +19,8 @@ def short_quantity(value):
     result = ""
     if value >= BILLION:
         result = "%sB+" % format(value / BILLION, "0.2f")
+    elif value >= 10 * MILLION:
+        result = "%sM+" % format(value / MILLION, "0.1f")
     elif value >= MILLION:
         result = "%sM+" % format(value / MILLION, "0.2f")
     elif value >= 10 * THOUSAND:
