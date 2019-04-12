@@ -22,6 +22,13 @@ body {
     font-family: 'Lato', Arial, sans-serif;
 }
 
+h2 {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    font-style: oblique;
+    color: #6f6288;
+}
+
 h5 {
     color: #fff;
 }
