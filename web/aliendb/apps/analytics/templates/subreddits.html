@@ -38,7 +38,7 @@
               <td id="submissions">{{ subreddit.tracked_submissions|intcomma }}</td>
               <td id="karma">{{ subreddit.score|intcomma }}</td>
               <td id="comments" class="d-none d-md-table-cell">{{ subreddit.num_comments|intcomma }}</td>
-              <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
+              <td id="name"><a href="/r/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -64,7 +64,7 @@
             {% for subreddit in agreeable_subreddits %}
             <tr>
               <td id="rank">{{ forloop.counter }}</td>
-              <td id="name"><a href="/subreddit/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+              <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
               <td id="ratio">{{ subreddit.average_upvote_ratio|percentage }}</td>
             </tr>
             {% endfor %}
@@ -89,7 +89,7 @@
             {% for subreddit in controversial_subreddits %}
             <tr>
               <td id="rank">{{ forloop.counter }}</td>
-              <td id="name"><a href="/subreddit/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+              <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
               <td id="ratio">{{ subreddit.average_upvote_ratio|percentage }}</td>
             </tr>
             {% endfor %}
@@ -114,7 +114,7 @@
             {% for subreddit in recent_subreddits %}
             <tr>
               <td id="rank">{{ forloop.counter }}</td>
-              <td id="name"><a href="/subreddit/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+              <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
               <td>{{ subreddit.created_at|date:"N j" }}</td>
             </tr>
             {% endfor %}

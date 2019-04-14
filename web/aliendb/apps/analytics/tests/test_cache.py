@@ -27,6 +27,6 @@ class CacheTest(TestCase):
         self.assertEqual(response.content, cached.content)
 
     def test_cache_subreddit(self):
-        response = self.client.get('/subreddit/testsubreddit')
+        response = self.client.get('/r/testsubreddit')
         cached = cache.get("subreddit_response_testsubreddit")
         self.assertEqual(response.content, cached.content)

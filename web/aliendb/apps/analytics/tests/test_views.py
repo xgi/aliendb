@@ -30,15 +30,15 @@ class ViewsTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_subreddit_200(self):
-        response = self.client.get('/subreddit/testsubreddit')
+        response = self.client.get('/r/testsubreddit')
         self.assertEqual(response.status_code, 200)
 
     def test_subreddit_404(self):
-        response = self.client.get('/subreddit/notarealsubreddit')
+        response = self.client.get('/r/notarealsubreddit')
         self.assertEqual(response.status_code, 404)
 
     def test_empty_subreddit_404(self):
-        response = self.client.get('/subreddit/emptysubreddit')
+        response = self.client.get('/r/emptysubreddit')
         self.assertEqual(response.status_code, 404)
 
     def test_search_200(self):

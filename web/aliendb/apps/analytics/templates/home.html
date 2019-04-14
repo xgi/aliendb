@@ -100,7 +100,7 @@
                 {% for subreddit in active_subreddits %}
                 <tr>
                   <td id="rank"><b>{{ forloop.counter }}</b></td>
-                  <td id="name"><a href="/subreddit/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
+                  <td id="name"><a href="/r/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -135,7 +135,7 @@
                       submitted {{ submission.created_at|timesince }} ago</span>
                   </td>
                   <td id="subreddit" class="d-none d-md-table-cell">
-                    <a href="/subreddit/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
+                    <a href="/r/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
                 </tr>
                 {% endfor %}
               </tbody>
