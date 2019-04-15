@@ -67,19 +67,19 @@
               <h2>Top posts of the week</h2>
               <thead class="bg-primary">
                 <tr>
-                  <th id="rank">Rank</th>
+                  <th id="score">Score</th>
                   <th id="title">Title</td>
-                    <th id="score">Score</th>
+                  <th id="subreddit">Subreddit</th>
                 </tr>
               </thead>
               <tbody>
                 {% for submission in top_submissions %}
                 <tr>
-                  <td id="rank"><b>{{ forloop.counter }}</b></td>
+                  <td id="score">{{ submission.score|short_quantity }}</td>
                   <td id="title">
                     <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
                   </td>
-                  <td id="score">{{ submission.score|short_quantity }}</td>
+                  <td id="subreddit"><a href="/r/{{ submission.subreddit.name }}">r/{{ submission.subreddit.name }}</a></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -99,7 +99,7 @@
               <tbody>
                 {% for subreddit in active_subreddits %}
                 <tr>
-                  <td id="rank"><b>{{ forloop.counter }}</b></td>
+                  <td id="rank">{{ forloop.counter }}</td>
                   <td id="name"><a href="/r/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
                 </tr>
                 {% endfor %}
