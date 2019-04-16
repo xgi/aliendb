@@ -48,6 +48,14 @@ a:hover {
     color: #13967c;
 }
 
+input {
+    border-radius: 0 !important;
+}
+
+button {
+    border-radius: 0 !important;
+}
+
 .green {
     color: green;
 }
