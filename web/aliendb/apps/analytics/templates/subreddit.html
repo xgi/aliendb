@@ -22,13 +22,18 @@
             <div class="col-12">
               <div class="card subreddit-overview">
                 <div class="card-block">
-                  <h4 class="card-title">{{ subreddit.title }}</h4>
-                  <p class="card-text">{{ subreddit.description }}</p>
-                  <p class="card-text">
-                    <small class="text-muted">
-                      <a href="//reddit.com/r/{{ subreddit.name }}">View /r/{{ subreddit.name }} on Reddit.</a>
-                    </small>
-                  </p>
+                  <div class="card-body">
+                    <h4 class="card-title">{{ subreddit.title }}</h4>
+                    <p class="card-text">{{ subreddit.description }}</p>
+                    <p class="card-text">
+                      <small>
+                        <a href="//reddit.com/r/{{ subreddit.name }}">View /r/{{ subreddit.name }} on Reddit.</a>
+                      </small>
+                    </p>
+                  </div>
+                  <div class="card-footer">
+                    <small class="text-muted" title="{{ subreddit.updated_at|date:'r' }} (UTC)">Last updated {{ subreddit.updated_at|timesince}} ago</small>
+                  </div>
                 </div>
               </div>
             </div>
