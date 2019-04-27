@@ -74,9 +74,9 @@ def create_submission_obj(submission, rank) -> Submission:
                                 over_18=submission.over_18,
                                 spoiler=submission.spoiler,
                                 locked=submission.locked,
-                                gilded_silver=submission.gildings['gid_1'],
-                                gilded_gold=submission.gildings['gid_2'],
-                                gilded_platinum=submission.gildings['gid_3'],
+                                gilded_silver=submission.gildings['gid_1'] if 'gid_1' in submission.gildings else 0,
+                                gilded_gold=submission.gildings['gid_2'] if 'gid_2' in submission.gildings else 0,
+                                gilded_platinum=submission.gildings['gid_3'] if 'gid_3' in submission.gildings else 0,
                                 created_at=created_at)
     submission_obj.save()
 
@@ -130,9 +130,9 @@ def update_submission_obj(submission, rank) -> Submission:
     submission_obj.over_18 = submission.over_18
     submission_obj.spoiler = submission.spoiler
     submission_obj.locked = submission.locked
-    submission_obj.gilded_silver = submission.gildings['gid_1']
-    submission_obj.gilded_gold = submission.gildings['gid_2']
-    submission_obj.gilded_platinum = submission.gildings['gid_3']
+    submission_obj.gilded_silver = submission.gildings['gid_1'] if 'gid_1' in submission.gildings else 0
+    submission_obj.gilded_gold = submission.gildings['gid_2'] if 'gid_2' in submission.gildings else 0
+    submission_obj.gilded_platinum = submission.gildings['gid_3'] if 'gid_3' in submission.gildings else 0
 
     # create new Comment objects if necessary
     if submission.num_comments > 500:
@@ -198,9 +198,9 @@ def create_comment_obj(comment, submission_obj):
                               is_mod=is_mod,
                               is_admin=is_admin,
                               is_special=is_special,
-                              gilded_silver=comment.gildings['gid_1'],
-                              gilded_gold=comment.gildings['gid_2'],
-                              gilded_platinum=comment.gildings['gid_3'],
+                              gilded_silver=comment.gildings['gid_1'] if 'gid_1' in comment.gildings else 0,
+                              gilded_gold=comment.gildings['gid_2'] if 'gid_2' in comment.gildings else 0,
+                              gilded_platinum=comment.gildings['gid_3'] if 'gid_3' in comment.gildings else 0,
                               characters=num_characters,
                               words=len(blob.words),
                               sentences=len(blob.sentences),
@@ -226,9 +226,9 @@ def create_comment_obj(comment, submission_obj):
         # comment already exists in db
         comment_obj = Comment.objects.get(id=comment.id)
         comment_obj.score = comment.score
-        comment_obj.gilded_silver = comment.gildings['gid_1']
-        comment_obj.gilded_gold = comment.gildings['gid_2']
-        comment_obj.gilded_platinum = comment.gildings['gid_3']
+        comment_obj.gilded_silver = comment.gildings['gid_1'] if 'gid_1' in comment.gildings else 0
+        comment_obj.gilded_gold = comment.gildings['gid_2'] if 'gid_2' in comment.gildings else 0
+        comment_obj.gilded_platinum = comment.gildings['gid_3'] if 'gid_3' in comment.gildings else 0
         comment_obj.save()
 
 
