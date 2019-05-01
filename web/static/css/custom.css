@@ -189,7 +189,7 @@ button {
 
 @media (max-width: 768px) {
     .table-container-col {
-        padding: 0;
+        padding: 1rem;
     }
 }
 
