@@ -38,12 +38,20 @@ h5 {
     margin: 0 auto;
 }
 
-a {
+.form-control {
+    color: inherit;
+    border-radius: 0;
+}
+
+a, .btn-link {
     color: #41553D;
+}
+
+a {
     border-bottom: 1px darkgray dotted;
 }
 
-a:hover {
+a:hover, .btn-link:hover {
     text-decoration: none;
     color: #13967c;
 }
