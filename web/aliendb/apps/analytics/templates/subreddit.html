@@ -39,25 +39,25 @@
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{{ subreddit.tracked_submissions|short_quantity }}</h4>
+                <h3>{{ subreddit.tracked_submissions|short_quantity }}</h3>
                 <span>Posts</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{{ subreddit.score|short_quantity }}</h4>
+                <h3>{{ subreddit.score|short_quantity }}</h3>
                 <span>Karma</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{{ subreddit.num_comments|short_quantity }}</h4>
+                <h3>{{ subreddit.num_comments|short_quantity }}</h3>
                 <span>Comments</span>
               </div>
             </div>
             <div class="col-6 col-md-3 col-xl-6">
               <div class="card card-stat text-center">
-                <h4>{% widthratio subreddit.average_upvote_ratio 1 100 %}%</h4>
+                <h3>{% widthratio subreddit.average_upvote_ratio 1 100 %}%</h3>
                 <span>Upvoted</span>
               </div>
             </div>
@@ -76,11 +76,11 @@
       </div>
     </div>
   </div>
-  <br />
   <div class="row justify-content-sm-center">
     <div class="col-12 col-md-6 col-xl-5 table-container-col">
+      <hr />
       <table class="table table-hover">
-        <h2>Recent posts from /r/{{ subreddit.name }}</h2>
+        <h2>Recent posts</h2>
         <thead class="bg-primary">
           <tr>
             <th id="karma">Karma</th>
@@ -104,8 +104,9 @@
     <div class="col-12 col-md-6 col-lg-5">
       <div class="row justify-content-sm-center">
         <div class="col-12 table-container-col">
+          <hr />
           <table class="table table-hover">
-            <h2>Agreeable posts from /r/{{ subreddit.name }}</h2>
+            <h2>Agreeable posts</h2>
             <thead class="bg-success">
               <tr>
                 <th id="ratio">Ratio</th>
@@ -125,10 +126,11 @@
               {% endfor %}
             </tbody>
           </table>
+          <hr />
         </div>
         <div class="col-12 table-container-col">
           <table class="table table-hover">
-            <h2>Controversial posts from /r/{{ subreddit.name }}</h2>
+            <h2>Controversial posts</h2>
             <thead class="bg-danger">
               <tr>
                 <th id="ratio">Ratio</th>
@@ -152,9 +154,9 @@
       </div>
     </div>
   </div>
-  <br />
   <div class="row justify-content-sm-center">
     <div class="col-12 col-md-6 col-lg-5">
+      <hr />
       <div class="loader">
         <div class="rect1"></div>
         <div class="rect2"></div>
@@ -163,8 +165,10 @@
         <div class="rect5"></div>
       </div>
       <div id="subreddit_polarity_chart"></div>
+      <hr />
     </div>
     <div class="col-12 col-md-6 col-lg-5">
+      <hr />
       <div class="loader">
         <div class="rect1"></div>
         <div class="rect2"></div>
@@ -173,6 +177,7 @@
         <div class="rect5"></div>
       </div>
       <div id="subreddit_subjectivity_chart"></div>
+      <hr />
     </div>
   </div>
   <br />

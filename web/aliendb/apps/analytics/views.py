@@ -223,7 +223,7 @@ def subreddit(request, subreddit) -> HttpResponse:
 
     submissions = Submission.objects.filter(subreddit=subreddit)
     top_submissions = submissions.order_by('-score')[:50]
-    recent_submissions = submissions.order_by('-created_at')[:10]
+    recent_submissions = submissions.order_by('-created_at')[:12]
     agreeable_submissions = submissions.order_by('-upvote_ratio')[:5]
     controversial_submissions = submissions.order_by('upvote_ratio')[:5]
 

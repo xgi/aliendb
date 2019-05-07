@@ -23,10 +23,15 @@ body {
 }
 
 h2 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-transform: uppercase;
     font-style: oblique;
     color: #6f6288;
+}
+
+h3 {
+    color: #3a4b5c;
+    font-weight: bold;
 }
 
 h5 {
@@ -268,8 +273,7 @@ td#title span {
 
 .card-stat {
     border: none;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 /* Tabs */
