@@ -180,12 +180,18 @@ def submission(request, id) -> HttpResponse:
         submission=submission).order_by('timestamp')
 
     # lifetime and rise time
-    lifetime_delta = submission_scores[len(
-        submission_scores) - 1].timestamp - submission_scores[0].timestamp
-    lifetime = time.strftime('%H:%M:%S', time.gmtime(lifetime_delta.seconds))
-
-    rise_time_delta = submission_scores[0].timestamp - submission.created_at
-    rise_time = time.strftime('%H:%M:%S', time.gmtime(rise_time_delta.seconds))
+    if len(submission_scores) > 0:
+        lifetime_delta = \
+            submission_scores[len(submission_scores) - 1].timestamp - \
+            submission_scores[0].timestamp
+        lifetime = \
+            time.strftime('%H:%M:%S', time.gmtime(lifetime_delta.seconds))
+        rise_time_delta = \
+            submission_scores[0].timestamp - submission.created_at
+        rise_time = \
+            time.strftime('%H:%M:%S', time.gmtime(rise_time_delta.seconds))
+    else:
+        lifetime = rise_time = '00:00:00'
 
     response = render(request, 'submission.html', {
         'page_category': 'posts',
