@@ -127,7 +127,7 @@
             <tbody>
               {% for submission in agreeable_submissions %}
               <tr>
-                <td id="ratio">{{ submission.upvote_ratio|percentage }}</td>
+                <td id="ratio">{% widthratio submission.upvote_ratio 1 100 %}%</td>
                 <td id="karma">{{ submission.score|intcomma }}</td>
                 <td id="title">
                   <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
@@ -151,7 +151,7 @@
             <tbody>
               {% for submission in controversial_submissions %}
               <tr>
-                <td id="ratio">{{ submission.upvote_ratio|percentage }}</td>
+                <td id="ratio">{% widthratio submission.upvote_ratio 1 100 %}%</td>
                 <td id="karma">{{ submission.score|intcomma }}</td>
                 <td id="title">
                   <a href="/submission/{{ submission.id }}">{{ submission.title }}</a><br />
