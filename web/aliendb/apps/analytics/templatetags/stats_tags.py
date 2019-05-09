@@ -1,5 +1,6 @@
 from django import template
 import math
+import time
 
 
 BILLION = math.pow(10, 9)
@@ -16,21 +17,39 @@ def percentage(value):
 
 @register.filter
 def short_quantity(value):
-    result = ""
     if value >= BILLION:
-        result = "%sB+" % format(value / BILLION, "0.2f")
+        return "%sB+" % format(value / BILLION, "0.2f")
     elif value >= 10 * MILLION:
-        result = "%sM+" % format(value / MILLION, "0.1f")
+        return "%sM+" % format(value / MILLION, "0.1f")
     elif value >= MILLION:
-        result = "%sM+" % format(value / MILLION, "0.2f")
+        return "%sM+" % format(value / MILLION, "0.2f")
     elif value >= 10 * THOUSAND:
-        result = "%sk+" % format(value / THOUSAND, "0.1f")
+        return "%sk+" % format(value / THOUSAND, "0.1f")
     elif value >= THOUSAND:
-        result = "%s+" % str(value - value % 100)
+        return "%s+" % str(value - value % 100)
     elif value >= 100:
-        result = "%s+" % str(value - value % 100)
+        return "%s+" % str(value - value % 100)
     elif value >= 10:
-        result = "%s+" % str(value - value % 10)
+        return "%s+" % str(value - value % 10)
+    return str(value)
+
+
+@register.filter
+def timestamp(value):
+    t = time.gmtime(value)
+    hour_ending = "s" if t.tm_hour > 1 else ""
+    min_ending = "s" if t.tm_min > 1 else ""
+    sec_ending = "s" if t.tm_sec > 1 else ""
+
+    if t.tm_hour > 0:
+        return time.strftime(
+            "%-H hour{}, %-M minute{}".format(hour_ending, min_ending),
+            time.gmtime(value))
+    elif t.tm_min > 0:
+        return time.strftime(
+            "%-M minute{}, %-S second{}".format(min_ending, sec_ending),
+            time.gmtime(value))
     else:
-        result = str(value)
-    return result
+        return time.strftime(
+            "%-S second{}".format(sec_ending),
+            time.gmtime(value))

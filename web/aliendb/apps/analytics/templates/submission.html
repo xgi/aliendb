@@ -6,6 +6,8 @@
 <meta property="og:description" content="Analytics for this Reddit post on AlienDB.">
 {% endblock %}
 {% block content %}
+{% load humanize %}
+{% load stats_tags %}
 <div class="header">
   <div class="container-fluid align-self-center">
     <div class="row justify-content-sm-center">
@@ -56,16 +58,20 @@
         <div class="col-12 col-lg-10 col-xl-8">
           <div class="row justify-content-center">
             <div class="col-6 col-md-3 col-lg-2">
-              <a class="btn btn-success nav-link active" id="overview-tab" href="#overview" data-toggle="tab" role="tab">Overview</a>
+              <a class="btn btn-success nav-link active" id="overview-tab" href="#overview" data-toggle="tab"
+                role="tab">Overview</a>
             </div>
             <div class="col-6 col-md-3 col-lg-2">
-              <a class="btn btn-secondary nav-link" id="details-tab" href="#details" data-toggle="tab" role="tab">Details</a>
+              <a class="btn btn-secondary nav-link" id="details-tab" href="#details" data-toggle="tab"
+                role="tab">Details</a>
             </div>
             <div class="col-6 col-md-3 col-lg-2">
-              <a class="btn btn-secondary nav-link" id="sentiment-tab" href="#sentiment" data-toggle="tab" role="tab">Sentiment</a>
+              <a class="btn btn-secondary nav-link" id="sentiment-tab" href="#sentiment" data-toggle="tab"
+                role="tab">Sentiment</a>
             </div>
             <div class="col-6 col-md-3 col-lg-2">
-              <a class="btn btn-secondary nav-link" id="comments-tab" href="#comments" data-toggle="tab" role="tab">Comments</a>
+              <a class="btn btn-secondary nav-link" id="comments-tab" href="#comments" data-toggle="tab"
+                role="tab">Comments</a>
             </div>
           </div>
         </div>
@@ -94,13 +100,37 @@
               <div class="row justify-content-center">
                 <div class="col-6 col-lg-12">
                   <div class="card card-stat">
-                    <h3>{{ lifetime }}</h3>
-                    <span>spent in the top 100</span>
+                    <h3>{{ submission.score|intcomma }}</h3>
+                    <span>Karma</span>
                   </div>
                 </div>
                 <div class="col-6 col-lg-12">
                   <div class="card card-stat">
-                    <h3>{{ rise_time }}</h3>
+                    <h3>{{ submission.num_comments|intcomma }}</h3>
+                    <span>Comments</span>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-12">
+                  <div class="card card-stat">
+                    <h3>{% widthratio submission.upvote_ratio 1 100 %}%</h3>
+                    <span>Upvote Ratio</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <br />
+              <hr /><br />
+              <div class="row justify-content-center">
+                <div class="col-12 col-md-6">
+                  <div class="card card-stat">
+                    <h3>{{ lifetime|timestamp }}</h3>
+                    <span>spent in the top 100</span>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="card card-stat">
+                    <h3>{{ rise_time|timestamp }}</h3>
                     <span>before reaching the top 100</span>
                   </div>
                 </div>

@@ -184,14 +184,12 @@ def submission(request, id) -> HttpResponse:
         lifetime_delta = \
             submission_scores[len(submission_scores) - 1].timestamp - \
             submission_scores[0].timestamp
-        lifetime = \
-            time.strftime('%H:%M:%S', time.gmtime(lifetime_delta.seconds))
+        lifetime = lifetime_delta.seconds
         rise_time_delta = \
             submission_scores[0].timestamp - submission.created_at
-        rise_time = \
-            time.strftime('%H:%M:%S', time.gmtime(rise_time_delta.seconds))
+        rise_time = rise_time_delta.seconds
     else:
-        lifetime = rise_time = '00:00:00'
+        lifetime = rise_time = 0
 
     response = render(request, 'submission.html', {
         'page_category': 'posts',
