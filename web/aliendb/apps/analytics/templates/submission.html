@@ -95,23 +95,37 @@
                 <div class="rect5"></div>
               </div>
               <div id="submission_activity_chart"></div>
+              <div class="d-sm-none"><br />
+                <hr />
+              </div>
+              <br />
             </div>
             <div class="col-12 col-md-4 col-lg-3">
               <div class="row justify-content-center">
                 <div class="col-6 col-lg-12">
-                  <div class="card card-stat">
-                    <h3>{{ submission.score|intcomma }}</h3>
-                    <span>Karma</span>
+                  <div class="card card-stat text-center">
+                    {% if submission.rank == -1 %}
+                    <h3>???</h3>
+                    {% else %}
+                    <h3>{{ submission.rank }}</h3>
+                    {% endif %}
+                    <span>Rank</span>
                   </div>
                 </div>
                 <div class="col-6 col-lg-12">
-                  <div class="card card-stat">
+                  <div class="card card-stat text-center">
+                    <h3>{{ submission.score|intcomma }}</h3>
+                    <span>Score</span>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-12">
+                  <div class="card card-stat text-center">
                     <h3>{{ submission.num_comments|intcomma }}</h3>
                     <span>Comments</span>
                   </div>
                 </div>
                 <div class="col-6 col-lg-12">
-                  <div class="card card-stat">
+                  <div class="card card-stat text-center">
                     <h3>{% widthratio submission.upvote_ratio 1 100 %}%</h3>
                     <span>Upvote Ratio</span>
                   </div>
@@ -123,13 +137,13 @@
               <hr /><br />
               <div class="row justify-content-center">
                 <div class="col-12 col-md-6">
-                  <div class="card card-stat">
+                  <div class="card card-stat text-center">
                     <h3>{{ lifetime|timestamp }}</h3>
                     <span>spent in the top 100</span>
                   </div>
                 </div>
                 <div class="col-12 col-md-6">
-                  <div class="card card-stat">
+                  <div class="card card-stat text-center">
                     <h3>{{ rise_time|timestamp }}</h3>
                     <span>before reaching the top 100</span>
                   </div>
