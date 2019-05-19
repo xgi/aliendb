@@ -96,29 +96,6 @@ class SubredditNumComments(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
-class Comment(models.Model):
-    id = models.CharField(primary_key=True, unique=True, max_length=7)
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
-
-    score = models.IntegerField()
-    is_root = models.BooleanField()
-    is_op = models.NullBooleanField()
-    is_mod = models.NullBooleanField()
-    is_admin = models.NullBooleanField()
-    is_special = models.NullBooleanField()
-    gilded_silver = models.IntegerField(default=0)
-    gilded_gold = models.IntegerField(default=0)
-    gilded_platinum = models.IntegerField(default=0)
-    characters = models.IntegerField()
-    words = models.IntegerField()
-    sentences = models.IntegerField()
-    polarity = models.FloatField()
-    subjectivity = models.FloatField()
-
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField(auto_now=True)
-
-
 class SubmissionScore(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     score = models.IntegerField()
