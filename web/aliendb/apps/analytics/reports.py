@@ -37,7 +37,6 @@ def submission(request) -> dict:
         return data
 
     subreddit = submission.subreddit
-    comments = Comment.objects.filter(submission=submission)
     submission_scores = SubmissionScore.objects.filter(
         submission=submission).order_by('timestamp')
     submission_num_comments = SubmissionNumComments.objects.filter(
@@ -66,10 +65,10 @@ def submission(request) -> dict:
 
     # special_users
     special_users_submission = [
-        [c.is_op for c in comments].count(True),
-        [c.is_mod for c in comments].count(True),
-        [c.is_admin for c in comments].count(True),
-        [c.is_special for c in comments].count(True)
+        submission.comments_op,
+        submission.comments_mod,
+        submission.comments_admin,
+        submission.comments_special
     ]
     special_users_subreddit = [
         float("{0:.2f}".format(subreddit.average_is_op)),
@@ -85,9 +84,9 @@ def submission(request) -> dict:
         submission.gilded_platinum
     ]
     gilded_comments = [
-        sum(c.gilded_silver for c in comments),
-        sum(c.gilded_gold for c in comments),
-        sum(c.gilded_platinum for c in comments),
+        submission.comments_gilded_silver,
+        submission.comments_gilded_gold,
+        submission.comments_gilded_platinum
     ]
     gilded_subreddit = [
         float("{0:.2f}".format(subreddit.average_gilded_silver)),
@@ -98,7 +97,7 @@ def submission(request) -> dict:
     # polarity
     polarity_submission = [
         float("{0:.4f}".format(submission.polarity)),
-        float("{0:.4f}".format(sum(c.polarity for c in comments) / len(comments)))
+        float("{0:.4f}".format(submission.comments_polarity))
     ]
     polarity_subreddit = [
         float("{0:.4f}".format(subreddit.average_submission_polarity)),
@@ -108,8 +107,7 @@ def submission(request) -> dict:
     # subjectivity
     subjectivity_submission = [
         float("{0:.4f}".format(submission.subjectivity)),
-        float("{0:.4f}".format(
-            sum(c.subjectivity for c in comments) / len(comments)))
+        float("{0:.4f}".format(submission.comments_subjectivity))
     ]
     subjectivity_subreddit = [
         float("{0:.4f}".format(subreddit.average_submission_subjectivity)),

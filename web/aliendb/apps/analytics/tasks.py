@@ -65,6 +65,7 @@ def create_submission_obj(submission, rank) -> Submission:
                                 rank_peak=rank,
                                 score=submission.score,
                                 num_comments=submission.num_comments,
+                                num_sample_comments=0,
                                 polarity=polarity,
                                 subjectivity=subjectivity,
                                 domain=submission.domain,
@@ -77,23 +78,20 @@ def create_submission_obj(submission, rank) -> Submission:
                                 gilded_silver=submission.gildings['gid_1'] if 'gid_1' in submission.gildings else 0,
                                 gilded_gold=submission.gildings['gid_2'] if 'gid_2' in submission.gildings else 0,
                                 gilded_platinum=submission.gildings['gid_3'] if 'gid_3' in submission.gildings else 0,
+                                comments_gilded_silver=0,
+                                comments_gilded_gold=0,
+                                comments_gilded_platinum=0,
+                                comments_root=0,
+                                comments_op=0,
+                                comments_mod=0,
+                                comments_admin=0,
+                                comments_special=0,
+                                comments_polarity=0,
+                                comments_subjectivity=0,
                                 created_at=created_at)
     submission_obj.save()
 
-    # create Comment objects
-    submission.comments.replace_more(limit=0)
-    comments = submission.comments.list()
-
-    if submission.num_comments > 500:
-        # get the submission again, sorted by oldest comments
-        submission.comment_sort = 'old'
-        submission = reddit.submission(id=submission.id)
-        submission.comments.replace_more(limit=0)
-        # append new flattened comments to comments array
-        comments += submission.comments.list()
-
-    for comment in comments:
-        create_comment_obj(comment, submission_obj)
+    sample_submission_comments(submission, submission_obj)
 
     return submission_obj
 
@@ -130,38 +128,50 @@ def update_submission_obj(submission, rank) -> Submission:
     submission_obj.over_18 = submission.over_18
     submission_obj.spoiler = submission.spoiler
     submission_obj.locked = submission.locked
-    submission_obj.gilded_silver = submission.gildings['gid_1'] if 'gid_1' in submission.gildings else 0
-    submission_obj.gilded_gold = submission.gildings['gid_2'] if 'gid_2' in submission.gildings else 0
-    submission_obj.gilded_platinum = submission.gildings['gid_3'] if 'gid_3' in submission.gildings else 0
+    submission_obj.gilded_silver = \
+        submission.gildings['gid_1'] if 'gid_1' in submission.gildings else 0
+    submission_obj.gilded_gold = \
+        submission.gildings['gid_2'] if 'gid_2' in submission.gildings else 0
+    submission_obj.gilded_platinum = \
+        submission.gildings['gid_3'] if 'gid_3' in submission.gildings else 0
 
-    # create new Comment objects if necessary
-    if submission.num_comments > 500:
-        # get the submission again, sorted by oldest comments
-        submission = reddit.submission(id=submission.id)
-        submission.comment_sort = 'old'
-        submission.comments.replace_more(limit=0)
-        # append new flattened comments to comments array
-        comments += submission.comments.list()
-
-    for comment in comments:
-        create_comment_obj(comment, submission_obj)
+    sample_submission_comments(submission, submission_obj)
 
     return submission_obj
 
 
-def create_comment_obj(comment, submission_obj):
-    """Creates a models.Comment object from a Praw comment object.
+def sample_submission_comments(submission, submission_obj):
+    """Update models.Submission comments_* fields from a sample of comments.
 
     Args:
-        comment: the source Praw comment object;
-        submission_obj: the models.Submission object parent to the comment
+        submission: the source Praw submission object;
+        submission_obj: the models.Submission objec to update
     """
-    # check if comment already exists in db
-    if not Comment.objects.filter(id=comment.id).exists():
-        # check if comment has been deleted
-        if not hasattr(comment, 'body'):
-            return
+    submission.comments.replace_more(limit=0)
+    comments = submission.comments.list()
 
+    if submission.num_comments > 500:
+        # get the submission again, sorted by oldest comments
+        submission.comment_sort = 'old'
+        submission = reddit.submission(id=submission.id)
+        submission.comments.replace_more(limit=0)
+        # append new flattened comments to comments array
+        comments += submission.comments.list()
+
+    # clear current sample stats
+    submission_obj.num_sample_comments = 0
+    submission_obj.comments_gilded_silver = 0
+    submission_obj.comments_gilded_gold = 0
+    submission_obj.comments_gilded_platinum = 0
+    submission_obj.comments_root = 0
+    submission_obj.comments_op = 0
+    submission_obj.comments_mod = 0
+    submission_obj.comments_admin = 0
+    submission_obj.comments_special = 0
+    submission_obj.comments_subjectivity = 0
+    submission_obj.comments_polarity = 0
+
+    for comment in comments:
         # determine comment distinguised properties
         if comment.author is not None:
             is_op = comment.author.name == submission_obj.author
@@ -185,32 +195,27 @@ def create_comment_obj(comment, submission_obj):
         polarity = blob.polarity
         subjectivity = blob.subjectivity
 
-        num_characters = sum(c in string.ascii_letters for c in comment.body)
-
-        created_at = datetime.datetime.utcfromtimestamp(comment.created_utc)
-        created_at = created_at.replace(tzinfo=datetime.timezone.utc)
-
-        comment_obj = Comment(id=comment.id,
-                              submission=submission_obj,
-                              score=comment.score,
-                              is_root=comment.is_root,
-                              is_op=is_op,
-                              is_mod=is_mod,
-                              is_admin=is_admin,
-                              is_special=is_special,
-                              gilded_silver=comment.gildings['gid_1'] if 'gid_1' in comment.gildings else 0,
-                              gilded_gold=comment.gildings['gid_2'] if 'gid_2' in comment.gildings else 0,
-                              gilded_platinum=comment.gildings['gid_3'] if 'gid_3' in comment.gildings else 0,
-                              characters=num_characters,
-                              words=len(blob.words),
-                              sentences=len(blob.sentences),
-                              polarity=polarity,
-                              subjectivity=subjectivity,
-                              created_at=created_at)
-        comment_obj.save()
+        submission_obj.comments_gilded_silver += comment.gildings['gid_1'] if 'gid_1' in comment.gildings else 0
+        submission_obj.comments_gilded_gold += comment.gildings['gid_2'] if 'gid_2' in comment.gildings else 0
+        submission_obj.comments_gilded_platinum += comment.gildings['gid_3'] if 'gid_3' in comment.gildings else 0
+        submission_obj.comments_root += 1 if comment.is_root else 0
+        submission_obj.comments_op += 1 if is_op else 0
+        submission_obj.comments_mod += 1 if is_mod else 0
+        submission_obj.comments_admin += 1 if is_admin else 0
+        submission_obj.comments_special += 1 if is_special else 0
+        submission_obj.comments_subjectivity = update_average(
+            submission_obj.comments_subjectivity,
+            subjectivity,
+            submission_obj.num_sample_comments)
+        submission_obj.comments_polarity = update_average(
+            submission_obj.comments_polarity,
+            polarity,
+            submission_obj.num_sample_comments)
+        submission_obj.num_sample_comments += 1
+        submission_obj.save()
 
         # update subreddit stats
-        subreddit = comment_obj.submission.subreddit
+        subreddit = submission_obj.subreddit
         subreddit.average_comments_polarity = update_average(
             subreddit.average_comments_polarity,
             polarity,
@@ -221,15 +226,6 @@ def create_comment_obj(comment, submission_obj):
             subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
         subreddit.save()
-
-    else:
-        # comment already exists in db
-        comment_obj = Comment.objects.get(id=comment.id)
-        comment_obj.score = comment.score
-        comment_obj.gilded_silver = comment.gildings['gid_1'] if 'gid_1' in comment.gildings else 0
-        comment_obj.gilded_gold = comment.gildings['gid_2'] if 'gid_2' in comment.gildings else 0
-        comment_obj.gilded_platinum = comment.gildings['gid_3'] if 'gid_3' in comment.gildings else 0
-        comment_obj.save()
 
 
 def update_subreddit_obj(submission_obj) -> Subreddit:
@@ -242,15 +238,6 @@ def update_subreddit_obj(submission_obj) -> Subreddit:
         Subreddit: the updated models.Subreddit object
     """
     subreddit = submission_obj.subreddit
-    comments = Comment.objects.filter(submission=submission_obj)
-
-    current_gilded_silver = sum(c.gilded_silver for c in comments)
-    current_gilded_gold = sum(c.gilded_gold for c in comments)
-    current_gilded_platinum = sum(c.gilded_platinum for c in comments)
-    current_is_op = [c.is_op for c in comments].count(True)
-    current_is_mod = [c.is_mod for c in comments].count(True)
-    current_is_admin = [c.is_admin for c in comments].count(True)
-    current_is_special = [c.is_special for c in comments].count(True)
 
     subreddit.average_submission_polarity = update_average(
         subreddit.average_submission_polarity,
@@ -266,31 +253,31 @@ def update_subreddit_obj(submission_obj) -> Subreddit:
         subreddit.tracked_submissions)
     subreddit.average_gilded_silver = update_average(
         subreddit.average_gilded_silver,
-        current_gilded_silver,
+        submission_obj.comments_gilded_silver,
         subreddit.tracked_submissions)
     subreddit.average_gilded_gold = update_average(
         subreddit.average_gilded_gold,
-        current_gilded_gold,
+        submission_obj.comments_gilded_gold,
         subreddit.tracked_submissions)
     subreddit.average_gilded_platinum = update_average(
         subreddit.average_gilded_platinum,
-        current_gilded_platinum,
+        submission_obj.comments_gilded_platinum,
         subreddit.tracked_submissions)
     subreddit.average_is_op = update_average(
         subreddit.average_is_op,
-        current_is_op,
+        submission_obj.comments_op,
         subreddit.tracked_submissions)
     subreddit.average_is_mod = update_average(
         subreddit.average_is_mod,
-        current_is_mod,
+        submission_obj.comments_mod,
         subreddit.tracked_submissions)
     subreddit.average_is_admin = update_average(
         subreddit.average_is_admin,
-        current_is_admin,
+        submission_obj.comments_admin,
         subreddit.tracked_submissions)
     subreddit.average_is_special = update_average(
         subreddit.average_is_special,
-        current_is_special,
+        submission_obj.comments_special,
         subreddit.tracked_submissions)
 
     subreddit.score = subreddit.score + submission_obj.score

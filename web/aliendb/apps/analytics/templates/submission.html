@@ -274,7 +274,6 @@
 
   // properly change active tab
   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    console.log("here!");
     $(e.target).addClass('btn-success');
     $(e.target).removeClass('btn-secondary');
     $(e.relatedTarget).addClass('btn-secondary');
