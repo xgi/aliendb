@@ -36,7 +36,7 @@ def home(request) -> HttpResponse:
 
     top_submissions = Submission.objects.filter(
         created_at__gte=datetime.utcnow() - timedelta(weeks=1)
-    ).order_by('-score')[:8]
+    ).order_by('-score')[:9]
 
     cumulative_stats = {
         'submissions': Submission.objects.all().count(),
