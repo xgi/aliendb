@@ -37,9 +37,9 @@ def short_quantity(value):
 @register.filter
 def timestamp(value):
     t = time.gmtime(value)
-    hour_ending = "s" if t.tm_hour > 1 else ""
-    min_ending = "s" if t.tm_min > 1 else ""
-    sec_ending = "s" if t.tm_sec > 1 else ""
+    hour_ending = "s" if t.tm_hour != 1 else ""
+    min_ending = "s" if t.tm_min != 1 else ""
+    sec_ending = "s" if t.tm_sec != 1 else ""
 
     if t.tm_hour > 0:
         return time.strftime(
