@@ -36,15 +36,6 @@ class TasksTest(TestCase):
         assert submission_obj.num_comments == new_num_comments
         assert submission_obj.rank == new_rank
 
-    def test_create_comment_obj(self):
-        create_dummy_models()
-        comment_id = 'dnz8azn'
-        with open(self.my_dir + '/data/comment_%s.pk1' % comment_id, 'rb') as obj_file:
-            comment = pickle.load(obj_file)
-        submission_obj = Submission.objects.get(id='000001')
-        create_comment_obj(comment, submission_obj)
-        assert Comment.objects.filter(id=comment_id).exists()
-
     def test_create_submission_tracker_objs(self):
         submission_id = '8djsdf'
         with open(self.my_dir + '/data/submission_%s.pk1' % submission_id, 'rb') as obj_file:
