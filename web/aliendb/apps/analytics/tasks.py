@@ -212,7 +212,6 @@ def sample_submission_comments(submission, submission_obj):
             polarity,
             submission_obj.num_sample_comments)
         submission_obj.num_sample_comments += 1
-        submission_obj.save()
 
         # update subreddit stats
         subreddit = submission_obj.subreddit
@@ -225,7 +224,9 @@ def sample_submission_comments(submission, submission_obj):
             subjectivity,
             subreddit.tracked_comments)
         subreddit.tracked_comments = subreddit.tracked_comments + 1
-        subreddit.save()
+
+    submission_obj.save()
+    subreddit.save()
 
 
 def update_subreddit_obj(submission_obj) -> Subreddit:
