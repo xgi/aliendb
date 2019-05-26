@@ -28,7 +28,8 @@ def home(request) -> HttpResponse:
     if response is not None and settings.DEBUG is False:
         return response
 
-    cur_submissions = Submission.objects.filter(rank__gt=0).order_by('rank')
+    cur_submissions = \
+        Submission.objects.filter(rank__gt=0).order_by('rank')[:100]
 
     sr_scores = SubredditScore.objects.all().order_by('-timestamp')[:100]
     active_subreddits = [sr_score.subreddit for sr_score in sr_scores]
