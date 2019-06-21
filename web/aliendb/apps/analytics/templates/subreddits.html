@@ -17,94 +17,91 @@
 <div class="container-fluid">
   <div class="row justify-content-sm-center">
     <div class="col-12 col-md-11 col-lg-6 col-xl-5 table-container-col">
-      <div class="bs-component">
-        <table class="table table-hover">
-          <h2>Most popular subreddits</h2>
-          <thead class="bg-primary">
-            <tr>
-              <th id="submissions">Posts</th>
-              <th id="karma">Karma</th>
-              <th id="comments" class="d-none d-md-table-cell">Comments</td>
-              <th id="name">Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for subreddit in subreddits %}
-            <tr>
-              <td id="submissions">{{ subreddit.tracked_submissions|intcomma }}</td>
-              <td id="karma">{{ subreddit.score|intcomma }}</td>
-              <td id="comments" class="d-none d-md-table-cell">{{ subreddit.num_comments|intcomma }}</td>
-              <td id="name"><a href="/r/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <table class="table table-hover">
+        <h2>Most popular subreddits</h2>
+        <thead class="bg-primary">
+          <tr>
+            <th id="submissions">Posts</th>
+            <th id="karma">Karma</th>
+            <th id="comments" class="d-none d-md-table-cell">Comments</td>
+            <th id="name">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for subreddit in subreddits %}
+          <tr>
+            <td id="submissions">{{ subreddit.tracked_submissions|intcomma }}</td>
+            <td id="karma">{{ subreddit.score|intcomma }}</td>
+            <td id="comments" class="d-none d-md-table-cell">{{ subreddit.num_comments|intcomma }}</td>
+            <td id="name"><a href="/r/{{ subreddit.name }}">r/{{ subreddit.name }}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="d-sm-none">
+        <hr />
       </div>
     </div>
     <div class="col-12 col-md-11 col-lg-5 col-xl-3 table-container-col">
-      <div class="bs-component">
-        <table class="table table-hover">
-          <h2>Agreeable subreddits</h2>
-          <thead class="bg-success">
-            <tr>
-              <th id="rank">Rank</th>
-              <th id="name">Name</th>
-              <th id="ratio">Ratio</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for subreddit in agreeable_subreddits %}
-            <tr>
-              <td id="rank">{{ forloop.counter }}</td>
-              <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
-              <td id="ratio">{{ subreddit.average_upvote_ratio|percentage }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="bs-component">
-        <table class="table table-hover">
-          <h2>Controversial subreddits</h2>
-          <thead class="bg-danger">
-            <tr>
-              <th id="rank">Rank</th>
-              <th id="name">Name</th>
-              <th id="ratio">Ratio</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for subreddit in controversial_subreddits %}
-            <tr>
-              <td id="rank">{{ forloop.counter }}</td>
-              <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
-              <td id="ratio">{{ subreddit.average_upvote_ratio|percentage }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="bs-component">
-        <table class="table table-hover">
-          <h2>Recent subreddits</h2>
-          <thead class="bg-info">
-            <tr>
-              <th id="rank">Rank</th>
-              <th id="name">Name</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for subreddit in recent_subreddits %}
-            <tr>
-              <td id="rank">{{ forloop.counter }}</td>
-              <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
-              <td>{{ subreddit.created_at|date:"N j" }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <table class="table table-hover">
+        <h2>Agreeable subreddits</h2>
+        <thead class="bg-success">
+          <tr>
+            <th id="rank">Rank</th>
+            <th id="name">Name</th>
+            <th id="ratio">Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for subreddit in agreeable_subreddits %}
+          <tr>
+            <td id="rank">{{ forloop.counter }}</td>
+            <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+            <td id="ratio">{{ subreddit.average_upvote_ratio|percentage }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <hr />
+      <table class="table table-hover">
+        <h2>Controversial subreddits</h2>
+        <thead class="bg-danger">
+          <tr>
+            <th id="rank">Rank</th>
+            <th id="name">Name</th>
+            <th id="ratio">Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for subreddit in controversial_subreddits %}
+          <tr>
+            <td id="rank">{{ forloop.counter }}</td>
+            <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+            <td id="ratio">{{ subreddit.average_upvote_ratio|percentage }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <hr />
+      <table class="table table-hover">
+        <h2>Recent subreddits</h2>
+        <thead class="bg-info">
+          <tr>
+            <th id="rank">Rank</th>
+            <th id="name">Name</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for subreddit in recent_subreddits %}
+          <tr>
+            <td id="rank">{{ forloop.counter }}</td>
+            <td id="name"><a href="/r/{{ subreddit.name}}">r/{{ subreddit.name }}</a></td>
+            <td>{{ subreddit.created_at|date:"N j" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div> <!-- container -->
