@@ -1,13 +1,13 @@
-django==2.2.4
+django==2.2.6
 gunicorn==19.9.0
 psycopg2==2.8.3
-redis==3.2.1
+redis==3.3.8
 celery==4.3.0
 django-redis==4.10.0
 rcssmin==1.0.6
 rjsmin==1.0.12
-praw==6.1.1
+praw==6.4.0
 textblob==0.15.3
 flower==0.9.3
 tornado>=4.2.0,<6.0.0
-coverage==4.5.3
+coverage==4.5.4
